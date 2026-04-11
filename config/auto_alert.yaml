@@ -1,0 +1,36 @@
+target:   #in create ticket
+  -target
+  -self
+manager:
+  -manager
+  -self
+target_manager:
+  -target
+  -manager
+  -self
+confirm:    #for update ticket
+  -target
+reject:
+  -self
+  -creator
+  -manager
+priority:
+  -self
+  -manager
+  -target
+assigned_to:
+  -self
+  -manager
+on_off_external:
+  -self
+  -manager
+finish_ticket:
+  -self
+  -manager
+close_ticket:
+  -self
+  -assigned_to
+
+#for branch/user controller or show ticket message only self
+
+

@@ -1,0 +1,51 @@
+TICKET:
+  immutable:
+    ticket_id:
+      description: код заявки
+    creator_id:
+      description: код создателя
+    creator_name:
+      description: имя создателя
+    branch_id:
+      description: код филиала
+    branch_name:
+      description: имя филиала
+    event_type:
+      description: тип заявки
+    'problem_category':
+      description: категория заявки(1 уровень)
+    'problem_name':
+      description: название проблемы(2 уровень)
+    'problem_class':
+      description: класс (критичность) проблемы(3 уровень)
+    'problem_type':
+      description: тип проблемы (мелкое/крупное происшествие)(4уровень)
+    zone:
+      description: зона исключительно для объектов
+    scenario:
+      description: тип сценария
+    target:
+      description: отдел
+    date_create:
+      description: дата создания
+    sla_reaction_deadline:
+      description: время на реакцию
+    sla_resolution_deadline:
+      description: время на исполнение
+  mutable:
+    current_state:
+      description: текущий статус
+    date_close:
+      description: дата закрытия
+    assigned_to:
+      description: текущий исполнитель
+    reject_comment:
+      description: причина отклонения
+    comment:
+      description: комментарий
+    priority:
+      description: приоритет
+      note: can be changed only by MANAGER or OWNER
+    history:
+      description: история изменения. добавляется автоматически
+

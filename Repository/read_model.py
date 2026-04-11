@@ -1,0 +1,274 @@
+import sqlite3 as sq
+from datetime import datetime
+from Core.exceptions import RepositoryError,SQLValidationBreak
+
+
+#BRANCH
+def get_branch_with_data(filter_value= None,con= None)-> list:  #filter(None, branch_id: value, branch_name: value, activity:(1-0))
+    cur = con.cursor()
+    base_query = """SELECT b.branch_id,
+                            b.branch_name,
+                            u.user_name AS branch_manager
+                            FROM branch AS b
+                            LEFT JOIN users AS u ON b.branch_id = u.branch_id AND role_id = 2"""
+    conditions = []
+    params = []
+    if filter_value:
+        for key, val in filter_value.items():
+            if key == "branch_id":
+                conditions.append("b.branch_id = ?")
+                params.append(val)
+            elif key == "branch_name":
+                conditions.append("b.branch_name = ?")
+                params.append(val)
+            elif key == "branch_activity":
+                conditions.append("b.branch_activity = ?")
+                params.append(val)
+    where_sql = ''
+    if conditions:
+        where_sql = " WHERE " + " AND ".join(conditions)
+    request = base_query + where_sql
+    try:
+        rows = cur.execute(request, params).fetchall()
+        return [dict(row) for row in rows]
+    except sq.Error as e :
+        raise RepositoryError(f"Error in get_branch_with_data: {e}") from e
+
+#USERS
+def get_users_with_data(filter_value= None, con=None)-> list:  #filter(None, branch_id, depart_id, role_id, api_user_id, id, activity:(1-0))
+    cur = con.cursor()
+    condition = []
+    param = []
+    if filter_value:
+        for key, val in filter_value.items():
+            if key == "user_id":
+                condition.append("u.user_id = ?")
+                param.append(val)
+            elif key == "api_user_id":
+                condition.append("u.api_user_id = (?)")
+                param.append(val)
+            elif key == "user_branch_id":
+                condition.append("u.branch_id = ?")
+                param.append(val)
+            elif key == "user_depart_id":
+                condition.append("u.depart_id = ?")
+                param.append(val)
+            elif key == "role_id":
+                condition.append("u.role_id = ?")
+                param.append(val)
+            elif key == "user_activity":
+                condition.append("u.user_activity = ?")
+                param.append(val)
+    where_sql = ''
+    if condition:
+        where_sql = " WHERE " + " AND ".join(condition)
+
+    base_query = """SELECT u.user_id,
+                           u.user_name,
+                           u.api_user_id,
+                           r.role_name,
+                           u.depart_id,
+                           d.depart_name,
+                           u.branch_id,
+                           b.branch_name
+                           FROM users AS u
+                           JOIN role AS r ON u.role_id = r.role_id
+                           LEFT JOIN department AS d ON d.depart_id = u.depart_id
+                           LEFT JOIN branch AS b ON b.branch_id = u.branch_id"""
+    request = base_query + where_sql
+
+    try:
+        rows = cur.execute(request, param).fetchall()
+        return [dict(row) for row in rows]
+    except sq.Error as e:
+        raise RepositoryError(f"Error in get_tickets: {e}") from e
+
+#TICKET
+def get_tickets_with_data(filter_value= None,con=None)-> list:  # filter(id, zone, branch_name, depart_id, creator_id, status, priority, sort_priority, sort_status)
+    cur = con.cursor()
+    condition = []  # Value in sort_priority or sort_status only (asc, desc)
+    sort_condition = []
+    param = []
+    if filter_value:
+        for key, val in filter_value.items():
+            if key == "ticket_id":
+                condition.append("t.ticket_id = ?")
+                param.append(val)
+            elif key == "zone":
+                condition.append("t.zone = ?")
+                param.append(val)
+            elif key == "branch_id":
+                condition.append("t.branch_id = ?")
+                param.append(val)
+            elif key == "depart_id":
+                condition.append(" t.target = ? ")
+                param.append(val)
+            elif key == "creator_id":
+                condition.append("t.creator_id = ? ")
+                param.append(val)
+            elif key == "status":
+                condition.append("t.current_state = ?")
+                param.append(val)
+            elif key == "priority":
+                condition.append("t.priority = ?")
+                param.append(val)
+
+            elif key == "state":
+                condition.append("st.state = ?")
+                param.append(val)
+
+            elif key == 'sort_priority':
+                if val.lower() in ("asc", "desc"):
+                    sort_condition.append(f"p.priority_id {val.upper()}")
+            elif key == "sort_status":
+                if val.lower() in ("asc", "desc"):
+                    sort_condition.append(f"st.status_id {val.upper()}")
+
+    where_sql = ''
+    if condition:
+        where_sql = " WHERE " + " AND ".join(condition)
+    sort_sql = ""
+    if sort_condition:
+        sort_sql = " ORDER BY " + ", ".join(sort_condition)
+
+    base_query = """SELECT t.ticket_id,
+                                   t.creator_id,
+                                   cr.user_name AS creator_name,
+                                   t.branch_id,
+                                   b.branch_name,
+                                   t.event_type,
+                                   t.problem_category,
+                                   t.problem_name,
+                                   t.problem_class,
+                                   t.problem_type,
+                                   t.zone,
+                                   t.scenario,
+                                   d.depart_name AS target,
+                                   t.date_create,
+                                   t.sla_reaction_deadline,
+                                   t.sla_resolution_deadline,
+                                   st.status_name AS current_state,
+                                   t.date_close,
+                                   asig.user_name AS assigned_to,
+                                   t.reject_comment,
+                                   t.comment,
+                                   p.priority_name AS priority
+                                   FROM tickets AS t 
+                                   JOIN users AS cr ON t.creator_id = cr.user_id
+                                   LEFT JOIN users AS asig ON t.assigned_to = asig.user_id
+                                   JOIN branch AS b ON t.branch_id = b.branch_id
+                                    JOIN department AS d ON t.target = d.depart_id
+                                   JOIN priority AS p ON t.priority = p.priority_id
+                                   JOIN ticket_status AS st ON t.current_state = st.status_id
+                                   """
+    request = base_query + where_sql + sort_sql
+    try:
+        rows = cur.execute(request, param).fetchall()
+    except sq.Error as e:
+        raise RepositoryError(f"Error in get_tickets: {e}") from e
+    results = [dict(row) for row in rows]
+    for res in results:
+        res['date_create'] = datetime.strptime(res['date_create'], "%Y-%m-%d %H:%M:%S")
+        res['sla_reaction_deadline'] = datetime.strptime(res['sla_reaction_deadline'], "%Y-%m-%d %H:%M:%S") if res[
+            'sla_reaction_deadline'] else None
+        res['sla_resolution_deadline'] = datetime.strptime(res['sla_resolution_deadline'], "%Y-%m-%d %H:%M:%S") if res[
+            'sla_resolution_deadline'] else None
+        res['date_close'] = datetime.strptime(res['date_close'], "%Y-%m-%d %H:%M:%S") if res['date_close'] else None
+        res['history'] = []
+    return results
+def encode_object(my_dict: dict, config: dict,con=None) -> dict:
+    cur = con.cursor()
+    res = my_dict.copy()
+
+    priority_map = config['enum']['priority']
+    state_map = config['enum']['TICKET_STATUS']
+    depart_map = config['enum']['DEPARTMENTS']
+
+    # foreign keys
+    if 'creator_name' in res:
+        row = cur.execute(
+            "SELECT user_id FROM users WHERE user_name = ?",
+            (res['creator_name'],)
+        ).fetchone()
+        if not row:
+            raise SQLValidationBreak("Creator not found")
+        res['creator_id'] = row[0]
+
+    if 'branch_name' in res:
+        row = cur.execute(
+            "SELECT branch_id FROM branch WHERE branch_name = ?",
+            (res['branch_name'],)
+        ).fetchone()
+        if not row:
+            raise SQLValidationBreak("Branch not found")
+        res['branch_id'] = row[0]
+
+    # datetime formatting
+    for field in (
+        'date_create',
+        'sla_reaction_deadline',
+        'sla_resolution_deadline',
+        'date_close'
+    ):
+        if field in res and res[field] is not None:
+            res[field] = res[field].strftime("%Y-%m-%d %H:%M:%S")
+
+    # enum mapping
+    if 'priority' in res and res['priority'] is not None:
+        res['priority'] = priority_map[res['priority']]
+
+    if 'current_state' in res:
+        res['current_state'] = state_map[res['current_state']]
+
+    if 'target' in res:
+        res['target'] = depart_map[res['target']]
+
+    return res
+
+#HISTORY
+def show_history(con=None):
+    cur = con.cursor()
+    try:
+        res = cur.execute(
+            """SELECT patch_id, ticket_id, timestamp, field, old, new, u.user_name, r.role_name'
+            FROM history AS h 
+            JOIN users AS u ON h.user_id = u.user_id
+            JOIN role AS r ON u.role_id = r.role_id
+            """).fetchall()
+        return res
+    except sq.Error as e :
+        raise RepositoryError(f"Error in show_history: {e}") from e
+
+def fetch_history_ticket(ticket_id:int, con=None):
+    cur = con.cursor()
+    try:
+        res = cur.execute(
+            """SELECT 
+    h.patch_id, 
+    h.ticket_id, 
+    h.timestamp,
+    h.field,
+    h.old,
+    CASE
+        WHEN h.field = 'assigned_to' THEN asiq.user_name
+        ELSE h.new
+    END AS new_value,
+    u.user_name, 
+    r.role_name
+FROM history AS h 
+LEFT JOIN users AS asiq 
+    ON h.new = CAST(asiq.user_id AS TEXT)
+    AND h.field = 'assigned_to'
+JOIN users AS u 
+    ON h.user_id = u.user_id
+JOIN role AS r 
+    ON u.role_id = r.role_id 
+WHERE h.ticket_id = ? 
+ORDER BY h.timestamp;""", (ticket_id,)).fetchall()
+
+        return [dict(r) for r in res]
+
+    except sq.Error as e :
+        raise RepositoryError(f"Error in get_history_ticket: {e}") from e
+
+

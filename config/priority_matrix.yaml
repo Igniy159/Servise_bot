@@ -1,0 +1,34 @@
+OBJECT_CLASSES:
+  PRODUCTION_CRITICAL:
+    FULL_FAILURE:
+      priority: critical
+      scenario: CRITICAL_REQUEST
+    PARTIAL_PROBLEM:
+      priority: high
+      scenario: URGENT_REQUEST
+    MINOR_ISSUE:
+      priority: medium
+      scenario: REGULAR_REQUEST
+
+
+  PRODUCTION_IMPORTANT:
+    FULL_FAILURE:
+      priority: high
+      scenario: URGENT_REQUEST
+    PARTIAL_PROBLEM:
+      priority: medium
+      scenario: REGULAR_REQUEST
+    MINOR_ISSUE:
+      priority: low
+      scenario: REGULAR_REQUEST
+
+  COMFORT:
+    FULL_FAILURE:
+      priority: medium
+      scenario: REGULAR_REQUEST
+    PARTIAL_PROBLEM:
+      priority: low
+      scenario: REGULAR_REQUEST
+    MINOR_ISSUE:
+      priority: low
+      scenario: REGULAR_REQUEST

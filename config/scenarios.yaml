@@ -1,0 +1,63 @@
+SCENARIOS:
+
+  CRITICAL_NOTIFICATION:
+    description: Критическая ситуация, которую нельзя исправить заявкой
+    type: notification
+    priority: critical
+    confirmation_required: false
+    auto_actions:
+      - notify_manager
+      - notify_top_management
+    sla_policy: NOT
+
+  CRITICAL_REQUEST:
+    description: Критическая заявка, требующая немедленного действия
+    type: request
+    confirmation_required: false
+    auto_actions:
+      - notify_manager
+      - assign_department
+    sla_policy: CRITICAL
+
+  URGENT_REQUEST:
+    description: Срочная заявка, решается в течение дня
+    type: request
+    confirmation_required: true
+    auto_actions:
+      - assign_department
+    sla_policy: URGENT
+
+  REGULAR_REQUEST:
+    description: Обычная заявка
+    type: request
+    confirmation_required: true
+    auto_actions:
+      - assign_department
+    sla_policy: REGULAR
+
+  SUPPLY_REQUEST:
+    description: Поставка или инвентарь
+    type: supply
+    confirmation_required: true
+    auto_actions:
+      - assign_department
+    sla_policy: REGULAR
+
+  ALERT:
+    description: Информационное уведомление
+    type: alert
+    priority: medium
+    confirmation_required: false
+    auto_actions:
+      - notify_manager
+    sla_policy: NOT
+
+  SECURITY_INCIDENT:
+    description: Инцидент безопасности
+    type: incident
+    priority: critical
+    confirmation_required: false
+    auto_actions:
+      - notify_manager
+      - notify_security
+    sla_policy: IMMEDIATE

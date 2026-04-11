@@ -1,0 +1,18 @@
+SLA_POLICIES:
+  CRITICAL:
+    reaction: 10m
+    resolution: 4h
+  URGENT:
+    reaction: 2h
+    resolution: 1d
+  REGULAR:
+    reaction: 6h
+    resolution: 3d
+  NOT:
+    reaction: null
+    resolution: null
+  IMMEDIATE:
+    reaction: 10m
+    resolution: null
+
+#only format m h d

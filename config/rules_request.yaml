@@ -1,0 +1,64 @@
+REQUEST_CLASSES:
+  SUPPLY_CRITICAL:
+    target: STORE
+    description: Без этого нельзя работать
+    OUT_OF_STOCK:
+      priority: critical
+      scenario: CRITICAL_REQUEST
+    LOW_STOCK:
+      priority: high
+      scenario: URGENT_REQUEST
+
+  SUPPLY_REGULAR:
+    target: STORE
+    description: Можно подождать
+    REQUEST:
+      priority: medium
+      scenario: REGULAR_REQUEST
+
+  INVENTORY:
+    description: Не влияет напрямую на продажи
+    target: INVENTORY
+    REQUEST:
+      priority: low
+      scenario: SUPPLY_REQUEST
+
+  IT_SERVICE:
+    description: IT и кассовые сервисы
+    target: IT
+    INCIDENT:
+      priority: critical
+      scenario: CRITICAL_REQUEST
+    REQUEST:
+      priority: medium
+      scenario: REGULAR_REQUEST
+
+  MARKETING:
+    description: Маркетинговые запросы и активности
+    target: MARKETING
+    REQUEST:
+      priority: low
+      scenario: SUPPLY_REQUEST
+    CAMPAIGN_START:
+      priority: medium
+      scenario: REGULAR_REQUEST
+
+  SECURITY_SERVICE:
+    description: Запросы в службу безопасности
+    target: SECURITY
+    REQUEST:
+      priority: medium
+      scenario: SUPPLY_REQUEST
+    INCIDENT:
+      priority: high
+      scenario: URGENT_REQUEST
+
+  EXTERNAL_SERVICE:   #это или алерт для упра(чтоб упр позвонил в службу) или заявка отделу. Сильно зависит от орг
+    description: Вызов внешнего подрядчика
+    target: BRANCH_MANAGER
+    REQUEST:
+      priority: medium
+      scenario: REGULAR_REQUEST
+    INCIDENT:
+      priority: high
+      scenario: CRITICAL_NOTIFICATION

@@ -1,0 +1,25 @@
+DEPARTMENTS:
+  ARS:
+    role: SPECIALIST
+  IT:
+    role: SPECIALIST
+  INVENTORY:
+    role: SPECIALIST
+  HR:
+    role: SPECIALIST
+  SECURITY:
+    role: SPECIALIST
+  MARKETING:
+    role: SPECIALIST
+  SERVICE:
+    role: SPECIALIST
+  ACCOUNTANT:
+     role: SPECIALIST
+  STORE:
+    role: SPECIALIST
+  TOP_MANAGEMENT:
+     role: OWNER
+  BRANCH_MANAGER:
+    role: MANAGER
+  LINE_STAFF:
+    role: EMPLOYEE

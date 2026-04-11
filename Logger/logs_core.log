@@ -1,0 +1,1533 @@
+2026-03-07 15:34:32,489 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:34:32,499 | INFO | party_ticket correct
+2026-03-07 15:34:32,499 | INFO | ticket 1 correct
+2026-03-07 15:34:32,499 | INFO | path_correct
+2026-03-07 15:34:32,499 | INFO | ticket 1 correct
+2026-03-07 15:34:32,499 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:38:17,768 | INFO | user Один assert in bd
+2026-03-07 15:38:17,768 | INFO | branch Асгард assert
+2026-03-07 15:38:17,768 | INFO | user Тор assert in bd
+2026-03-07 15:38:17,768 | INFO | user Фрейя assert in bd
+2026-03-07 15:38:17,771 | INFO | Event FAUCET correct
+2026-03-07 15:38:17,771 | INFO | Ticket FAUCET create
+2026-03-07 15:38:17,771 | INFO | party_ticket correct
+2026-03-07 15:38:17,771 | INFO | Event NO_ELECTRICITY correct
+2026-03-07 15:38:17,771 | INFO | Ticket NO_ELECTRICITY create
+2026-03-07 15:38:17,771 | INFO | party_ticket correct
+2026-03-07 15:38:17,771 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:38:17,771 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:38:17,771 | INFO | party_ticket correct
+2026-03-07 15:38:17,845 | INFO | user Один assert in bd
+2026-03-07 15:38:17,846 | INFO | branch Асгард assert
+2026-03-07 15:38:17,846 | INFO | user Локи assert in bd
+2026-03-07 15:38:17,886 | INFO | user Один assert in bd
+2026-03-07 15:38:17,887 | INFO | branch Асгард assert
+2026-03-07 15:38:17,887 | INFO | user Тор assert in bd
+2026-03-07 15:38:17,887 | INFO | user Локи assert in bd
+2026-03-07 15:38:17,887 | INFO | user Фрейя assert in bd
+2026-03-07 15:38:17,887 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:38:17,887 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:38:17,887 | INFO | party_ticket correct
+2026-03-07 15:38:17,888 | INFO | ticket 1 correct
+2026-03-07 15:38:17,888 | INFO | path_correct
+2026-03-07 15:38:17,888 | INFO | ticket 1 correct
+2026-03-07 15:38:17,888 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:38:17,888 | INFO | ticket 1 correct
+2026-03-07 15:38:17,888 | INFO | path_correct
+2026-03-07 15:38:17,888 | INFO | ticket 1 correct
+2026-03-07 15:38:17,888 | INFO | Ticket 1 update patch dict_keys(['current_state', 'assigned_to', 'comment'])
+2026-03-07 15:38:17,888 | INFO | ticket 1 correct
+2026-03-07 15:38:17,888 | INFO | path_correct
+2026-03-07 15:38:17,888 | INFO | ticket 1 correct
+2026-03-07 15:38:17,888 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:38:17,888 | INFO | ticket 1 correct
+2026-03-07 15:38:17,888 | INFO | path_correct
+2026-03-07 15:38:17,890 | INFO | ticket 1 correct
+2026-03-07 15:38:17,890 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:38:17,890 | INFO | ticket 1 correct
+2026-03-07 15:38:17,890 | INFO | path_correct
+2026-03-07 15:38:17,890 | INFO | ticket 1 correct
+2026-03-07 15:38:17,890 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:38:17,890 | INFO | ticket 1 correct
+2026-03-07 15:38:17,890 | INFO | path_correct
+2026-03-07 15:38:17,890 | INFO | ticket 1 correct
+2026-03-07 15:38:17,891 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment', 'date_close'])
+2026-03-07 15:38:17,933 | INFO | user Один assert in bd
+2026-03-07 15:38:17,933 | INFO | branch Асгард assert
+2026-03-07 15:38:17,934 | INFO | user Тор assert in bd
+2026-03-07 15:38:17,934 | INFO | user Локи assert in bd
+2026-03-07 15:38:17,934 | INFO | user Фрейя assert in bd
+2026-03-07 15:38:17,934 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:38:17,934 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:38:17,934 | INFO | party_ticket correct
+2026-03-07 15:38:17,934 | INFO | ticket 1 correct
+2026-03-07 15:38:17,934 | INFO | path_correct
+2026-03-07 15:38:17,934 | INFO | ticket 1 correct
+2026-03-07 15:38:17,934 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:38:17,935 | INFO | ticket 1 correct
+2026-03-07 15:38:17,935 | INFO | path_correct
+2026-03-07 15:38:17,935 | INFO | ticket 1 correct
+2026-03-07 15:38:17,935 | INFO | Ticket 1 update patch dict_keys(['current_state', 'assigned_to', 'comment'])
+2026-03-07 15:38:17,935 | INFO | ticket 1 correct
+2026-03-07 15:38:17,935 | INFO | path_correct
+2026-03-07 15:38:17,935 | INFO | ticket 1 correct
+2026-03-07 15:38:17,935 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:38:17,935 | INFO | ticket 1 correct
+2026-03-07 15:38:17,935 | INFO | path_correct
+2026-03-07 15:38:17,935 | INFO | ticket 1 correct
+2026-03-07 15:38:17,935 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:38:17,936 | INFO | ticket 1 correct
+2026-03-07 15:38:17,936 | INFO | path_correct
+2026-03-07 15:38:17,936 | INFO | ticket 1 correct
+2026-03-07 15:38:17,936 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:38:17,936 | INFO | ticket 1 correct
+2026-03-07 15:38:17,936 | INFO | path_correct
+2026-03-07 15:38:17,936 | INFO | ticket 1 correct
+2026-03-07 15:38:17,936 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment', 'date_close'])
+2026-03-07 15:38:17,977 | INFO | user Один assert in bd
+2026-03-07 15:38:17,978 | INFO | branch Асгард assert
+2026-03-07 15:38:17,978 | INFO | user Тор assert in bd
+2026-03-07 15:38:17,978 | INFO | user Локи assert in bd
+2026-03-07 15:38:17,978 | INFO | user Фрейя assert in bd
+2026-03-07 15:38:17,978 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:38:17,978 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:38:17,978 | INFO | party_ticket correct
+2026-03-07 15:38:17,978 | INFO | ticket 1 correct
+2026-03-07 15:38:17,978 | INFO | path_correct
+2026-03-07 15:38:17,979 | INFO | ticket 1 correct
+2026-03-07 15:38:17,979 | INFO | Ticket 1 update patch dict_keys(['current_state', 'reject_comment', 'date_close'])
+2026-03-07 15:38:17,979 | INFO | ticket 1 correct
+2026-03-07 15:38:17,979 | ERROR | Path incorrect. Reason: Invalid lifecycle transition
+2026-03-07 15:38:18,030 | INFO | user Один assert in bd
+2026-03-07 15:38:18,031 | INFO | branch Асгард assert
+2026-03-07 15:38:18,031 | INFO | user Тор assert in bd
+2026-03-07 15:38:18,031 | INFO | user Локи assert in bd
+2026-03-07 15:38:18,031 | INFO | user Фрейя assert in bd
+2026-03-07 15:38:18,031 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:38:18,031 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:38:18,032 | INFO | party_ticket correct
+2026-03-07 15:38:18,032 | INFO | ticket 1 correct
+2026-03-07 15:38:18,032 | INFO | path_correct
+2026-03-07 15:38:18,032 | INFO | ticket 1 correct
+2026-03-07 15:38:18,032 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:38:18,033 | INFO | ticket 1 correct
+2026-03-07 15:38:18,033 | INFO | path_correct
+2026-03-07 15:38:18,033 | INFO | ticket 1 correct
+2026-03-07 15:38:18,033 | INFO | Ticket 1 update patch dict_keys(['current_state', 'assigned_to', 'comment'])
+2026-03-07 15:38:18,033 | INFO | ticket 1 correct
+2026-03-07 15:38:18,033 | INFO | path_correct
+2026-03-07 15:38:18,033 | INFO | ticket 1 correct
+2026-03-07 15:38:18,033 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:38:18,034 | INFO | ticket 1 correct
+2026-03-07 15:38:18,034 | INFO | path_correct
+2026-03-07 15:38:18,034 | INFO | ticket 1 correct
+2026-03-07 15:38:18,034 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:38:18,034 | INFO | ticket 1 correct
+2026-03-07 15:38:18,034 | INFO | path_correct
+2026-03-07 15:38:18,034 | INFO | ticket 1 correct
+2026-03-07 15:38:18,034 | INFO | Ticket 1 update patch dict_keys(['current_state', 'reject_comment', 'date_close'])
+2026-03-07 15:38:18,034 | INFO | ticket 1 correct
+2026-03-07 15:38:18,034 | ERROR | Path incorrect. Reason: Invalid lifecycle transition
+2026-03-07 15:38:18,080 | INFO | user Один assert in bd
+2026-03-07 15:38:18,080 | INFO | branch Асгард assert
+2026-03-07 15:38:18,080 | INFO | user Тор assert in bd
+2026-03-07 15:38:18,080 | INFO | user Локи assert in bd
+2026-03-07 15:38:18,081 | INFO | user Фрейя assert in bd
+2026-03-07 15:38:18,081 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:38:18,081 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:38:18,081 | INFO | party_ticket correct
+2026-03-07 15:38:18,081 | INFO | ticket 1 correct
+2026-03-07 15:38:18,081 | INFO | path_correct
+2026-03-07 15:38:18,081 | INFO | ticket 1 correct
+2026-03-07 15:38:18,081 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:38:18,081 | INFO | ticket 1 correct
+2026-03-07 15:38:18,082 | INFO | path_correct
+2026-03-07 15:38:18,082 | INFO | ticket 1 correct
+2026-03-07 15:38:18,082 | INFO | Ticket 1 update patch dict_keys(['current_state', 'assigned_to', 'comment'])
+2026-03-07 15:38:18,082 | INFO | ticket 1 correct
+2026-03-07 15:38:18,082 | INFO | path_correct
+2026-03-07 15:38:18,082 | INFO | ticket 1 correct
+2026-03-07 15:38:18,082 | INFO | Ticket 1 update patch dict_keys(['current_state', 'reject_comment', 'date_close'])
+2026-03-07 15:38:18,082 | INFO | ticket 1 correct
+2026-03-07 15:38:18,082 | ERROR | Path incorrect. Reason: Invalid lifecycle transition
+2026-03-07 15:38:18,125 | INFO | user Один assert in bd
+2026-03-07 15:38:18,125 | INFO | branch Асгард assert
+2026-03-07 15:38:18,126 | INFO | user Тор assert in bd
+2026-03-07 15:38:18,126 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:38:18,126 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:38:18,126 | INFO | party_ticket correct
+2026-03-07 15:38:18,168 | INFO | user Один assert in bd
+2026-03-07 15:38:18,168 | INFO | branch Асгард assert
+2026-03-07 15:38:18,168 | INFO | user Тор assert in bd
+2026-03-07 15:38:18,168 | INFO | user Локи assert in bd
+2026-03-07 15:38:18,169 | INFO | user Фрейя assert in bd
+2026-03-07 15:38:18,169 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:38:18,169 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:38:18,169 | INFO | party_ticket correct
+2026-03-07 15:38:18,169 | INFO | ticket 1 correct
+2026-03-07 15:38:18,169 | INFO | path_correct
+2026-03-07 15:38:18,169 | INFO | ticket 1 correct
+2026-03-07 15:38:18,169 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:38:18,169 | INFO | ticket 1 correct
+2026-03-07 15:38:18,170 | INFO | path_correct
+2026-03-07 15:38:18,170 | INFO | ticket 1 correct
+2026-03-07 15:38:18,170 | INFO | Ticket 1 update patch dict_keys(['priority', 'comment'])
+2026-03-07 15:38:18,170 | INFO | ticket 1 correct
+2026-03-07 15:38:18,171 | INFO | path_correct
+2026-03-07 15:38:18,171 | INFO | ticket 1 correct
+2026-03-07 15:38:18,171 | INFO | Ticket 1 update patch dict_keys(['current_state', 'assigned_to', 'comment'])
+2026-03-07 15:38:18,171 | INFO | ticket 1 correct
+2026-03-07 15:38:18,171 | INFO | path_correct
+2026-03-07 15:38:18,171 | INFO | ticket 1 correct
+2026-03-07 15:38:18,171 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:38:18,171 | INFO | ticket 1 correct
+2026-03-07 15:38:18,171 | INFO | path_correct
+2026-03-07 15:38:18,171 | INFO | ticket 1 correct
+2026-03-07 15:38:18,171 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:38:18,171 | INFO | ticket 1 correct
+2026-03-07 15:38:18,172 | INFO | path_correct
+2026-03-07 15:38:18,172 | INFO | ticket 1 correct
+2026-03-07 15:38:18,172 | INFO | Ticket 1 update patch dict_keys(['current_state', 'reject_comment', 'date_close'])
+2026-03-07 15:38:18,220 | INFO | user Один assert in bd
+2026-03-07 15:38:18,221 | INFO | branch Асгард assert
+2026-03-07 15:38:18,221 | INFO | branch Ванахейм assert
+2026-03-07 15:38:18,221 | INFO | user Тор assert in bd
+2026-03-07 15:38:18,221 | INFO | user Бальдр assert in bd
+2026-03-07 15:38:18,221 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:38:18,221 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:38:18,222 | INFO | party_ticket correct
+2026-03-07 15:38:18,276 | INFO | user Один assert in bd
+2026-03-07 15:38:18,276 | INFO | branch Асгард assert
+2026-03-07 15:38:18,276 | INFO | user Тор assert in bd
+2026-03-07 15:38:18,276 | INFO | user Локи assert in bd
+2026-03-07 15:38:18,277 | INFO | user Фрейя assert in bd
+2026-03-07 15:38:18,277 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:38:18,277 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:38:18,277 | INFO | party_ticket correct
+2026-03-07 15:38:18,278 | INFO | ticket 1 correct
+2026-03-07 15:38:18,278 | INFO | path_correct
+2026-03-07 15:38:18,278 | INFO | ticket 1 correct
+2026-03-07 15:38:18,278 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:38:18,323 | INFO | user Один assert in bd
+2026-03-07 15:38:18,324 | INFO | branch Асгард assert
+2026-03-07 15:38:18,324 | INFO | user Тор assert in bd
+2026-03-07 15:38:18,324 | INFO | user Локи assert in bd
+2026-03-07 15:38:18,324 | INFO | user Фрейя assert in bd
+2026-03-07 15:38:18,324 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:38:18,324 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:38:18,324 | INFO | party_ticket correct
+2026-03-07 15:38:18,324 | INFO | ticket 1 correct
+2026-03-07 15:38:18,325 | INFO | path_correct
+2026-03-07 15:38:18,325 | INFO | ticket 1 correct
+2026-03-07 15:38:18,325 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:39:44,693 | INFO | user Один assert in bd
+2026-03-07 15:39:44,694 | INFO | branch Асгард assert
+2026-03-07 15:39:44,694 | INFO | user Тор assert in bd
+2026-03-07 15:39:44,694 | INFO | user Фрейя assert in bd
+2026-03-07 15:39:44,694 | INFO | Event FAUCET correct
+2026-03-07 15:39:44,694 | INFO | Ticket FAUCET create
+2026-03-07 15:39:44,694 | INFO | party_ticket correct
+2026-03-07 15:39:44,694 | INFO | Event NO_ELECTRICITY correct
+2026-03-07 15:39:44,695 | INFO | Ticket NO_ELECTRICITY create
+2026-03-07 15:39:44,695 | INFO | party_ticket correct
+2026-03-07 15:39:44,695 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:39:44,695 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:39:44,695 | INFO | party_ticket correct
+2026-03-07 15:39:44,774 | INFO | user Один assert in bd
+2026-03-07 15:39:44,774 | INFO | branch Асгард assert
+2026-03-07 15:39:44,775 | INFO | user Локи assert in bd
+2026-03-07 15:39:44,817 | INFO | user Один assert in bd
+2026-03-07 15:39:44,817 | INFO | branch Асгард assert
+2026-03-07 15:39:44,818 | INFO | user Тор assert in bd
+2026-03-07 15:39:44,818 | INFO | user Локи assert in bd
+2026-03-07 15:39:44,818 | INFO | user Фрейя assert in bd
+2026-03-07 15:39:44,818 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:39:44,818 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:39:44,818 | INFO | party_ticket correct
+2026-03-07 15:39:44,818 | INFO | ticket 1 correct
+2026-03-07 15:39:44,818 | INFO | path_correct
+2026-03-07 15:39:44,818 | INFO | ticket 1 correct
+2026-03-07 15:39:44,818 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:39:44,818 | INFO | ticket 1 correct
+2026-03-07 15:39:44,818 | INFO | path_correct
+2026-03-07 15:39:44,818 | INFO | ticket 1 correct
+2026-03-07 15:39:44,818 | INFO | Ticket 1 update patch dict_keys(['current_state', 'assigned_to', 'comment'])
+2026-03-07 15:39:44,820 | INFO | ticket 1 correct
+2026-03-07 15:39:44,820 | INFO | path_correct
+2026-03-07 15:39:44,820 | INFO | ticket 1 correct
+2026-03-07 15:39:44,820 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:39:44,820 | INFO | ticket 1 correct
+2026-03-07 15:39:44,820 | INFO | path_correct
+2026-03-07 15:39:44,820 | INFO | ticket 1 correct
+2026-03-07 15:39:44,820 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:39:44,820 | INFO | ticket 1 correct
+2026-03-07 15:39:44,820 | INFO | path_correct
+2026-03-07 15:39:44,820 | INFO | ticket 1 correct
+2026-03-07 15:39:44,820 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:39:44,821 | INFO | ticket 1 correct
+2026-03-07 15:39:44,821 | INFO | path_correct
+2026-03-07 15:39:44,821 | INFO | ticket 1 correct
+2026-03-07 15:39:44,821 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment', 'date_close'])
+2026-03-07 15:39:44,861 | INFO | user Один assert in bd
+2026-03-07 15:39:44,861 | INFO | branch Асгард assert
+2026-03-07 15:39:44,862 | INFO | user Тор assert in bd
+2026-03-07 15:39:44,862 | INFO | user Локи assert in bd
+2026-03-07 15:39:44,862 | INFO | user Фрейя assert in bd
+2026-03-07 15:39:44,862 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:39:44,862 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:39:44,862 | INFO | party_ticket correct
+2026-03-07 15:39:44,862 | INFO | ticket 1 correct
+2026-03-07 15:39:44,862 | INFO | path_correct
+2026-03-07 15:39:44,862 | INFO | ticket 1 correct
+2026-03-07 15:39:44,862 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:39:44,862 | INFO | ticket 1 correct
+2026-03-07 15:39:44,862 | INFO | path_correct
+2026-03-07 15:39:44,862 | INFO | ticket 1 correct
+2026-03-07 15:39:44,862 | INFO | Ticket 1 update patch dict_keys(['current_state', 'assigned_to', 'comment'])
+2026-03-07 15:39:44,863 | INFO | ticket 1 correct
+2026-03-07 15:39:44,863 | INFO | path_correct
+2026-03-07 15:39:44,863 | INFO | ticket 1 correct
+2026-03-07 15:39:44,863 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:39:44,863 | INFO | ticket 1 correct
+2026-03-07 15:39:44,863 | INFO | path_correct
+2026-03-07 15:39:44,863 | INFO | ticket 1 correct
+2026-03-07 15:39:44,863 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:39:44,863 | INFO | ticket 1 correct
+2026-03-07 15:39:44,863 | INFO | path_correct
+2026-03-07 15:39:44,864 | INFO | ticket 1 correct
+2026-03-07 15:39:44,864 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:39:44,864 | INFO | ticket 1 correct
+2026-03-07 15:39:44,864 | INFO | path_correct
+2026-03-07 15:39:44,864 | INFO | ticket 1 correct
+2026-03-07 15:39:44,864 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment', 'date_close'])
+2026-03-07 15:39:44,905 | INFO | user Один assert in bd
+2026-03-07 15:39:44,905 | INFO | branch Асгард assert
+2026-03-07 15:39:44,906 | INFO | user Тор assert in bd
+2026-03-07 15:39:44,906 | INFO | user Локи assert in bd
+2026-03-07 15:39:44,906 | INFO | user Фрейя assert in bd
+2026-03-07 15:39:44,906 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:39:44,906 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:39:44,906 | INFO | party_ticket correct
+2026-03-07 15:39:44,906 | INFO | ticket 1 correct
+2026-03-07 15:39:44,907 | INFO | path_correct
+2026-03-07 15:39:44,907 | INFO | ticket 1 correct
+2026-03-07 15:39:44,907 | INFO | Ticket 1 update patch dict_keys(['current_state', 'reject_comment', 'date_close'])
+2026-03-07 15:39:44,907 | INFO | ticket 1 correct
+2026-03-07 15:39:44,907 | ERROR | Path incorrect. Reason: Invalid lifecycle transition
+2026-03-07 15:39:44,950 | INFO | user Один assert in bd
+2026-03-07 15:39:44,951 | INFO | branch Асгард assert
+2026-03-07 15:39:44,951 | INFO | user Тор assert in bd
+2026-03-07 15:39:44,951 | INFO | user Локи assert in bd
+2026-03-07 15:39:44,951 | INFO | user Фрейя assert in bd
+2026-03-07 15:39:44,951 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:39:44,951 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:39:44,951 | INFO | party_ticket correct
+2026-03-07 15:39:44,951 | INFO | ticket 1 correct
+2026-03-07 15:39:44,951 | INFO | path_correct
+2026-03-07 15:39:44,952 | INFO | ticket 1 correct
+2026-03-07 15:39:44,952 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:39:44,952 | INFO | ticket 1 correct
+2026-03-07 15:39:44,952 | INFO | path_correct
+2026-03-07 15:39:44,952 | INFO | ticket 1 correct
+2026-03-07 15:39:44,952 | INFO | Ticket 1 update patch dict_keys(['current_state', 'assigned_to', 'comment'])
+2026-03-07 15:39:44,953 | INFO | ticket 1 correct
+2026-03-07 15:39:44,953 | INFO | path_correct
+2026-03-07 15:39:44,953 | INFO | ticket 1 correct
+2026-03-07 15:39:44,953 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:39:44,953 | INFO | ticket 1 correct
+2026-03-07 15:39:44,953 | INFO | path_correct
+2026-03-07 15:39:44,953 | INFO | ticket 1 correct
+2026-03-07 15:39:44,953 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:39:44,953 | INFO | ticket 1 correct
+2026-03-07 15:39:44,953 | INFO | path_correct
+2026-03-07 15:39:44,953 | INFO | ticket 1 correct
+2026-03-07 15:39:44,953 | INFO | Ticket 1 update patch dict_keys(['current_state', 'reject_comment', 'date_close'])
+2026-03-07 15:39:44,954 | INFO | ticket 1 correct
+2026-03-07 15:39:44,954 | ERROR | Path incorrect. Reason: Invalid lifecycle transition
+2026-03-07 15:39:45,005 | INFO | user Один assert in bd
+2026-03-07 15:39:45,005 | INFO | branch Асгард assert
+2026-03-07 15:39:45,005 | INFO | user Тор assert in bd
+2026-03-07 15:39:45,005 | INFO | user Локи assert in bd
+2026-03-07 15:39:45,005 | INFO | user Фрейя assert in bd
+2026-03-07 15:39:45,005 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:39:45,006 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:39:45,006 | INFO | party_ticket correct
+2026-03-07 15:39:45,006 | INFO | ticket 1 correct
+2026-03-07 15:39:45,006 | INFO | path_correct
+2026-03-07 15:39:45,006 | INFO | ticket 1 correct
+2026-03-07 15:39:45,006 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:39:45,006 | INFO | ticket 1 correct
+2026-03-07 15:39:45,007 | INFO | path_correct
+2026-03-07 15:39:45,007 | INFO | ticket 1 correct
+2026-03-07 15:39:45,007 | INFO | Ticket 1 update patch dict_keys(['current_state', 'assigned_to', 'comment'])
+2026-03-07 15:39:45,007 | INFO | ticket 1 correct
+2026-03-07 15:39:45,007 | INFO | path_correct
+2026-03-07 15:39:45,007 | INFO | ticket 1 correct
+2026-03-07 15:39:45,007 | INFO | Ticket 1 update patch dict_keys(['current_state', 'reject_comment', 'date_close'])
+2026-03-07 15:39:45,008 | INFO | ticket 1 correct
+2026-03-07 15:39:45,008 | ERROR | Path incorrect. Reason: Invalid lifecycle transition
+2026-03-07 15:39:45,049 | INFO | user Один assert in bd
+2026-03-07 15:39:45,050 | INFO | branch Асгард assert
+2026-03-07 15:39:45,050 | INFO | user Тор assert in bd
+2026-03-07 15:39:45,050 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:39:45,050 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:39:45,050 | INFO | party_ticket correct
+2026-03-07 15:39:45,091 | INFO | user Один assert in bd
+2026-03-07 15:39:45,091 | INFO | branch Асгард assert
+2026-03-07 15:39:45,091 | INFO | user Тор assert in bd
+2026-03-07 15:39:45,092 | INFO | user Локи assert in bd
+2026-03-07 15:39:45,092 | INFO | user Фрейя assert in bd
+2026-03-07 15:39:45,092 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:39:45,092 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:39:45,092 | INFO | party_ticket correct
+2026-03-07 15:39:45,092 | INFO | ticket 1 correct
+2026-03-07 15:39:45,092 | INFO | path_correct
+2026-03-07 15:39:45,092 | INFO | ticket 1 correct
+2026-03-07 15:39:45,092 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:39:45,092 | INFO | ticket 1 correct
+2026-03-07 15:39:45,092 | INFO | path_correct
+2026-03-07 15:39:45,092 | INFO | ticket 1 correct
+2026-03-07 15:39:45,092 | INFO | Ticket 1 update patch dict_keys(['priority', 'comment'])
+2026-03-07 15:39:45,093 | INFO | ticket 1 correct
+2026-03-07 15:39:45,093 | INFO | path_correct
+2026-03-07 15:39:45,093 | INFO | ticket 1 correct
+2026-03-07 15:39:45,093 | INFO | Ticket 1 update patch dict_keys(['current_state', 'assigned_to', 'comment'])
+2026-03-07 15:39:45,093 | INFO | ticket 1 correct
+2026-03-07 15:39:45,093 | INFO | path_correct
+2026-03-07 15:39:45,093 | INFO | ticket 1 correct
+2026-03-07 15:39:45,093 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:39:45,093 | INFO | ticket 1 correct
+2026-03-07 15:39:45,093 | INFO | path_correct
+2026-03-07 15:39:45,094 | INFO | ticket 1 correct
+2026-03-07 15:39:45,094 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:39:45,094 | INFO | ticket 1 correct
+2026-03-07 15:39:45,094 | INFO | path_correct
+2026-03-07 15:39:45,094 | INFO | ticket 1 correct
+2026-03-07 15:39:45,094 | INFO | Ticket 1 update patch dict_keys(['current_state', 'reject_comment', 'date_close'])
+2026-03-07 15:39:45,143 | INFO | user Один assert in bd
+2026-03-07 15:39:45,143 | INFO | branch Асгард assert
+2026-03-07 15:39:45,143 | INFO | branch Ванахейм assert
+2026-03-07 15:39:45,143 | INFO | user Тор assert in bd
+2026-03-07 15:39:45,143 | INFO | user Бальдр assert in bd
+2026-03-07 15:39:45,143 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:39:45,143 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:39:45,143 | INFO | party_ticket correct
+2026-03-07 15:39:45,185 | INFO | user Один assert in bd
+2026-03-07 15:39:45,185 | INFO | branch Асгард assert
+2026-03-07 15:39:45,186 | INFO | user Тор assert in bd
+2026-03-07 15:39:45,186 | INFO | user Локи assert in bd
+2026-03-07 15:39:45,186 | INFO | user Фрейя assert in bd
+2026-03-07 15:39:45,186 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:39:45,186 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:39:45,186 | INFO | party_ticket correct
+2026-03-07 15:39:45,186 | INFO | ticket 1 correct
+2026-03-07 15:39:45,186 | INFO | path_correct
+2026-03-07 15:39:45,186 | INFO | ticket 1 correct
+2026-03-07 15:39:45,187 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:39:45,228 | INFO | user Один assert in bd
+2026-03-07 15:39:45,229 | INFO | branch Асгард assert
+2026-03-07 15:39:45,229 | INFO | user Тор assert in bd
+2026-03-07 15:39:45,229 | INFO | user Локи assert in bd
+2026-03-07 15:39:45,229 | INFO | user Фрейя assert in bd
+2026-03-07 15:39:45,229 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:39:45,229 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:39:45,229 | INFO | party_ticket correct
+2026-03-07 15:39:45,230 | INFO | ticket 1 correct
+2026-03-07 15:39:45,230 | INFO | path_correct
+2026-03-07 15:39:45,230 | INFO | ticket 1 correct
+2026-03-07 15:39:45,230 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:39:58,626 | INFO | user Один assert in bd
+2026-03-07 15:39:58,626 | INFO | branch Асгард assert
+2026-03-07 15:39:58,626 | INFO | user Тор assert in bd
+2026-03-07 15:39:58,628 | INFO | user Фрейя assert in bd
+2026-03-07 15:39:58,628 | INFO | Event FAUCET correct
+2026-03-07 15:39:58,628 | INFO | Ticket FAUCET create
+2026-03-07 15:39:58,628 | INFO | party_ticket correct
+2026-03-07 15:39:58,628 | INFO | Event NO_ELECTRICITY correct
+2026-03-07 15:39:58,628 | INFO | Ticket NO_ELECTRICITY create
+2026-03-07 15:39:58,628 | INFO | party_ticket correct
+2026-03-07 15:39:58,628 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:39:58,628 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:39:58,628 | INFO | party_ticket correct
+2026-03-07 15:39:58,720 | INFO | user Один assert in bd
+2026-03-07 15:39:58,720 | INFO | branch Асгард assert
+2026-03-07 15:39:58,720 | INFO | user Локи assert in bd
+2026-03-07 15:39:58,777 | INFO | user Один assert in bd
+2026-03-07 15:39:58,778 | INFO | branch Асгард assert
+2026-03-07 15:39:58,778 | INFO | user Тор assert in bd
+2026-03-07 15:39:58,778 | INFO | user Локи assert in bd
+2026-03-07 15:39:58,778 | INFO | user Фрейя assert in bd
+2026-03-07 15:39:58,778 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:39:58,778 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:39:58,779 | INFO | party_ticket correct
+2026-03-07 15:39:58,780 | INFO | ticket 1 correct
+2026-03-07 15:39:58,780 | INFO | path_correct
+2026-03-07 15:39:58,780 | INFO | ticket 1 correct
+2026-03-07 15:39:58,780 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:39:58,780 | INFO | ticket 1 correct
+2026-03-07 15:39:58,781 | INFO | path_correct
+2026-03-07 15:39:58,781 | INFO | ticket 1 correct
+2026-03-07 15:39:58,781 | INFO | Ticket 1 update patch dict_keys(['current_state', 'assigned_to', 'comment'])
+2026-03-07 15:39:58,781 | INFO | ticket 1 correct
+2026-03-07 15:39:58,781 | INFO | path_correct
+2026-03-07 15:39:58,781 | INFO | ticket 1 correct
+2026-03-07 15:39:58,781 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:39:58,782 | INFO | ticket 1 correct
+2026-03-07 15:39:58,782 | INFO | path_correct
+2026-03-07 15:39:58,782 | INFO | ticket 1 correct
+2026-03-07 15:39:58,782 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:39:58,782 | INFO | ticket 1 correct
+2026-03-07 15:39:58,782 | INFO | path_correct
+2026-03-07 15:39:58,782 | INFO | ticket 1 correct
+2026-03-07 15:39:58,782 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:39:58,783 | INFO | ticket 1 correct
+2026-03-07 15:39:58,783 | INFO | path_correct
+2026-03-07 15:39:58,783 | INFO | ticket 1 correct
+2026-03-07 15:39:58,783 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment', 'date_close'])
+2026-03-07 15:39:58,832 | INFO | user Один assert in bd
+2026-03-07 15:39:58,832 | INFO | branch Асгард assert
+2026-03-07 15:39:58,832 | INFO | user Тор assert in bd
+2026-03-07 15:39:58,833 | INFO | user Локи assert in bd
+2026-03-07 15:39:58,833 | INFO | user Фрейя assert in bd
+2026-03-07 15:39:58,833 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:39:58,833 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:39:58,833 | INFO | party_ticket correct
+2026-03-07 15:39:58,833 | INFO | ticket 1 correct
+2026-03-07 15:39:58,833 | INFO | path_correct
+2026-03-07 15:39:58,833 | INFO | ticket 1 correct
+2026-03-07 15:39:58,833 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:39:58,834 | INFO | ticket 1 correct
+2026-03-07 15:39:58,834 | INFO | path_correct
+2026-03-07 15:39:58,834 | INFO | ticket 1 correct
+2026-03-07 15:39:58,834 | INFO | Ticket 1 update patch dict_keys(['current_state', 'assigned_to', 'comment'])
+2026-03-07 15:39:58,834 | INFO | ticket 1 correct
+2026-03-07 15:39:58,834 | INFO | path_correct
+2026-03-07 15:39:58,834 | INFO | ticket 1 correct
+2026-03-07 15:39:58,834 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:39:58,834 | INFO | ticket 1 correct
+2026-03-07 15:39:58,834 | INFO | path_correct
+2026-03-07 15:39:58,834 | INFO | ticket 1 correct
+2026-03-07 15:39:58,834 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:39:58,835 | INFO | ticket 1 correct
+2026-03-07 15:39:58,835 | INFO | path_correct
+2026-03-07 15:39:58,835 | INFO | ticket 1 correct
+2026-03-07 15:39:58,835 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:39:58,835 | INFO | ticket 1 correct
+2026-03-07 15:39:58,835 | INFO | path_correct
+2026-03-07 15:39:58,835 | INFO | ticket 1 correct
+2026-03-07 15:39:58,835 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment', 'date_close'])
+2026-03-07 15:39:58,884 | INFO | user Один assert in bd
+2026-03-07 15:39:58,884 | INFO | branch Асгард assert
+2026-03-07 15:39:58,884 | INFO | user Тор assert in bd
+2026-03-07 15:39:58,885 | INFO | user Локи assert in bd
+2026-03-07 15:39:58,885 | INFO | user Фрейя assert in bd
+2026-03-07 15:39:58,885 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:39:58,885 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:39:58,885 | INFO | party_ticket correct
+2026-03-07 15:39:58,886 | INFO | ticket 1 correct
+2026-03-07 15:39:58,886 | INFO | path_correct
+2026-03-07 15:39:58,886 | INFO | ticket 1 correct
+2026-03-07 15:39:58,886 | INFO | Ticket 1 update patch dict_keys(['current_state', 'reject_comment', 'date_close'])
+2026-03-07 15:39:58,886 | INFO | ticket 1 correct
+2026-03-07 15:39:58,886 | ERROR | Path incorrect. Reason: Invalid lifecycle transition
+2026-03-07 15:39:58,935 | INFO | user Один assert in bd
+2026-03-07 15:39:58,935 | INFO | branch Асгард assert
+2026-03-07 15:39:58,936 | INFO | user Тор assert in bd
+2026-03-07 15:39:58,936 | INFO | user Локи assert in bd
+2026-03-07 15:39:58,936 | INFO | user Фрейя assert in bd
+2026-03-07 15:39:58,936 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:39:58,936 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:39:58,936 | INFO | party_ticket correct
+2026-03-07 15:39:58,936 | INFO | ticket 1 correct
+2026-03-07 15:39:58,937 | INFO | path_correct
+2026-03-07 15:39:58,937 | INFO | ticket 1 correct
+2026-03-07 15:39:58,937 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:39:58,937 | INFO | ticket 1 correct
+2026-03-07 15:39:58,937 | INFO | path_correct
+2026-03-07 15:39:58,937 | INFO | ticket 1 correct
+2026-03-07 15:39:58,937 | INFO | Ticket 1 update patch dict_keys(['current_state', 'assigned_to', 'comment'])
+2026-03-07 15:39:58,937 | INFO | ticket 1 correct
+2026-03-07 15:39:58,937 | INFO | path_correct
+2026-03-07 15:39:58,937 | INFO | ticket 1 correct
+2026-03-07 15:39:58,937 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:39:58,938 | INFO | ticket 1 correct
+2026-03-07 15:39:58,938 | INFO | path_correct
+2026-03-07 15:39:58,938 | INFO | ticket 1 correct
+2026-03-07 15:39:58,938 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:39:58,938 | INFO | ticket 1 correct
+2026-03-07 15:39:58,938 | INFO | path_correct
+2026-03-07 15:39:58,938 | INFO | ticket 1 correct
+2026-03-07 15:39:58,938 | INFO | Ticket 1 update patch dict_keys(['current_state', 'reject_comment', 'date_close'])
+2026-03-07 15:39:58,938 | INFO | ticket 1 correct
+2026-03-07 15:39:58,938 | ERROR | Path incorrect. Reason: Invalid lifecycle transition
+2026-03-07 15:39:58,983 | INFO | user Один assert in bd
+2026-03-07 15:39:58,983 | INFO | branch Асгард assert
+2026-03-07 15:39:58,983 | INFO | user Тор assert in bd
+2026-03-07 15:39:58,983 | INFO | user Локи assert in bd
+2026-03-07 15:39:58,983 | INFO | user Фрейя assert in bd
+2026-03-07 15:39:58,984 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:39:58,984 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:39:58,984 | INFO | party_ticket correct
+2026-03-07 15:39:58,984 | INFO | ticket 1 correct
+2026-03-07 15:39:58,984 | INFO | path_correct
+2026-03-07 15:39:58,984 | INFO | ticket 1 correct
+2026-03-07 15:39:58,984 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:39:58,984 | INFO | ticket 1 correct
+2026-03-07 15:39:58,985 | INFO | path_correct
+2026-03-07 15:39:58,985 | INFO | ticket 1 correct
+2026-03-07 15:39:58,985 | INFO | Ticket 1 update patch dict_keys(['current_state', 'assigned_to', 'comment'])
+2026-03-07 15:39:58,985 | INFO | ticket 1 correct
+2026-03-07 15:39:58,985 | INFO | path_correct
+2026-03-07 15:39:58,985 | INFO | ticket 1 correct
+2026-03-07 15:39:58,985 | INFO | Ticket 1 update patch dict_keys(['current_state', 'reject_comment', 'date_close'])
+2026-03-07 15:39:58,985 | INFO | ticket 1 correct
+2026-03-07 15:39:58,985 | ERROR | Path incorrect. Reason: Invalid lifecycle transition
+2026-03-07 15:39:59,027 | INFO | user Один assert in bd
+2026-03-07 15:39:59,027 | INFO | branch Асгард assert
+2026-03-07 15:39:59,027 | INFO | user Тор assert in bd
+2026-03-07 15:39:59,028 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:39:59,028 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:39:59,028 | INFO | party_ticket correct
+2026-03-07 15:39:59,072 | INFO | user Один assert in bd
+2026-03-07 15:39:59,072 | INFO | branch Асгард assert
+2026-03-07 15:39:59,072 | INFO | user Тор assert in bd
+2026-03-07 15:39:59,072 | INFO | user Локи assert in bd
+2026-03-07 15:39:59,073 | INFO | user Фрейя assert in bd
+2026-03-07 15:39:59,073 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:39:59,073 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:39:59,073 | INFO | party_ticket correct
+2026-03-07 15:39:59,073 | INFO | ticket 1 correct
+2026-03-07 15:39:59,073 | INFO | path_correct
+2026-03-07 15:39:59,073 | INFO | ticket 1 correct
+2026-03-07 15:39:59,073 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:39:59,073 | INFO | ticket 1 correct
+2026-03-07 15:39:59,074 | INFO | path_correct
+2026-03-07 15:39:59,074 | INFO | ticket 1 correct
+2026-03-07 15:39:59,074 | INFO | Ticket 1 update patch dict_keys(['priority', 'comment'])
+2026-03-07 15:39:59,074 | INFO | ticket 1 correct
+2026-03-07 15:39:59,074 | INFO | path_correct
+2026-03-07 15:39:59,074 | INFO | ticket 1 correct
+2026-03-07 15:39:59,074 | INFO | Ticket 1 update patch dict_keys(['current_state', 'assigned_to', 'comment'])
+2026-03-07 15:39:59,074 | INFO | ticket 1 correct
+2026-03-07 15:39:59,074 | INFO | path_correct
+2026-03-07 15:39:59,074 | INFO | ticket 1 correct
+2026-03-07 15:39:59,075 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:39:59,075 | INFO | ticket 1 correct
+2026-03-07 15:39:59,075 | INFO | path_correct
+2026-03-07 15:39:59,075 | INFO | ticket 1 correct
+2026-03-07 15:39:59,075 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:39:59,075 | INFO | ticket 1 correct
+2026-03-07 15:39:59,075 | INFO | path_correct
+2026-03-07 15:39:59,075 | INFO | ticket 1 correct
+2026-03-07 15:39:59,075 | INFO | Ticket 1 update patch dict_keys(['current_state', 'reject_comment', 'date_close'])
+2026-03-07 15:39:59,126 | INFO | user Один assert in bd
+2026-03-07 15:39:59,126 | INFO | branch Асгард assert
+2026-03-07 15:39:59,127 | INFO | branch Ванахейм assert
+2026-03-07 15:39:59,127 | INFO | user Тор assert in bd
+2026-03-07 15:39:59,127 | INFO | user Бальдр assert in bd
+2026-03-07 15:39:59,127 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:39:59,127 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:39:59,127 | INFO | party_ticket correct
+2026-03-07 15:39:59,171 | INFO | user Один assert in bd
+2026-03-07 15:39:59,171 | INFO | branch Асгард assert
+2026-03-07 15:39:59,172 | INFO | user Тор assert in bd
+2026-03-07 15:39:59,172 | INFO | user Локи assert in bd
+2026-03-07 15:39:59,172 | INFO | user Фрейя assert in bd
+2026-03-07 15:39:59,172 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:39:59,172 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:39:59,172 | INFO | party_ticket correct
+2026-03-07 15:39:59,173 | INFO | ticket 1 correct
+2026-03-07 15:39:59,173 | INFO | path_correct
+2026-03-07 15:39:59,173 | INFO | ticket 1 correct
+2026-03-07 15:39:59,173 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:39:59,225 | INFO | user Один assert in bd
+2026-03-07 15:39:59,225 | INFO | branch Асгард assert
+2026-03-07 15:39:59,225 | INFO | user Тор assert in bd
+2026-03-07 15:39:59,225 | INFO | user Локи assert in bd
+2026-03-07 15:39:59,225 | INFO | user Фрейя assert in bd
+2026-03-07 15:39:59,225 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:39:59,225 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:39:59,225 | INFO | party_ticket correct
+2026-03-07 15:39:59,226 | INFO | ticket 1 correct
+2026-03-07 15:39:59,226 | INFO | path_correct
+2026-03-07 15:39:59,226 | INFO | ticket 1 correct
+2026-03-07 15:39:59,226 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:40:58,231 | INFO | user Один assert in bd
+2026-03-07 15:40:58,232 | INFO | branch Асгард assert
+2026-03-07 15:40:58,232 | INFO | user Тор assert in bd
+2026-03-07 15:40:58,232 | INFO | user Фрейя assert in bd
+2026-03-07 15:40:58,232 | INFO | Event FAUCET correct
+2026-03-07 15:40:58,232 | INFO | Ticket FAUCET create
+2026-03-07 15:40:58,232 | INFO | party_ticket correct
+2026-03-07 15:40:58,232 | INFO | Event NO_ELECTRICITY correct
+2026-03-07 15:40:58,232 | INFO | Ticket NO_ELECTRICITY create
+2026-03-07 15:40:58,233 | INFO | party_ticket correct
+2026-03-07 15:40:58,233 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:40:58,233 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:40:58,233 | INFO | party_ticket correct
+2026-03-07 15:40:58,278 | INFO | user Один assert in bd
+2026-03-07 15:40:58,278 | INFO | branch Асгард assert
+2026-03-07 15:40:58,278 | INFO | user Локи assert in bd
+2026-03-07 15:40:58,323 | INFO | user Один assert in bd
+2026-03-07 15:40:58,324 | INFO | branch Асгард assert
+2026-03-07 15:40:58,324 | INFO | user Тор assert in bd
+2026-03-07 15:40:58,324 | INFO | user Локи assert in bd
+2026-03-07 15:40:58,324 | INFO | user Фрейя assert in bd
+2026-03-07 15:40:58,324 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:40:58,324 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:40:58,324 | INFO | party_ticket correct
+2026-03-07 15:40:58,324 | INFO | ticket 1 correct
+2026-03-07 15:40:58,325 | INFO | path_correct
+2026-03-07 15:40:58,325 | INFO | ticket 1 correct
+2026-03-07 15:40:58,325 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:40:58,325 | INFO | ticket 1 correct
+2026-03-07 15:40:58,325 | INFO | path_correct
+2026-03-07 15:40:58,325 | INFO | ticket 1 correct
+2026-03-07 15:40:58,325 | INFO | Ticket 1 update patch dict_keys(['current_state', 'assigned_to', 'comment'])
+2026-03-07 15:40:58,325 | INFO | ticket 1 correct
+2026-03-07 15:40:58,325 | INFO | path_correct
+2026-03-07 15:40:58,326 | INFO | ticket 1 correct
+2026-03-07 15:40:58,326 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:40:58,326 | INFO | ticket 1 correct
+2026-03-07 15:40:58,326 | INFO | path_correct
+2026-03-07 15:40:58,326 | INFO | ticket 1 correct
+2026-03-07 15:40:58,326 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:40:58,326 | INFO | ticket 1 correct
+2026-03-07 15:40:58,326 | INFO | path_correct
+2026-03-07 15:40:58,326 | INFO | ticket 1 correct
+2026-03-07 15:40:58,326 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:40:58,326 | INFO | ticket 1 correct
+2026-03-07 15:40:58,326 | INFO | path_correct
+2026-03-07 15:40:58,327 | INFO | ticket 1 correct
+2026-03-07 15:40:58,327 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment', 'date_close'])
+2026-03-07 15:40:58,368 | INFO | user Один assert in bd
+2026-03-07 15:40:58,368 | INFO | branch Асгард assert
+2026-03-07 15:40:58,368 | INFO | user Тор assert in bd
+2026-03-07 15:40:58,368 | INFO | user Локи assert in bd
+2026-03-07 15:40:58,368 | INFO | user Фрейя assert in bd
+2026-03-07 15:40:58,368 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:40:58,368 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:40:58,368 | INFO | party_ticket correct
+2026-03-07 15:40:58,368 | INFO | ticket 1 correct
+2026-03-07 15:40:58,369 | INFO | path_correct
+2026-03-07 15:40:58,369 | INFO | ticket 1 correct
+2026-03-07 15:40:58,369 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:40:58,369 | INFO | ticket 1 correct
+2026-03-07 15:40:58,369 | INFO | path_correct
+2026-03-07 15:40:58,369 | INFO | ticket 1 correct
+2026-03-07 15:40:58,369 | INFO | Ticket 1 update patch dict_keys(['current_state', 'assigned_to', 'comment'])
+2026-03-07 15:40:58,369 | INFO | ticket 1 correct
+2026-03-07 15:40:58,370 | INFO | path_correct
+2026-03-07 15:40:58,370 | INFO | ticket 1 correct
+2026-03-07 15:40:58,370 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:40:58,370 | INFO | ticket 1 correct
+2026-03-07 15:40:58,370 | INFO | path_correct
+2026-03-07 15:40:58,370 | INFO | ticket 1 correct
+2026-03-07 15:40:58,370 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:40:58,372 | INFO | ticket 1 correct
+2026-03-07 15:40:58,372 | INFO | path_correct
+2026-03-07 15:40:58,372 | INFO | ticket 1 correct
+2026-03-07 15:40:58,372 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:40:58,372 | INFO | ticket 1 correct
+2026-03-07 15:40:58,372 | INFO | path_correct
+2026-03-07 15:40:58,372 | INFO | ticket 1 correct
+2026-03-07 15:40:58,372 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment', 'date_close'])
+2026-03-07 15:40:58,418 | INFO | user Один assert in bd
+2026-03-07 15:40:58,418 | INFO | branch Асгард assert
+2026-03-07 15:40:58,419 | INFO | user Тор assert in bd
+2026-03-07 15:40:58,419 | INFO | user Локи assert in bd
+2026-03-07 15:40:58,419 | INFO | user Фрейя assert in bd
+2026-03-07 15:40:58,419 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:40:58,419 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:40:58,419 | INFO | party_ticket correct
+2026-03-07 15:40:58,419 | INFO | ticket 1 correct
+2026-03-07 15:40:58,419 | INFO | path_correct
+2026-03-07 15:40:58,419 | INFO | ticket 1 correct
+2026-03-07 15:40:58,420 | INFO | Ticket 1 update patch dict_keys(['current_state', 'reject_comment', 'date_close'])
+2026-03-07 15:40:58,420 | INFO | ticket 1 correct
+2026-03-07 15:40:58,420 | ERROR | Path incorrect. Reason: Invalid lifecycle transition
+2026-03-07 15:40:58,463 | INFO | user Один assert in bd
+2026-03-07 15:40:58,464 | INFO | branch Асгард assert
+2026-03-07 15:40:58,464 | INFO | user Тор assert in bd
+2026-03-07 15:40:58,464 | INFO | user Локи assert in bd
+2026-03-07 15:40:58,464 | INFO | user Фрейя assert in bd
+2026-03-07 15:40:58,464 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:40:58,464 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:40:58,464 | INFO | party_ticket correct
+2026-03-07 15:40:58,464 | INFO | ticket 1 correct
+2026-03-07 15:40:58,464 | INFO | path_correct
+2026-03-07 15:40:58,465 | INFO | ticket 1 correct
+2026-03-07 15:40:58,465 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:40:58,465 | INFO | ticket 1 correct
+2026-03-07 15:40:58,465 | INFO | path_correct
+2026-03-07 15:40:58,465 | INFO | ticket 1 correct
+2026-03-07 15:40:58,465 | INFO | Ticket 1 update patch dict_keys(['current_state', 'assigned_to', 'comment'])
+2026-03-07 15:40:58,465 | INFO | ticket 1 correct
+2026-03-07 15:40:58,465 | INFO | path_correct
+2026-03-07 15:40:58,465 | INFO | ticket 1 correct
+2026-03-07 15:40:58,465 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:40:58,465 | INFO | ticket 1 correct
+2026-03-07 15:40:58,465 | INFO | path_correct
+2026-03-07 15:40:58,465 | INFO | ticket 1 correct
+2026-03-07 15:40:58,466 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:40:58,466 | INFO | ticket 1 correct
+2026-03-07 15:40:58,466 | INFO | path_correct
+2026-03-07 15:40:58,466 | INFO | ticket 1 correct
+2026-03-07 15:40:58,466 | INFO | Ticket 1 update patch dict_keys(['current_state', 'reject_comment', 'date_close'])
+2026-03-07 15:40:58,466 | INFO | ticket 1 correct
+2026-03-07 15:40:58,466 | ERROR | Path incorrect. Reason: Invalid lifecycle transition
+2026-03-07 15:40:58,508 | INFO | user Один assert in bd
+2026-03-07 15:40:58,508 | INFO | branch Асгард assert
+2026-03-07 15:40:58,510 | INFO | user Тор assert in bd
+2026-03-07 15:40:58,510 | INFO | user Локи assert in bd
+2026-03-07 15:40:58,510 | INFO | user Фрейя assert in bd
+2026-03-07 15:40:58,510 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:40:58,510 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:40:58,510 | INFO | party_ticket correct
+2026-03-07 15:40:58,510 | INFO | ticket 1 correct
+2026-03-07 15:40:58,511 | INFO | path_correct
+2026-03-07 15:40:58,511 | INFO | ticket 1 correct
+2026-03-07 15:40:58,511 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:40:58,511 | INFO | ticket 1 correct
+2026-03-07 15:40:58,511 | INFO | path_correct
+2026-03-07 15:40:58,511 | INFO | ticket 1 correct
+2026-03-07 15:40:58,511 | INFO | Ticket 1 update patch dict_keys(['current_state', 'assigned_to', 'comment'])
+2026-03-07 15:40:58,511 | INFO | ticket 1 correct
+2026-03-07 15:40:58,511 | INFO | path_correct
+2026-03-07 15:40:58,511 | INFO | ticket 1 correct
+2026-03-07 15:40:58,511 | INFO | Ticket 1 update patch dict_keys(['current_state', 'reject_comment', 'date_close'])
+2026-03-07 15:40:58,512 | INFO | ticket 1 correct
+2026-03-07 15:40:58,512 | ERROR | Path incorrect. Reason: Invalid lifecycle transition
+2026-03-07 15:40:58,555 | INFO | user Один assert in bd
+2026-03-07 15:40:58,555 | INFO | branch Асгард assert
+2026-03-07 15:40:58,555 | INFO | user Тор assert in bd
+2026-03-07 15:40:58,555 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:40:58,556 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:40:58,556 | INFO | party_ticket correct
+2026-03-07 15:40:58,598 | INFO | user Один assert in bd
+2026-03-07 15:40:58,598 | INFO | branch Асгард assert
+2026-03-07 15:40:58,598 | INFO | user Тор assert in bd
+2026-03-07 15:40:58,598 | INFO | user Локи assert in bd
+2026-03-07 15:40:58,599 | INFO | user Фрейя assert in bd
+2026-03-07 15:40:58,599 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:40:58,599 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:40:58,599 | INFO | party_ticket correct
+2026-03-07 15:40:58,599 | INFO | ticket 1 correct
+2026-03-07 15:40:58,600 | INFO | path_correct
+2026-03-07 15:40:58,600 | INFO | ticket 1 correct
+2026-03-07 15:40:58,600 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:40:58,600 | INFO | ticket 1 correct
+2026-03-07 15:40:58,600 | INFO | path_correct
+2026-03-07 15:40:58,600 | INFO | ticket 1 correct
+2026-03-07 15:40:58,600 | INFO | Ticket 1 update patch dict_keys(['priority', 'comment'])
+2026-03-07 15:40:58,600 | INFO | ticket 1 correct
+2026-03-07 15:40:58,600 | INFO | path_correct
+2026-03-07 15:40:58,601 | INFO | ticket 1 correct
+2026-03-07 15:40:58,601 | INFO | Ticket 1 update patch dict_keys(['current_state', 'assigned_to', 'comment'])
+2026-03-07 15:40:58,601 | INFO | ticket 1 correct
+2026-03-07 15:40:58,601 | INFO | path_correct
+2026-03-07 15:40:58,601 | INFO | ticket 1 correct
+2026-03-07 15:40:58,601 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:40:58,601 | INFO | ticket 1 correct
+2026-03-07 15:40:58,601 | INFO | path_correct
+2026-03-07 15:40:58,601 | INFO | ticket 1 correct
+2026-03-07 15:40:58,601 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:40:58,602 | INFO | ticket 1 correct
+2026-03-07 15:40:58,602 | INFO | path_correct
+2026-03-07 15:40:58,602 | INFO | ticket 1 correct
+2026-03-07 15:40:58,602 | INFO | Ticket 1 update patch dict_keys(['current_state', 'reject_comment', 'date_close'])
+2026-03-07 15:40:58,654 | INFO | user Один assert in bd
+2026-03-07 15:40:58,655 | INFO | branch Асгард assert
+2026-03-07 15:40:58,655 | INFO | branch Ванахейм assert
+2026-03-07 15:40:58,655 | INFO | user Тор assert in bd
+2026-03-07 15:40:58,655 | INFO | user Бальдр assert in bd
+2026-03-07 15:40:58,655 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:40:58,656 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:40:58,656 | INFO | party_ticket correct
+2026-03-07 15:40:58,700 | INFO | user Один assert in bd
+2026-03-07 15:40:58,700 | INFO | branch Асгард assert
+2026-03-07 15:40:58,701 | INFO | user Тор assert in bd
+2026-03-07 15:40:58,701 | INFO | user Локи assert in bd
+2026-03-07 15:40:58,701 | INFO | user Фрейя assert in bd
+2026-03-07 15:40:58,701 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:40:58,701 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:40:58,701 | INFO | party_ticket correct
+2026-03-07 15:40:58,701 | INFO | ticket 1 correct
+2026-03-07 15:40:58,701 | INFO | path_correct
+2026-03-07 15:40:58,701 | INFO | ticket 1 correct
+2026-03-07 15:40:58,702 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-07 15:40:58,746 | INFO | user Один assert in bd
+2026-03-07 15:40:58,748 | INFO | branch Асгард assert
+2026-03-07 15:40:58,748 | INFO | user Тор assert in bd
+2026-03-07 15:40:58,748 | INFO | user Локи assert in bd
+2026-03-07 15:40:58,748 | INFO | user Фрейя assert in bd
+2026-03-07 15:40:58,748 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-07 15:40:58,748 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-07 15:40:58,748 | INFO | party_ticket correct
+2026-03-07 15:40:58,748 | INFO | ticket 1 correct
+2026-03-07 15:40:58,748 | INFO | path_correct
+2026-03-07 15:40:58,748 | INFO | ticket 1 correct
+2026-03-07 15:40:58,748 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-08 20:23:56,193 | INFO | Config correct
+2026-03-08 20:28:35,260 | INFO | user Зевс assert in bd
+2026-03-08 20:28:35,271 | INFO | branch Олимп assert
+2026-03-08 20:28:35,281 | INFO | branch Афины assert
+2026-03-08 20:28:35,290 | INFO | branch Тартар assert
+2026-03-08 20:39:37,802 | INFO | user Аид assert in bd
+2026-03-08 20:39:37,811 | INFO | user Персефона assert in bd
+2026-03-08 20:40:01,320 | ERROR | User 6666 not found
+2026-03-08 20:40:31,281 | INFO | user Танатос assert in bd
+2026-03-08 20:40:31,289 | INFO | user Фобос assert in bd
+2026-03-08 20:40:31,298 | INFO | user Деймос assert in bd
+2026-03-08 20:40:31,310 | INFO | user Геракл assert in bd
+2026-03-08 20:40:31,321 | INFO | user Афина assert in bd
+2026-03-08 20:40:31,330 | INFO | user Афродита assert in bd
+2026-03-08 20:40:31,339 | INFO | user Апполон assert in bd
+2026-03-08 20:40:31,349 | INFO | user Артемида assert in bd
+2026-03-08 20:40:31,359 | INFO | user Арес assert in bd
+2026-03-08 20:40:31,369 | INFO | user Гера assert in bd
+2026-03-08 20:40:31,378 | INFO | user Гефест assert in bd
+2026-03-08 20:40:31,388 | INFO | user Персей assert in bd
+2026-03-08 20:40:31,398 | INFO | user Хронос assert in bd
+2026-03-08 20:44:59,307 | INFO | user Атрейдес assert in bd
+2026-03-08 20:44:59,388 | INFO | user Атрейдес assert in bd
+2026-03-08 20:44:59,442 | INFO | user Атрейдес assert in bd
+2026-03-08 20:44:59,528 | INFO | user Атрейдес assert in bd
+2026-03-08 20:44:59,573 | INFO | user Атрейдес assert in bd
+2026-03-08 20:44:59,619 | INFO | user Атрейдес assert in bd
+2026-03-08 20:44:59,664 | INFO | user Атрейдес assert in bd
+2026-03-08 20:44:59,712 | INFO | user Атрейдес assert in bd
+2026-03-08 20:45:17,275 | INFO | user Один assert in bd
+2026-03-08 20:45:17,360 | INFO | user Один assert in bd
+2026-03-08 20:45:17,412 | INFO | user Один assert in bd
+2026-03-08 20:45:17,464 | INFO | user Один assert in bd
+2026-03-08 20:45:17,519 | INFO | user Один assert in bd
+2026-03-08 20:45:17,569 | INFO | user Один assert in bd
+2026-03-08 20:45:17,619 | INFO | user Один assert in bd
+2026-03-08 20:45:17,669 | INFO | user Один assert in bd
+2026-03-08 20:45:17,734 | INFO | user Один assert in bd
+2026-03-08 20:45:17,791 | INFO | user Один assert in bd
+2026-03-08 20:45:17,843 | INFO | user Один assert in bd
+2026-03-08 20:45:17,895 | INFO | user Один assert in bd
+2026-03-08 20:45:33,726 | INFO | user Владыка Тьмы assert in bd
+2026-03-08 20:45:33,771 | INFO | user Гендальф assert in bd
+2026-03-08 20:45:33,859 | INFO | user Гендальф assert in bd
+2026-03-08 20:45:33,907 | INFO | user Гендальф assert in bd
+2026-03-08 20:45:33,956 | INFO | user Гендальф assert in bd
+2026-03-08 20:45:34,003 | INFO | user Гендальф assert in bd
+2026-03-08 20:45:34,056 | INFO | user Гендальф assert in bd
+2026-03-08 20:45:34,103 | INFO | user Гендальф assert in bd
+2026-03-08 20:45:34,144 | INFO | user Гендальф assert in bd
+2026-03-08 20:45:34,195 | INFO | user Курт Кобейн assert in bd
+2026-03-08 20:45:34,241 | INFO | user Великий рыцарь Зот assert in bd
+2026-03-08 20:45:34,286 | INFO | user Великий Прекрасный рыцарь Зот assert in bd
+2026-03-08 20:45:34,332 | INFO | user Черв assert in bd
+2026-03-08 20:45:34,381 | INFO | user Гендальф assert in bd
+2026-03-09 17:06:24,391 | INFO | user Атрейдес assert in bd
+2026-03-09 17:06:24,392 | INFO | branch Арракис assert
+2026-03-09 17:06:24,439 | INFO | user Атрейдес assert in bd
+2026-03-09 17:06:24,439 | INFO | branch Арракис assert
+2026-03-09 17:06:24,439 | INFO | branch 1 rename Новый Арракис
+2026-03-09 17:06:24,481 | INFO | user Атрейдес assert in bd
+2026-03-09 17:06:24,481 | INFO | branch Арракис assert
+2026-03-09 17:06:24,481 | INFO | branch 1 not activity
+2026-03-09 17:06:24,577 | INFO | user Атрейдес assert in bd
+2026-03-09 17:06:24,577 | INFO | branch Арракис assert
+2026-03-09 17:06:24,577 | INFO | user Голлум assert in bd
+2026-03-09 17:06:24,654 | INFO | user Атрейдес assert in bd
+2026-03-09 17:06:24,654 | INFO | branch Арракис assert
+2026-03-09 17:06:24,654 | ERROR | Branch not found
+2026-03-09 17:06:24,707 | INFO | user Атрейдес assert in bd
+2026-03-09 17:06:24,707 | INFO | branch Арракис assert
+2026-03-09 17:06:24,707 | ERROR | Branch not found
+2026-03-09 17:06:24,763 | INFO | user Атрейдес assert in bd
+2026-03-09 17:06:24,763 | ERROR | Name cannot be empty
+2026-03-09 17:06:24,812 | INFO | user Атрейдес assert in bd
+2026-03-09 17:06:24,813 | INFO | branch Арракис assert
+2026-03-09 17:06:24,813 | INFO | branch 1 not activity
+2026-03-09 17:06:24,813 | INFO | branch 1 not activity
+2026-03-09 17:06:42,573 | INFO | user Атрейдес assert in bd
+2026-03-09 17:06:42,573 | INFO | branch Арракис assert
+2026-03-09 17:06:42,626 | INFO | user Атрейдес assert in bd
+2026-03-09 17:06:42,627 | INFO | branch Арракис assert
+2026-03-09 17:06:42,627 | INFO | branch 1 rename Новый Арракис
+2026-03-09 17:06:42,674 | INFO | user Атрейдес assert in bd
+2026-03-09 17:06:42,674 | INFO | branch Арракис assert
+2026-03-09 17:06:42,674 | INFO | branch 1 not activity
+2026-03-09 17:06:42,759 | INFO | user Атрейдес assert in bd
+2026-03-09 17:06:42,760 | INFO | branch Арракис assert
+2026-03-09 17:06:42,760 | INFO | user Голлум assert in bd
+2026-03-09 17:06:42,760 | ERROR | This changed Голлум cannot use branch action
+2026-03-09 17:06:42,804 | INFO | user Атрейдес assert in bd
+2026-03-09 17:06:42,804 | INFO | branch Арракис assert
+2026-03-09 17:06:42,805 | ERROR | Branch not found
+2026-03-09 17:06:42,845 | INFO | user Атрейдес assert in bd
+2026-03-09 17:06:42,845 | INFO | branch Арракис assert
+2026-03-09 17:06:42,845 | ERROR | Branch not found
+2026-03-09 17:06:42,889 | INFO | user Атрейдес assert in bd
+2026-03-09 17:06:42,889 | ERROR | Name cannot be empty
+2026-03-09 17:06:42,938 | INFO | user Атрейдес assert in bd
+2026-03-09 17:06:42,938 | INFO | branch Арракис assert
+2026-03-09 17:06:42,938 | INFO | branch 1 not activity
+2026-03-09 17:06:42,938 | INFO | branch 1 not activity
+2026-03-09 17:09:48,943 | INFO | user Один assert in bd
+2026-03-09 17:09:48,944 | INFO | branch Асгард assert
+2026-03-09 17:09:48,944 | INFO | user Тор assert in bd
+2026-03-09 17:09:48,944 | INFO | user Фрейя assert in bd
+2026-03-09 17:09:48,944 | INFO | Event FAUCET correct
+2026-03-09 17:09:48,944 | INFO | Ticket FAUCET create
+2026-03-09 17:09:48,944 | INFO | party_ticket correct
+2026-03-09 17:09:49,047 | INFO | user Один assert in bd
+2026-03-09 17:09:49,048 | INFO | branch Асгард assert
+2026-03-09 17:09:49,048 | INFO | user Локи assert in bd
+2026-03-09 17:09:49,103 | INFO | user Один assert in bd
+2026-03-09 17:09:49,104 | INFO | branch Асгард assert
+2026-03-09 17:09:49,104 | INFO | user Тор assert in bd
+2026-03-09 17:09:49,104 | INFO | user Локи assert in bd
+2026-03-09 17:09:49,104 | INFO | user Фрейя assert in bd
+2026-03-09 17:09:49,104 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:09:49,105 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:09:49,105 | INFO | party_ticket correct
+2026-03-09 17:09:49,170 | INFO | user Один assert in bd
+2026-03-09 17:09:49,170 | INFO | branch Асгард assert
+2026-03-09 17:09:49,170 | INFO | user Тор assert in bd
+2026-03-09 17:09:49,170 | INFO | user Локи assert in bd
+2026-03-09 17:09:49,170 | INFO | user Фрейя assert in bd
+2026-03-09 17:09:49,171 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:09:49,171 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:09:49,171 | INFO | party_ticket correct
+2026-03-09 17:09:49,240 | INFO | user Один assert in bd
+2026-03-09 17:09:49,240 | INFO | branch Асгард assert
+2026-03-09 17:09:49,240 | INFO | user Тор assert in bd
+2026-03-09 17:09:49,241 | INFO | user Локи assert in bd
+2026-03-09 17:09:49,241 | INFO | user Фрейя assert in bd
+2026-03-09 17:09:49,241 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:09:49,241 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:09:49,241 | INFO | party_ticket correct
+2026-03-09 17:09:49,307 | INFO | user Один assert in bd
+2026-03-09 17:09:49,307 | INFO | branch Асгард assert
+2026-03-09 17:09:49,308 | INFO | user Тор assert in bd
+2026-03-09 17:09:49,308 | INFO | user Локи assert in bd
+2026-03-09 17:09:49,308 | INFO | user Фрейя assert in bd
+2026-03-09 17:09:49,308 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:09:49,308 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:09:49,308 | INFO | party_ticket correct
+2026-03-09 17:09:49,383 | INFO | user Один assert in bd
+2026-03-09 17:09:49,383 | INFO | branch Асгард assert
+2026-03-09 17:09:49,383 | INFO | user Тор assert in bd
+2026-03-09 17:09:49,383 | INFO | user Локи assert in bd
+2026-03-09 17:09:49,383 | INFO | user Фрейя assert in bd
+2026-03-09 17:09:49,383 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:09:49,384 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:09:49,384 | INFO | party_ticket correct
+2026-03-09 17:09:49,445 | INFO | user Один assert in bd
+2026-03-09 17:09:49,445 | INFO | branch Асгард assert
+2026-03-09 17:09:49,445 | INFO | user Тор assert in bd
+2026-03-09 17:09:49,445 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:09:49,445 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:09:49,446 | INFO | party_ticket correct
+2026-03-09 17:09:49,507 | INFO | user Один assert in bd
+2026-03-09 17:09:49,507 | INFO | branch Асгард assert
+2026-03-09 17:09:49,507 | INFO | user Тор assert in bd
+2026-03-09 17:09:49,508 | INFO | user Локи assert in bd
+2026-03-09 17:09:49,508 | INFO | user Фрейя assert in bd
+2026-03-09 17:09:49,508 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:09:49,508 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:09:49,508 | INFO | party_ticket correct
+2026-03-09 17:09:49,569 | INFO | user Один assert in bd
+2026-03-09 17:09:49,569 | INFO | branch Асгард assert
+2026-03-09 17:09:49,570 | INFO | branch Ванахейм assert
+2026-03-09 17:09:49,570 | INFO | user Тор assert in bd
+2026-03-09 17:09:49,570 | INFO | user Бальдр assert in bd
+2026-03-09 17:09:49,570 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:09:49,570 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:09:49,570 | INFO | party_ticket correct
+2026-03-09 17:09:49,642 | INFO | user Один assert in bd
+2026-03-09 17:09:49,642 | INFO | branch Асгард assert
+2026-03-09 17:09:49,642 | INFO | user Тор assert in bd
+2026-03-09 17:09:49,642 | INFO | user Локи assert in bd
+2026-03-09 17:09:49,642 | INFO | user Фрейя assert in bd
+2026-03-09 17:09:49,643 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:09:49,643 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:09:49,643 | INFO | party_ticket correct
+2026-03-09 17:09:49,707 | INFO | user Один assert in bd
+2026-03-09 17:09:49,708 | INFO | branch Асгард assert
+2026-03-09 17:09:49,708 | INFO | user Тор assert in bd
+2026-03-09 17:09:49,708 | INFO | user Локи assert in bd
+2026-03-09 17:09:49,708 | INFO | user Фрейя assert in bd
+2026-03-09 17:09:49,708 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:09:49,708 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:09:49,708 | INFO | party_ticket correct
+2026-03-09 17:11:30,714 | INFO | user Один assert in bd
+2026-03-09 17:11:30,715 | INFO | branch Асгард assert
+2026-03-09 17:11:30,715 | INFO | user Тор assert in bd
+2026-03-09 17:11:30,715 | INFO | user Фрейя assert in bd
+2026-03-09 17:11:30,715 | INFO | Event FAUCET correct
+2026-03-09 17:11:30,715 | INFO | Ticket FAUCET create
+2026-03-09 17:11:30,817 | INFO | user Один assert in bd
+2026-03-09 17:11:30,817 | INFO | branch Асгард assert
+2026-03-09 17:11:30,817 | INFO | user Локи assert in bd
+2026-03-09 17:11:30,865 | INFO | user Один assert in bd
+2026-03-09 17:11:30,865 | INFO | branch Асгард assert
+2026-03-09 17:11:30,866 | INFO | user Тор assert in bd
+2026-03-09 17:11:30,866 | INFO | user Локи assert in bd
+2026-03-09 17:11:30,866 | INFO | user Фрейя assert in bd
+2026-03-09 17:11:30,866 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:11:30,866 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:11:30,925 | INFO | user Один assert in bd
+2026-03-09 17:11:30,925 | INFO | branch Асгард assert
+2026-03-09 17:11:30,925 | INFO | user Тор assert in bd
+2026-03-09 17:11:30,925 | INFO | user Локи assert in bd
+2026-03-09 17:11:30,925 | INFO | user Фрейя assert in bd
+2026-03-09 17:11:30,925 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:11:30,925 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:11:30,989 | INFO | user Один assert in bd
+2026-03-09 17:11:30,989 | INFO | branch Асгард assert
+2026-03-09 17:11:30,989 | INFO | user Тор assert in bd
+2026-03-09 17:11:30,989 | INFO | user Локи assert in bd
+2026-03-09 17:11:30,989 | INFO | user Фрейя assert in bd
+2026-03-09 17:11:30,989 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:11:30,990 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:11:31,053 | INFO | user Один assert in bd
+2026-03-09 17:11:31,054 | INFO | branch Асгард assert
+2026-03-09 17:11:31,054 | INFO | user Тор assert in bd
+2026-03-09 17:11:31,054 | INFO | user Локи assert in bd
+2026-03-09 17:11:31,054 | INFO | user Фрейя assert in bd
+2026-03-09 17:11:31,054 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:11:31,054 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:11:31,119 | INFO | user Один assert in bd
+2026-03-09 17:11:31,119 | INFO | branch Асгард assert
+2026-03-09 17:11:31,119 | INFO | user Тор assert in bd
+2026-03-09 17:11:31,119 | INFO | user Локи assert in bd
+2026-03-09 17:11:31,119 | INFO | user Фрейя assert in bd
+2026-03-09 17:11:31,119 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:11:31,119 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:11:31,188 | INFO | user Один assert in bd
+2026-03-09 17:11:31,188 | INFO | branch Асгард assert
+2026-03-09 17:11:31,188 | INFO | user Тор assert in bd
+2026-03-09 17:11:31,188 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:11:31,189 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:11:31,249 | INFO | user Один assert in bd
+2026-03-09 17:11:31,249 | INFO | branch Асгард assert
+2026-03-09 17:11:31,250 | INFO | user Тор assert in bd
+2026-03-09 17:11:31,250 | INFO | user Локи assert in bd
+2026-03-09 17:11:31,250 | INFO | user Фрейя assert in bd
+2026-03-09 17:11:31,250 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:11:31,250 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:11:31,317 | INFO | user Один assert in bd
+2026-03-09 17:11:31,317 | INFO | branch Асгард assert
+2026-03-09 17:11:31,318 | INFO | branch Ванахейм assert
+2026-03-09 17:11:31,318 | INFO | user Тор assert in bd
+2026-03-09 17:11:31,318 | INFO | user Бальдр assert in bd
+2026-03-09 17:11:31,318 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:11:31,318 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:11:31,378 | INFO | user Один assert in bd
+2026-03-09 17:11:31,378 | INFO | branch Асгард assert
+2026-03-09 17:11:31,378 | INFO | user Тор assert in bd
+2026-03-09 17:11:31,378 | INFO | user Локи assert in bd
+2026-03-09 17:11:31,378 | INFO | user Фрейя assert in bd
+2026-03-09 17:11:31,378 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:11:31,378 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:11:31,438 | INFO | user Один assert in bd
+2026-03-09 17:11:31,438 | INFO | branch Асгард assert
+2026-03-09 17:11:31,438 | INFO | user Тор assert in bd
+2026-03-09 17:11:31,439 | INFO | user Локи assert in bd
+2026-03-09 17:11:31,439 | INFO | user Фрейя assert in bd
+2026-03-09 17:11:31,439 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:11:31,439 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:12:50,603 | INFO | user Один assert in bd
+2026-03-09 17:12:50,604 | INFO | branch Асгард assert
+2026-03-09 17:12:50,604 | INFO | user Тор assert in bd
+2026-03-09 17:12:50,604 | INFO | user Фрейя assert in bd
+2026-03-09 17:12:50,604 | INFO | Event FAUCET correct
+2026-03-09 17:12:50,604 | INFO | Ticket FAUCET create
+2026-03-09 17:12:50,604 | INFO | party_ticket correct
+2026-03-09 17:12:50,605 | INFO | Event NO_ELECTRICITY correct
+2026-03-09 17:12:50,605 | INFO | Ticket NO_ELECTRICITY create
+2026-03-09 17:12:50,605 | INFO | party_ticket correct
+2026-03-09 17:12:50,605 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:12:50,605 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:12:50,605 | INFO | party_ticket correct
+2026-03-09 17:12:50,659 | INFO | user Один assert in bd
+2026-03-09 17:12:50,659 | INFO | branch Асгард assert
+2026-03-09 17:12:50,659 | INFO | user Локи assert in bd
+2026-03-09 17:12:50,702 | INFO | user Один assert in bd
+2026-03-09 17:12:50,702 | INFO | branch Асгард assert
+2026-03-09 17:12:50,702 | INFO | user Тор assert in bd
+2026-03-09 17:12:50,702 | INFO | user Локи assert in bd
+2026-03-09 17:12:50,702 | INFO | user Фрейя assert in bd
+2026-03-09 17:12:50,702 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:12:50,702 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:12:50,702 | INFO | party_ticket correct
+2026-03-09 17:12:50,703 | INFO | ticket 1 correct
+2026-03-09 17:12:50,703 | INFO | path_correct
+2026-03-09 17:12:50,703 | INFO | ticket 1 correct
+2026-03-09 17:12:50,703 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-09 17:12:50,799 | INFO | user Один assert in bd
+2026-03-09 17:12:50,799 | INFO | branch Асгард assert
+2026-03-09 17:12:50,799 | INFO | user Тор assert in bd
+2026-03-09 17:12:50,800 | INFO | user Локи assert in bd
+2026-03-09 17:12:50,800 | INFO | user Фрейя assert in bd
+2026-03-09 17:12:50,800 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:12:50,800 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:12:50,800 | INFO | party_ticket correct
+2026-03-09 17:12:50,800 | INFO | ticket 1 correct
+2026-03-09 17:12:50,800 | INFO | path_correct
+2026-03-09 17:12:50,800 | INFO | ticket 1 correct
+2026-03-09 17:12:50,800 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-09 17:12:50,861 | INFO | user Один assert in bd
+2026-03-09 17:12:50,861 | INFO | branch Асгард assert
+2026-03-09 17:12:50,861 | INFO | user Тор assert in bd
+2026-03-09 17:12:50,861 | INFO | user Локи assert in bd
+2026-03-09 17:12:50,861 | INFO | user Фрейя assert in bd
+2026-03-09 17:12:50,861 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:12:50,862 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:12:50,862 | INFO | party_ticket correct
+2026-03-09 17:12:50,862 | INFO | ticket 1 correct
+2026-03-09 17:12:50,862 | INFO | path_correct
+2026-03-09 17:12:50,862 | INFO | ticket 1 correct
+2026-03-09 17:12:50,862 | INFO | Ticket 1 update patch dict_keys(['current_state', 'reject_comment', 'date_close'])
+2026-03-09 17:12:50,932 | INFO | user Один assert in bd
+2026-03-09 17:12:50,932 | INFO | branch Асгард assert
+2026-03-09 17:12:50,932 | INFO | user Тор assert in bd
+2026-03-09 17:12:50,932 | INFO | user Локи assert in bd
+2026-03-09 17:12:50,932 | INFO | user Фрейя assert in bd
+2026-03-09 17:12:50,932 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:12:50,932 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:12:50,932 | INFO | party_ticket correct
+2026-03-09 17:12:50,933 | INFO | ticket 1 correct
+2026-03-09 17:12:50,933 | INFO | path_correct
+2026-03-09 17:12:50,933 | INFO | ticket 1 correct
+2026-03-09 17:12:50,933 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-09 17:12:50,996 | INFO | user Один assert in bd
+2026-03-09 17:12:50,997 | INFO | branch Асгард assert
+2026-03-09 17:12:50,997 | INFO | user Тор assert in bd
+2026-03-09 17:12:50,997 | INFO | user Локи assert in bd
+2026-03-09 17:12:50,997 | INFO | user Фрейя assert in bd
+2026-03-09 17:12:50,997 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:12:50,997 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:12:50,997 | INFO | party_ticket correct
+2026-03-09 17:12:50,998 | INFO | ticket 1 correct
+2026-03-09 17:12:50,998 | INFO | path_correct
+2026-03-09 17:12:50,998 | INFO | ticket 1 correct
+2026-03-09 17:12:50,998 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-09 17:12:51,072 | INFO | user Один assert in bd
+2026-03-09 17:12:51,072 | INFO | branch Асгард assert
+2026-03-09 17:12:51,072 | INFO | user Тор assert in bd
+2026-03-09 17:12:51,072 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:12:51,072 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:12:51,072 | INFO | party_ticket correct
+2026-03-09 17:12:51,122 | INFO | user Один assert in bd
+2026-03-09 17:12:51,122 | INFO | branch Асгард assert
+2026-03-09 17:12:51,122 | INFO | user Тор assert in bd
+2026-03-09 17:12:51,122 | INFO | user Локи assert in bd
+2026-03-09 17:12:51,122 | INFO | user Фрейя assert in bd
+2026-03-09 17:12:51,122 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:12:51,122 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:12:51,122 | INFO | party_ticket correct
+2026-03-09 17:12:51,123 | INFO | ticket 1 correct
+2026-03-09 17:12:51,123 | INFO | path_correct
+2026-03-09 17:12:51,123 | INFO | ticket 1 correct
+2026-03-09 17:12:51,123 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-09 17:12:51,193 | INFO | user Один assert in bd
+2026-03-09 17:12:51,193 | INFO | branch Асгард assert
+2026-03-09 17:12:51,194 | INFO | branch Ванахейм assert
+2026-03-09 17:12:51,194 | INFO | user Тор assert in bd
+2026-03-09 17:12:51,194 | INFO | user Бальдр assert in bd
+2026-03-09 17:12:51,194 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:12:51,194 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:12:51,194 | INFO | party_ticket correct
+2026-03-09 17:12:51,240 | INFO | user Один assert in bd
+2026-03-09 17:12:51,241 | INFO | branch Асгард assert
+2026-03-09 17:12:51,241 | INFO | user Тор assert in bd
+2026-03-09 17:12:51,241 | INFO | user Локи assert in bd
+2026-03-09 17:12:51,241 | INFO | user Фрейя assert in bd
+2026-03-09 17:12:51,241 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:12:51,241 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:12:51,241 | INFO | party_ticket correct
+2026-03-09 17:12:51,241 | INFO | ticket 1 correct
+2026-03-09 17:12:51,242 | INFO | path_correct
+2026-03-09 17:12:51,242 | INFO | ticket 1 correct
+2026-03-09 17:12:51,242 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-09 17:12:51,309 | INFO | user Один assert in bd
+2026-03-09 17:12:51,310 | INFO | branch Асгард assert
+2026-03-09 17:12:51,310 | INFO | user Тор assert in bd
+2026-03-09 17:12:51,310 | INFO | user Локи assert in bd
+2026-03-09 17:12:51,310 | INFO | user Фрейя assert in bd
+2026-03-09 17:12:51,310 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:12:51,310 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:12:51,310 | INFO | party_ticket correct
+2026-03-09 17:12:51,311 | INFO | ticket 1 correct
+2026-03-09 17:12:51,311 | INFO | path_correct
+2026-03-09 17:12:51,311 | INFO | ticket 1 correct
+2026-03-09 17:12:51,311 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-09 17:13:55,040 | INFO | user Один assert in bd
+2026-03-09 17:13:55,040 | INFO | branch Асгард assert
+2026-03-09 17:13:55,040 | INFO | user Тор assert in bd
+2026-03-09 17:13:55,041 | INFO | user Фрейя assert in bd
+2026-03-09 17:13:55,041 | INFO | Event FAUCET correct
+2026-03-09 17:13:55,041 | INFO | Ticket FAUCET create
+2026-03-09 17:13:55,041 | INFO | party_ticket correct
+2026-03-09 17:13:55,041 | INFO | Event NO_ELECTRICITY correct
+2026-03-09 17:13:55,041 | INFO | Ticket NO_ELECTRICITY create
+2026-03-09 17:13:55,041 | INFO | party_ticket correct
+2026-03-09 17:13:55,041 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:13:55,041 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:13:55,041 | INFO | party_ticket correct
+2026-03-09 17:13:55,085 | INFO | user Один assert in bd
+2026-03-09 17:13:55,086 | INFO | branch Асгард assert
+2026-03-09 17:13:55,086 | INFO | user Локи assert in bd
+2026-03-09 17:13:55,130 | INFO | user Один assert in bd
+2026-03-09 17:13:55,130 | INFO | branch Асгард assert
+2026-03-09 17:13:55,131 | INFO | user Тор assert in bd
+2026-03-09 17:13:55,131 | INFO | user Локи assert in bd
+2026-03-09 17:13:55,131 | INFO | user Фрейя assert in bd
+2026-03-09 17:13:55,131 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:13:55,131 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:13:55,131 | INFO | party_ticket correct
+2026-03-09 17:13:55,132 | INFO | ticket 1 correct
+2026-03-09 17:13:55,132 | INFO | path_correct
+2026-03-09 17:13:55,132 | INFO | ticket 1 correct
+2026-03-09 17:13:55,132 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-09 17:13:55,132 | INFO | ticket 1 correct
+2026-03-09 17:13:55,132 | INFO | path_correct
+2026-03-09 17:13:55,132 | INFO | ticket 1 correct
+2026-03-09 17:13:55,132 | INFO | Ticket 1 update patch dict_keys(['current_state', 'assigned_to', 'comment'])
+2026-03-09 17:13:55,133 | INFO | ticket 1 correct
+2026-03-09 17:13:55,133 | INFO | path_correct
+2026-03-09 17:13:55,133 | INFO | ticket 1 correct
+2026-03-09 17:13:55,133 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-09 17:13:55,133 | INFO | ticket 1 correct
+2026-03-09 17:13:55,133 | INFO | path_correct
+2026-03-09 17:13:55,134 | INFO | ticket 1 correct
+2026-03-09 17:13:55,134 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-09 17:13:55,134 | INFO | ticket 1 correct
+2026-03-09 17:13:55,134 | INFO | path_correct
+2026-03-09 17:13:55,134 | INFO | ticket 1 correct
+2026-03-09 17:13:55,134 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-09 17:13:55,134 | INFO | ticket 1 correct
+2026-03-09 17:13:55,134 | INFO | path_correct
+2026-03-09 17:13:55,134 | INFO | ticket 1 correct
+2026-03-09 17:13:55,134 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment', 'date_close'])
+2026-03-09 17:13:55,181 | INFO | user Один assert in bd
+2026-03-09 17:13:55,181 | INFO | branch Асгард assert
+2026-03-09 17:13:55,182 | INFO | user Тор assert in bd
+2026-03-09 17:13:55,182 | INFO | user Локи assert in bd
+2026-03-09 17:13:55,182 | INFO | user Фрейя assert in bd
+2026-03-09 17:13:55,182 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:13:55,182 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:13:55,182 | INFO | party_ticket correct
+2026-03-09 17:13:55,182 | INFO | ticket 1 correct
+2026-03-09 17:13:55,183 | INFO | path_correct
+2026-03-09 17:13:55,183 | INFO | ticket 1 correct
+2026-03-09 17:13:55,183 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-09 17:13:55,183 | INFO | ticket 1 correct
+2026-03-09 17:13:55,183 | INFO | path_correct
+2026-03-09 17:13:55,183 | INFO | ticket 1 correct
+2026-03-09 17:13:55,183 | INFO | Ticket 1 update patch dict_keys(['current_state', 'assigned_to', 'comment'])
+2026-03-09 17:13:55,184 | INFO | ticket 1 correct
+2026-03-09 17:13:55,184 | INFO | path_correct
+2026-03-09 17:13:55,184 | INFO | ticket 1 correct
+2026-03-09 17:13:55,184 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-09 17:13:55,184 | INFO | ticket 1 correct
+2026-03-09 17:13:55,184 | INFO | path_correct
+2026-03-09 17:13:55,184 | INFO | ticket 1 correct
+2026-03-09 17:13:55,184 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-09 17:13:55,185 | INFO | ticket 1 correct
+2026-03-09 17:13:55,185 | INFO | path_correct
+2026-03-09 17:13:55,185 | INFO | ticket 1 correct
+2026-03-09 17:13:55,185 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-09 17:13:55,185 | INFO | ticket 1 correct
+2026-03-09 17:13:55,185 | INFO | path_correct
+2026-03-09 17:13:55,185 | INFO | ticket 1 correct
+2026-03-09 17:13:55,185 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment', 'date_close'])
+2026-03-09 17:13:55,236 | INFO | user Один assert in bd
+2026-03-09 17:13:55,236 | INFO | branch Асгард assert
+2026-03-09 17:13:55,236 | INFO | user Тор assert in bd
+2026-03-09 17:13:55,236 | INFO | user Локи assert in bd
+2026-03-09 17:13:55,236 | INFO | user Фрейя assert in bd
+2026-03-09 17:13:55,236 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:13:55,236 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:13:55,236 | INFO | party_ticket correct
+2026-03-09 17:13:55,237 | INFO | ticket 1 correct
+2026-03-09 17:13:55,237 | INFO | path_correct
+2026-03-09 17:13:55,237 | INFO | ticket 1 correct
+2026-03-09 17:13:55,237 | INFO | Ticket 1 update patch dict_keys(['current_state', 'reject_comment', 'date_close'])
+2026-03-09 17:13:55,237 | INFO | ticket 1 correct
+2026-03-09 17:13:55,237 | ERROR | Path incorrect. Reason: Invalid lifecycle transition
+2026-03-09 17:13:55,279 | INFO | user Один assert in bd
+2026-03-09 17:13:55,280 | INFO | branch Асгард assert
+2026-03-09 17:13:55,280 | INFO | user Тор assert in bd
+2026-03-09 17:13:55,280 | INFO | user Локи assert in bd
+2026-03-09 17:13:55,280 | INFO | user Фрейя assert in bd
+2026-03-09 17:13:55,280 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:13:55,280 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:13:55,281 | INFO | party_ticket correct
+2026-03-09 17:13:55,281 | INFO | ticket 1 correct
+2026-03-09 17:13:55,281 | INFO | path_correct
+2026-03-09 17:13:55,281 | INFO | ticket 1 correct
+2026-03-09 17:13:55,281 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-09 17:13:55,281 | INFO | ticket 1 correct
+2026-03-09 17:13:55,282 | INFO | path_correct
+2026-03-09 17:13:55,282 | INFO | ticket 1 correct
+2026-03-09 17:13:55,282 | INFO | Ticket 1 update patch dict_keys(['current_state', 'assigned_to', 'comment'])
+2026-03-09 17:13:55,282 | INFO | ticket 1 correct
+2026-03-09 17:13:55,282 | INFO | path_correct
+2026-03-09 17:13:55,282 | INFO | ticket 1 correct
+2026-03-09 17:13:55,282 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-09 17:13:55,282 | INFO | ticket 1 correct
+2026-03-09 17:13:55,282 | INFO | path_correct
+2026-03-09 17:13:55,282 | INFO | ticket 1 correct
+2026-03-09 17:13:55,282 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-09 17:13:55,283 | INFO | ticket 1 correct
+2026-03-09 17:13:55,283 | INFO | path_correct
+2026-03-09 17:13:55,283 | INFO | ticket 1 correct
+2026-03-09 17:13:55,283 | INFO | Ticket 1 update patch dict_keys(['current_state', 'reject_comment', 'date_close'])
+2026-03-09 17:13:55,283 | INFO | ticket 1 correct
+2026-03-09 17:13:55,283 | ERROR | Path incorrect. Reason: Invalid lifecycle transition
+2026-03-09 17:13:55,324 | INFO | user Один assert in bd
+2026-03-09 17:13:55,325 | INFO | branch Асгард assert
+2026-03-09 17:13:55,325 | INFO | user Тор assert in bd
+2026-03-09 17:13:55,325 | INFO | user Локи assert in bd
+2026-03-09 17:13:55,325 | INFO | user Фрейя assert in bd
+2026-03-09 17:13:55,325 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:13:55,325 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:13:55,325 | INFO | party_ticket correct
+2026-03-09 17:13:55,325 | INFO | ticket 1 correct
+2026-03-09 17:13:55,325 | INFO | path_correct
+2026-03-09 17:13:55,326 | INFO | ticket 1 correct
+2026-03-09 17:13:55,326 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-09 17:13:55,326 | INFO | ticket 1 correct
+2026-03-09 17:13:55,326 | INFO | path_correct
+2026-03-09 17:13:55,326 | INFO | ticket 1 correct
+2026-03-09 17:13:55,326 | INFO | Ticket 1 update patch dict_keys(['current_state', 'assigned_to', 'comment'])
+2026-03-09 17:13:55,326 | INFO | ticket 1 correct
+2026-03-09 17:13:55,326 | INFO | path_correct
+2026-03-09 17:13:55,326 | INFO | ticket 1 correct
+2026-03-09 17:13:55,326 | INFO | Ticket 1 update patch dict_keys(['current_state', 'reject_comment', 'date_close'])
+2026-03-09 17:13:55,326 | INFO | ticket 1 correct
+2026-03-09 17:13:55,326 | ERROR | Path incorrect. Reason: Invalid lifecycle transition
+2026-03-09 17:13:55,368 | INFO | user Один assert in bd
+2026-03-09 17:13:55,368 | INFO | branch Асгард assert
+2026-03-09 17:13:55,368 | INFO | user Тор assert in bd
+2026-03-09 17:13:55,368 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:13:55,368 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:13:55,369 | INFO | party_ticket correct
+2026-03-09 17:13:55,413 | INFO | user Один assert in bd
+2026-03-09 17:13:55,414 | INFO | branch Асгард assert
+2026-03-09 17:13:55,414 | INFO | user Тор assert in bd
+2026-03-09 17:13:55,414 | INFO | user Локи assert in bd
+2026-03-09 17:13:55,414 | INFO | user Фрейя assert in bd
+2026-03-09 17:13:55,414 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:13:55,414 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:13:55,414 | INFO | party_ticket correct
+2026-03-09 17:13:55,414 | INFO | ticket 1 correct
+2026-03-09 17:13:55,415 | INFO | path_correct
+2026-03-09 17:13:55,415 | INFO | ticket 1 correct
+2026-03-09 17:13:55,415 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-09 17:13:55,415 | INFO | ticket 1 correct
+2026-03-09 17:13:55,415 | INFO | path_correct
+2026-03-09 17:13:55,415 | INFO | ticket 1 correct
+2026-03-09 17:13:55,415 | INFO | Ticket 1 update patch dict_keys(['priority', 'comment'])
+2026-03-09 17:13:55,415 | INFO | ticket 1 correct
+2026-03-09 17:13:55,415 | INFO | path_correct
+2026-03-09 17:13:55,416 | INFO | ticket 1 correct
+2026-03-09 17:13:55,416 | INFO | Ticket 1 update patch dict_keys(['current_state', 'assigned_to', 'comment'])
+2026-03-09 17:13:55,416 | INFO | ticket 1 correct
+2026-03-09 17:13:55,416 | INFO | path_correct
+2026-03-09 17:13:55,416 | INFO | ticket 1 correct
+2026-03-09 17:13:55,416 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-09 17:13:55,416 | INFO | ticket 1 correct
+2026-03-09 17:13:55,416 | INFO | path_correct
+2026-03-09 17:13:55,416 | INFO | ticket 1 correct
+2026-03-09 17:13:55,416 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-09 17:13:55,416 | INFO | ticket 1 correct
+2026-03-09 17:13:55,416 | INFO | path_correct
+2026-03-09 17:13:55,416 | INFO | ticket 1 correct
+2026-03-09 17:13:55,417 | INFO | Ticket 1 update patch dict_keys(['current_state', 'reject_comment', 'date_close'])
+2026-03-09 17:13:55,458 | INFO | user Один assert in bd
+2026-03-09 17:13:55,458 | INFO | branch Асгард assert
+2026-03-09 17:13:55,458 | INFO | branch Ванахейм assert
+2026-03-09 17:13:55,458 | INFO | user Тор assert in bd
+2026-03-09 17:13:55,458 | INFO | user Бальдр assert in bd
+2026-03-09 17:13:55,459 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:13:55,459 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:13:55,459 | INFO | party_ticket correct
+2026-03-09 17:13:55,499 | INFO | user Один assert in bd
+2026-03-09 17:13:55,499 | INFO | branch Асгард assert
+2026-03-09 17:13:55,499 | INFO | user Тор assert in bd
+2026-03-09 17:13:55,499 | INFO | user Локи assert in bd
+2026-03-09 17:13:55,499 | INFO | user Фрейя assert in bd
+2026-03-09 17:13:55,499 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:13:55,499 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:13:55,501 | INFO | party_ticket correct
+2026-03-09 17:13:55,501 | INFO | ticket 1 correct
+2026-03-09 17:13:55,501 | INFO | path_correct
+2026-03-09 17:13:55,501 | INFO | ticket 1 correct
+2026-03-09 17:13:55,501 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-09 17:13:55,549 | INFO | user Один assert in bd
+2026-03-09 17:13:55,549 | INFO | branch Асгард assert
+2026-03-09 17:13:55,549 | INFO | user Тор assert in bd
+2026-03-09 17:13:55,549 | INFO | user Локи assert in bd
+2026-03-09 17:13:55,549 | INFO | user Фрейя assert in bd
+2026-03-09 17:13:55,549 | INFO | Event CASH_COLLECTION_REQUEST correct
+2026-03-09 17:13:55,549 | INFO | Ticket CASH_COLLECTION_REQUEST create
+2026-03-09 17:13:55,549 | INFO | party_ticket correct
+2026-03-09 17:13:55,550 | INFO | ticket 1 correct
+2026-03-09 17:13:55,550 | INFO | path_correct
+2026-03-09 17:13:55,550 | INFO | ticket 1 correct
+2026-03-09 17:13:55,550 | INFO | Ticket 1 update patch dict_keys(['current_state', 'comment'])
+2026-03-09 17:17:24,153 | INFO | user Владыка Тьмы assert in bd
+2026-03-09 17:17:24,195 | INFO | user Гендальф assert in bd
+2026-03-09 17:17:24,195 | INFO | branch Шир assert
+2026-03-09 17:17:24,196 | INFO | user Фродо assert in bd
+2026-03-09 17:17:24,196 | INFO | user Бильбо assert in bd
+2026-03-09 17:17:24,196 | INFO | user Пипин assert in bd
+2026-03-09 17:17:24,196 | INFO | user Мерлин assert in bd
+2026-03-09 17:17:24,241 | INFO | user Гендальф assert in bd
+2026-03-09 17:17:24,242 | INFO | branch Шир assert
+2026-03-09 17:17:24,242 | INFO | user Фродо assert in bd
+2026-03-09 17:17:24,242 | INFO | user Бильбо assert in bd
+2026-03-09 17:17:24,242 | INFO | user Пипин assert in bd
+2026-03-09 17:17:24,242 | INFO | user Мерлин assert in bd
+2026-03-09 17:17:24,242 | INFO | user 2 deactivate
+2026-03-09 17:17:24,242 | INFO | user 3 deactivate
+2026-03-09 17:17:24,242 | INFO | user 4 deactivate
+2026-03-09 17:17:24,242 | INFO | user 5 deactivate
+2026-03-09 17:17:24,286 | INFO | user Гендальф assert in bd
+2026-03-09 17:17:24,286 | INFO | branch Шир assert
+2026-03-09 17:17:24,286 | INFO | user Фродо assert in bd
+2026-03-09 17:17:24,286 | INFO | user Бильбо assert in bd
+2026-03-09 17:17:24,286 | INFO | user Пипин assert in bd
+2026-03-09 17:17:24,286 | INFO | user Мерлин assert in bd
+2026-03-09 17:17:24,286 | INFO | user Мартин assert in bd
+2026-03-09 17:17:24,286 | INFO | user 2 change role = 4, branch =None, depart= None
+2026-03-09 17:17:24,287 | INFO | user 3 change role = 3, branch =None, depart= 1
+2026-03-09 17:17:24,287 | INFO | user 4 change role = 1, branch =1, depart= None
+2026-03-09 17:17:24,287 | INFO | user 5 change role = 2, branch =1, depart= None
+2026-03-09 17:17:24,330 | INFO | user Гендальф assert in bd
+2026-03-09 17:17:24,331 | INFO | branch Шир assert
+2026-03-09 17:17:24,331 | INFO | user Фродо assert in bd
+2026-03-09 17:17:24,331 | ERROR | This changed 2 cannot use this lead_user
+2026-03-09 17:17:24,381 | INFO | user Гендальф assert in bd
+2026-03-09 17:17:24,423 | INFO | user Гендальф assert in bd
+2026-03-09 17:17:24,465 | INFO | user Гендальф assert in bd
+2026-03-09 17:17:24,505 | INFO | user Гендальф assert in bd
+2026-03-09 17:17:24,505 | INFO | branch Шир assert
+2026-03-09 17:17:24,505 | INFO | user Леголас assert in bd
+2026-03-09 17:17:24,505 | ERROR | User 8888 not found
+2026-03-09 17:17:24,554 | INFO | user Курт Кобейн assert in bd
+2026-03-09 17:17:24,555 | ERROR | User not found
+2026-03-09 17:17:24,597 | INFO | user Великий рыцарь Зот assert in bd
+2026-03-09 17:17:24,598 | INFO | branch Хэлоунест assert
+2026-03-09 17:17:24,598 | ERROR | User not found
+2026-03-09 17:17:24,638 | INFO | user Великий Прекрасный рыцарь Зот assert in bd
+2026-03-09 17:17:24,638 | INFO | branch Хэлоунест assert
+2026-03-09 17:17:24,638 | INFO | user Ложный рыцарь assert in bd
+2026-03-09 17:17:24,639 | ERROR | This changed 2 cannot use this admin_lead_user
+2026-03-09 17:17:24,680 | INFO | user Черв assert in bd
+2026-03-09 17:17:24,680 | INFO | branch Хэлоунест assert
+2026-03-09 17:17:24,680 | INFO | user Могучий Рыцарь ЗОТ assert in bd
+2026-03-09 17:17:24,680 | INFO | user 2 change name = Зот
+2026-03-09 17:17:24,724 | INFO | user Гендальф assert in bd
+2026-03-09 17:17:24,724 | INFO | branch Шир assert

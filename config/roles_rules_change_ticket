@@ -1,0 +1,31 @@
+EMPLOYEE:
+    current_state: cannot change
+    date_close: None
+    assigned_to: None
+    reject_comment: None
+    comment: can write
+    priority: auto
+
+MANAGER:
+  current_state: can CONFIRMED / CANCELLED / (CLOSED only from RESOLVED)
+  date_close: if CLOSED date_close = current time
+  assigned_to: None
+  reject_comment: None
+  comment: can write
+  priority: can increase or decrease
+
+SPECIALIST:
+  current_state: can IN_PROGRESS / WAITING_EXTERNAL / RESOLVED
+  date_close: None
+  assigned_to: if SPECIALIST use IN_PROGRESS None -> employee_id
+  reject_comment: can write
+  comment: can write
+  priority: auto
+
+ADMIN:
+  current_state: can change or create any state
+  date_close: None
+  assigned_to: None
+  reject_comment: can write
+  comment: can write
+  priority: can change priority

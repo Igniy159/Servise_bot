@@ -1,0 +1,230 @@
+SCENARIOS:
+  CRITICAL_NOTIFICATION:
+    description: Критическая ситуация, которую нельзя исправить заявкой
+  CRITICAL_REQUEST:
+    description: Критическая заявка, требующая немедленного действия
+  URGENT_REQUEST:
+    description: Срочная заявка, решается в течение дня
+  REGULAR_REQUEST:
+    description: Обычная заявка
+  SUPPLY_REQUEST:
+    description: Поставка или инвентарь
+  ALERT:
+    description: Информационное уведомление
+  SECURITY_INCIDENT:
+    description: Инцидент безопасности
+
+priority:
+  critical:
+    1  #Description: Критический. Не отреагируем сию секунду и будет куча проблем!
+  high:
+    2  #Description: Высокий. Вот сегодня точно нужно будет решить
+  medium:
+    3   #Description: Средний. Пара дней - норм.
+  low:
+    4   #description: Низкий. Не горит от слова совсем. Завтра или на следующей неделе - неважно
+
+TYPE_EVENT:
+  OBJECT_PROBLEM:
+    description: Проблема с объектом
+  REQUEST:
+    description: заявка
+  ALERT:
+    description: Уведомление
+
+zones:
+  bar:
+    description: Барная зона
+  sales:
+    description: Зона продаж (витрины)
+  outdoor:
+    description: Внешняя территория
+  hall:
+    description: Торговый зал
+  technical_staff:
+    description: Зона тех персонала
+  staff:
+    description: Зона сотрудников
+  freezer_room:
+    description: Морозильная камера для хранения
+  restroom:
+    description: Уборные
+
+OBJECT_CLASSES:
+  PRODUCTION_CRITICAL:
+    description: Критически важный объект
+  PRODUCTION_IMPORTANT:
+    description: Необходимый объект
+  COMFORT:
+    description: Обычный объект
+
+PROBLEMS:
+  FULL_FAILURE:
+    description: Полная неисправность
+  PARTIAL_PROBLEM:
+    description: Частичная неполадка
+  MINOR_ISSUE:
+    description: Незначительная проблема
+
+REQUEST_CATEGORY:
+  STORE_REQUEST:
+    description: Заявки на склад
+  INVENTORY_REQUEST:
+    description: Заявки в отдел инвентаря
+  ON_CALL_SERVISE_REQUEST:
+    description: Внешние службы
+  MARKETING_REQUEST:
+    description: Заявки маркетинга
+  SECURITY_REQUEST:
+    description: Заявки СБ
+  IT_REQUEST:
+    description: Заявки IT
+
+REQUEST_CLASSES:
+  SUPPLY_CRITICAL:
+    description: Без этого нельзя работать
+  SUPPLY_REGULAR:
+    description: Можно подождать
+  INVENTORY:
+    description: Не влияет напрямую на продажи
+  IT_SERVICE:
+    description: IT и кассовые сервисы
+  MARKETING:
+    description: Маркетинговые запросы и активности
+  SECURITY_SERVICE:
+    description: Запросы в службу безопасности
+  EXTERNAL_SERVICE:
+    description: Вызов внешнего подрядчика
+
+TYPE_REQUEST:
+  OUT_OF_STOCK:
+    description: Полное отсутствие необходимого
+  LOW_STOCK:
+    description: Почти полное отсутствие необходимого
+  REQUEST:
+    description: Стандартная заявка
+  INCIDENT:
+    description: Срочная заявка
+  CAMPAIGN_START:
+    description: Старт акции (только для маркетинга)
+
+CATEGORY_ALERTS:
+  CRITICAL_ALERTS:
+    description: критическое уведомление
+  SECURITY_ALERTS:
+    description: предупреждение СБ
+  HR_ALERTS:
+    description: предупреждение HR
+  CASH_ALERTS:
+     description: предупреждение бухгалтеру
+  SERVICE_ALERTS:
+    description: предупреждение сервис менеджеру
+
+CLASS_ALERTS:
+  CRIT_ALERT:
+    description: критическое уведомление
+  HIGH_ALERT:
+    description: высокое уведомление
+  SEC_ALERT:
+    description: предупреждение СБ
+  HR_ALERT:
+    description: предупреждение HR
+  CASH_ALERT:
+    description: предупреждение бухгалтеру
+  SERVICE_ALERT:
+    description: предупреждение сервис менеджеру
+
+ROLES:
+  EMPLOYEE:
+    1 #description: линейный персонал или менеджер смены
+  MANAGER:
+    2 #description: управляющий филиала
+  SPECIALIST:
+    3 #description: рабочий отдела
+  OWNER:
+    4 #description: полный контроль над сетью. Руководитель
+
+ROLES_PERMISSION:
+    create_ticket:
+      description: создать заявку
+    confirm:
+      description: подтвердить  новую заявку
+    assigned_to:
+      description: принять заявку
+    change_state:
+      description: изменить статус
+    close_ticket:
+      description: закрыть заявку
+    change_priority:
+      description: изменить приоритет
+    reject_comment:
+      description: написать коммент при отклонении
+    extra_change_priority:
+      description: возможность изменить приоритет в любой момент
+    lead_branch:
+      description: управление филиалами
+    lead_user:
+      description: управление пользователями
+    admin_lead_user:
+      description: функции для админа по управлению пользователями
+    history_vision:
+      description: просмотр истории изменения
+    on_off_external:
+      description: включить-выключить ожидание внешних служб
+    finish_ticket:
+      description: закончить работу
+
+
+DEPARTMENTS:
+  HR:
+    1 #description: HR отдел
+  SECURITY:
+    2 #description: отдел безопасности
+  ACCOUNTANT:
+    3 #description: бухгалтерия
+  ARS:
+    4 #description: отдел аварийного ремонта
+  IT:
+    5 #description: ремонт и настройка POS
+  INVENTORY:
+    6 #description: отдел снабжения
+  STORE:
+    7 #description: склад
+  MARKETING:
+    8 #description: отдел маркетинга
+  SERVICE:
+    9 #description: сервис менеджер. жалобы посетителей
+  TOP_MANAGEMENT:
+    10 #description: руководство
+  BRANCH_MANAGER:
+    11 #description: управляющий филиала
+  LINE_STAFF:
+    12 #description: линейный персонал
+
+TICKET_STATUS:
+  NEW:
+    1  #description: новая заявка
+  CONFIRMED:
+    2  #description: подтвержденная заявка
+  IN_PROGRESS:
+    3  #description: в процессе
+  WAITING_EXTERNAL:
+    4   #description: ожидание необходимого
+  RESOLVED:
+    5   #description: технически выполнено. ожидает закрытия
+  CLOSED:
+    6  #description: подтверждено и закрыто
+  CANCELLED:
+    7  #description: отклонена
+
+SLA_TYPE:
+  CRITICAL:
+    description: несколько часов
+  URGENT:
+    description: в течении дня
+  REGULAR:
+    description: в течении нескольких дней
+  NOT:
+    description: отсутствует
+  IMMEDIATE:
+    description: немедленно

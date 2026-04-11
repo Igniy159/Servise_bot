@@ -1,0 +1,51 @@
+NORMAL_LIFECYCLE:
+  NEW:
+    next:
+      - CONFIRMED
+      - CANCELLED
+  CONFIRMED:
+    next:
+      - IN_PROGRESS
+  IN_PROGRESS:
+    next:
+      - WAITING_EXTERNAL
+      - RESOLVED
+  WAITING_EXTERNAL:
+    next:
+      - IN_PROGRESS
+      - RESOLVED
+  RESOLVED:
+    next:
+      - CLOSED
+  CLOSED:
+    next: []
+  CANCELLED:
+    next: []
+
+ADMIN_LIFECYCLE:
+  NEW:
+    next:
+      - CONFIRMED
+      - CANCELLED
+  CONFIRMED:
+    next:
+      - IN_PROGRESS
+      - CANCELLED
+  IN_PROGRESS:
+    next:
+      - WAITING_EXTERNAL
+      - RESOLVED
+      - CANCELLED
+  WAITING_EXTERNAL:
+    next:
+      - IN_PROGRESS
+      - RESOLVED
+      - CANCELLED
+  RESOLVED:
+    next:
+      - CLOSED
+      - CANCELLED
+  CLOSED:
+    next: []
+  CANCELLED:
+    next: []

@@ -1,0 +1,18 @@
+USER:
+  description: Пользователь системы
+  fields:
+    id:
+      type: string
+    organization_id:
+      type: string
+      required: true
+    branch_id:
+      type: string
+      required: false
+      description: null = уровень сети
+    role:
+      type: ROLE
+      required: true
+    department:
+      type: DEPARTMENT
+      required: false

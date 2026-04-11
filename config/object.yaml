@@ -1,0 +1,136 @@
+ARS_OBJECT:
+  bar:
+   COFFEE_MACHINE:
+     class: PRODUCTION_CRITICAL
+   COFFEE_GRINDER:
+     class: PRODUCTION_CRITICAL
+   ICE_MAKER:
+     class: PRODUCTION_IMPORTANT
+   REFRIGERATOR:
+     class: PRODUCTION_IMPORTANT
+   FREEZER:
+     class: PRODUCTION_IMPORTANT
+   ICE_CRUSH:
+     class: PRODUCTION_IMPORTANT
+   JUICER:
+     class: COMFORT
+   BLENDER:
+     class: COMFORT
+   BOILER:
+     class: PRODUCTION_CRITICAL
+   TV:
+     class: COMFORT
+   LIGHTING:
+     class: PRODUCTION_IMPORTANT
+   FAUCET:
+     class: PRODUCTION_IMPORTANT
+   PIPES:
+     class: PRODUCTION_CRITICAL
+   SOCKET:
+     class: PRODUCTION_CRITICAL
+   WATER_FILTER:
+     class: PRODUCTION_CRITICAL
+   OTHER:
+     class: COMFORT
+
+  sales:
+   TV:
+     class: COMFORT
+   LIGHTING:
+     class: PRODUCTION_IMPORTANT
+   MICROWAVE:
+     class: COMFORT
+   BACE_OVEN:
+     class: PRODUCTION_IMPORTANT
+   FAUCET:
+     class: PRODUCTION_CRITICAL
+   PIPES:
+     class: PRODUCTION_CRITICAL
+   SOCKET:
+     class: PRODUCTION_CRITICAL
+   DRY_SHOWCASE:
+     class: COMFORT
+   COLD_SHOWCASE:
+     class: PRODUCTION_IMPORTANT
+   SHOWCASE_REFRIGERATOR:
+     class: PRODUCTION_CRITICAL
+   DOOR_FRIDGE:
+     class: PRODUCTION_CRITICAL
+   SHELF:
+     class: COMFORT
+   OTHER:
+     class: COMFORT
+
+  outdoor:
+   SIGNBOARD:
+     class: PRODUCTION_IMPORTANT
+   LIGHTING:
+      class: PRODUCTION_IMPORTANT
+   OUTDOOR_FURNITURE:
+     class: COMFORT
+   CANOPY:
+     class: COMFORT
+   FRONT_DOOR:
+     class: COMFORT
+   OTHER:
+     class: COMFORT
+
+  hall:
+   LIGHTING:
+     class: PRODUCTION_IMPORTANT
+   SOCKET:
+     class: PRODUCTION_IMPORTANT
+   SHOWCASE_REFRIGERATOR:
+      class: PRODUCTION_CRITICAL
+   FURNITURE:
+     class: COMFORT
+   AIR_CONDITIONER:
+     class: PRODUCTION_IMPORTANT
+   HEATER:
+     class: PRODUCTION_IMPORTANT
+
+  technical_staff:
+   SINK:
+     class: PRODUCTION_IMPORTANT
+   LIGHTING:
+     class: PRODUCTION_IMPORTANT
+   PIPES:
+     class: PRODUCTION_CRITICAL
+   FAUCET:
+     class: PRODUCTION_CRITICAL
+   OTHER:
+     class: COMFORT
+
+  staff:
+   MICROWAVE:
+     class: COMFORT
+   LIGHTING:
+     class: COMFORT
+   REFRIGERATOR:
+     class: COMFORT
+   SOCKET:
+     class: PRODUCTION_IMPORTANT
+   LOCKER:
+     class: COMFORT
+   OTHER:
+     class: COMFORT
+
+  freezer_room:
+    FREEZER:
+      class: PRODUCTION_CRITICAL
+
+  restroom:
+   LIGHTING:
+     class: PRODUCTION_IMPORTANT
+   PIPES:
+     class: PRODUCTION_IMPORTANT
+   SINK:
+     class: COMFORT
+   TOILET:
+     class: PRODUCTION_IMPORTANT
+   HAND_DRYER:
+     class: COMFORT
+   SOAP_DISPENSER:
+     class: COMFORT
+   PAPER_DISPENSER:
+     class: COMFORT

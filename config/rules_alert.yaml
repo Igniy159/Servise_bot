@@ -1,0 +1,23 @@
+CRIT_ALERT:
+  scenario: CRITICAL_NOTIFICATION
+  target: TOP_MANAGEMENT
+
+HIGH_ALERT:
+  scenario: ALERT
+  target: BRANCH_MANAGER
+
+SEC_ALERT:
+  scenario: SECURITY_INCIDENT
+  target: SECURITY
+
+HR_ALERT:
+  scenario: ALERT
+  target: HR
+
+CASH_ALERT:
+  scenario: ALERT
+  target: ACCOUNTANT
+
+SERVICE_ALERT:
+  scenario: ALERT
+  target: SERVICE

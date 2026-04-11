@@ -1,0 +1,28 @@
+ticket_patch:
+  current_state:
+    description: текущий статус
+  date_close:
+    description: дата закрытия
+  assigned_to:
+    description: текущий исполнитель
+  reject_comment:
+    description: причина отклонения
+  comment:
+    description: комментарий
+  priority:
+    description: приоритет
+  user_role:
+    description: роль пользователя
+  user_id:
+    description: id пользователя
+
+prohibit_transition:
+  terminal_states:
+    - CLOSED
+    - CANCELLED
+
+rules:
+  - CLOSED / CANCELLED -> no transitions
+  - date_close allowed only if current_state == CLOSED
+  - assigned_to allowed only if current_state == IN_PROGRESS
+  - reject_comment allowed only if current_state == CANCELLED
