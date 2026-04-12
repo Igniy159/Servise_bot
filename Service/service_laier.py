@@ -1,6 +1,6 @@
 from Core.exceptions import *
 from Logger.logger import core_logger
-from Repository.create_tables import get_connect,sq
+from Repository.create_migrations import get_connect,sq
 from Repository.write_model import (ticket_assert, insert_history_record, update_user_params,
                                     user_soft_del, user_activate, user_assert, ticket_state,
                                     close_ticket, branch_activate, branch_rename, branch_soft_del, branch_assert,
