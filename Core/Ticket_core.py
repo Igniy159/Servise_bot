@@ -431,13 +431,30 @@ def full_ticket_validator(ticket: dict, config: dict)-> None:
     core_logger.info(f"ticket {ticket['ticket_id']} correct")
 
 class User:
-    pass
+    __doc__ = "This class for user operations"
+
+    def __init__(self,user: dict):
+        self.id = user['user_id']
+        self.name = user['user_name']
+        self.api_id = user['api_user_id']
+        self.role = user['role_name']
+        self.depart_id = user.get('depart_id',None)
+        self.depart_name = user.get('depart_name', None)
+        self.branch_id = user.get('branch_id', None)
+        self.branch_name = user.get('branch_name',None)
+
+class Branch:
+    __doc__ = "This class for branch operations"
+
+    def __init__(self, branch:dict):
+        self.branch_id = branch['branch_id']
+        self.branch_name = branch['branch_name']
+        self.branch_manager = branch['branch_manager']
 
 class Ticket:
     __doc__ = "This class for ticket field validations and patch operations. He without hard logic"
 
     def __init__(self, data: dict):
-
         self.ticket_id = data.get('ticket_id',None)
         self.creator_id = data.get('creator_id')
         self.creator_name = data.get('creator_name')
