@@ -1,3 +1,4 @@
+from copy import deepcopy
 from datetime import datetime, timedelta
 from typing import Optional
 from Logger.logger import core_logger
@@ -180,7 +181,7 @@ def validate_event(event: dict, config: dict) -> None:
         validate_alert(event,config)
     core_logger.info(f"Event {event['problem_name']} correct")
 
-def validate_object(event,config):
+def validate_object(event: dict,config:dict):
     if event['problem_class'] not in config["enum"]['OBJECT_CLASSES']:
         raise CoreValidationBreak(f"INCORRECT OBJECT_CLASS - {event['problem_class']}")
     elif event['problem_class'] not in config["priority_matrix"]['OBJECT_CLASSES']:
@@ -211,7 +212,7 @@ def validate_object(event,config):
     elif event['zone'] != event["problem_category"]:
         raise CoreValidationBreak(f"Incorrect zone - {event['zone']}")
 
-def validate_request(event,config):
+def validate_request(event: dict,config:dict):
     if event['problem_class'] not in config["enum"]['REQUEST_CLASSES']:
         raise CoreValidationBreak(f"INCORRECT request_class - {event['problem_class']}")
     elif event['problem_class'] not in config["rules_request"]["REQUEST_CLASSES"]:
@@ -233,7 +234,7 @@ def validate_request(event,config):
     elif event['problem_name'] not in config['request'][event['problem_category']]:
         raise CoreValidationBreak(f"INCORRECT request_name - {event['problem_name']}")
 
-def validate_alert(event,config):
+def validate_alert(event: dict,config:dict):
     if event.get("problem_type") is not None:
         raise CoreValidationBreak("ALERT must not contain problem_type")
 
@@ -253,33 +254,27 @@ def validate_alert(event,config):
         raise CoreValidationBreak(f"INCORRECT alert_problem - {event['problem_name']}")
 
 
-def resolve_decision(event: dict, config: dict) -> dict:
-    res_dict = {}
+def resolve_decision(event_data: dict, config: dict)-> dict:
 
-    if event["type"] == "OBJECT_PROBLEM":
-        matrix = config["priority_matrix"]['OBJECT_CLASSES'][event['problem_class']][event['problem_type']]
+    res_dict = deepcopy(event_data)
+
+    if event_data["type"] == "OBJECT_PROBLEM":
+        matrix = config["priority_matrix"]['OBJECT_CLASSES'][event_data['problem_class']][event_data['problem_type']]
         res_dict["priority"] = matrix["priority"]
         res_dict["scenario"] = matrix["scenario"]
         res_dict["target"] = 'ARS'  #target object only ARS
 
-    elif event["type"] == "REQUEST":
-        req = config["rules_request"]['REQUEST_CLASSES'][event['problem_class']][event['problem_type']]
+    elif event_data["type"] == "REQUEST":
+        req = config["rules_request"]['REQUEST_CLASSES'][event_data['problem_class']][event_data['problem_type']]
         res_dict["priority"] = req["priority"]
         res_dict["scenario"] = req["scenario"]
-        res_dict["target"] = config["rules_request"]['REQUEST_CLASSES'][event["problem_class"]]["target"]
+        res_dict["target"] = config["rules_request"]['REQUEST_CLASSES'][event_data["problem_class"]]["target"]
 
-    elif event['type'] == "ALERT":
-        al = config['rules_alert'][event['problem_class']]
+    elif event_data['type'] == "ALERT":
+        al = config['rules_alert'][event_data['problem_class']]
         res_dict["scenario"] = al["scenario"]
         res_dict["target"] = al["target"]
 
-    res_dict['branch_id'] = event.get('branch_id')
-    res_dict['event_type'] = event.get("type")
-    res_dict['problem_category'] = event.get('problem_category')
-    res_dict['problem_name'] = event.get('problem_name')
-    res_dict['problem_class'] = event.get('problem_class')
-    res_dict['problem_type'] = event.get('problem_type')
-    res_dict['zone'] = event.get("zone")
     return res_dict
 
 
@@ -449,7 +444,7 @@ class Branch:
     def __init__(self, branch:dict):
         self.branch_id = branch['branch_id']
         self.branch_name = branch['branch_name']
-        self.branch_manager = branch['branch_manager']
+        self.branch_manager = branch.get('branch_manager',None)
 
 class Ticket:
     __doc__ = "This class for ticket field validations and patch operations. He without hard logic"
@@ -506,7 +501,7 @@ class Ticket:
             cls,
             event_data: dict,
             config: dict,
-            user: Optional[User]):
+            user: Optional[User])-> Optional[Ticket]:
         now = datetime.now()
         sla_delta = cls._calculate_sla(event_data, config)
         date = {
@@ -540,65 +535,40 @@ class Ticket:
                        ticket:dict):
         return cls(ticket)
 
+    @staticmethod
+    def for_data_base(ticket, config:dict)->dict:
+        priority_map = config['enum']['priority']
+        state_map = config['enum']['TICKET_STATUS']
+        depart_map = config['enum']['DEPARTMENTS']
 
-def build_ticket(resolve_dict: dict,
-                 config: dict,
-                 creator_id: int,
-                 role: str,
-                 branch_id: int,
-                 comment: str | None = None,
-                 priority: str | None = None)-> dict:
+        res = {'creator_id': ticket.creator_id,
+                  'branch_id': ticket.branch_name,
+                  'event_type': ticket.event_type,
+                  'problem_category': ticket.problem_category,
+                  'problem_name': ticket.problem_name,
+                  'problem_class': ticket.problem_class,
+                  'problem_type': ticket.problem_type,
+                  'zone': ticket.zone,
+                  'scenario': ticket.scenario,
+                  'target': depart_map.get(ticket.target),
+                  'date_create': ticket.date_create.strftime("%Y-%m-%d %H:%M:%S"),
+                  'sla_reaction_deadline': ticket.sla_reaction_deadline.strftime("%Y-%m-%d %H:%M:%S") if ticket.sla_reaction_deadline else None,
+                  'sla_resolution_deadline': ticket.sla_resolution_deadline.strftime("%Y-%m-%d %H:%M:%S") if ticket.sla_resolution_deadline else None,
+                  'current_state': state_map.get(ticket.current_state),
+                  'date_close': ticket.date_close.strftime("%Y-%m-%d %H:%M:%S") if ticket.date_close else None,
+                  'assigned_to': ticket.assigned_to,
+                  'reject_comment': ticket.reject_comment,
+                  'comment': ticket.comment,
+                  'priority': priority_map.get(ticket.priority)}
+        return res
 
-    now = datetime.now()
-    sla_delta = calculate_sla(resolve_dict,config)
-    roles = config['roles']["ROLES"]
-    if role not in roles:
-        raise CoreValidationBreak(f"Unknown role {role}")
-    ticket = {
-        'creator_id': creator_id,
-        'branch_id': branch_id,
-        'event_type': resolve_dict["event_type"],
-        'problem_category': resolve_dict['problem_category'],
-        'problem_name': resolve_dict['problem_name'],
-        'problem_class': resolve_dict['problem_class'],
-        'problem_type': resolve_dict['problem_type'],
-        'zone': resolve_dict["zone"],
-        'scenario': resolve_dict['scenario'],
-        'target': resolve_dict['target'],
-        'date_create': now,
-        'sla_reaction_deadline': None if sla_delta['reaction'] is None else now + sla_delta['reaction'],
-        'sla_resolution_deadline': None if sla_delta['resolution'] is None else now + sla_delta['resolution'],
-        'date_close': None,
-        'assigned_to': None,
-        'reject_comment': None,
-        'comment': comment,
-        "priority": resolve_dict.get("priority") if not roles[role]["permissions"]["change_priority"] or not priority
-        else priority,
-        "current_state": "CONFIRMED"
-        if has_permission(role,"confirm",config)
-        else "NEW",
-        'history': []
-    }
-    return ticket
-def calculate_sla(resolve_dict: dict, config: dict)-> dict:
-    scen = resolve_dict['scenario']
-    type_sla = config['scenarios']['SCENARIOS'][scen]["sla_policy"]
-    need_sla = config["SLA"]["SLA_POLICIES"][type_sla]
-    react, resol = need_sla['reaction'], need_sla['resolution']
-    def convert(value: str)-> Optional[timedelta]:
-        if value is None:
-            return None
-        elif value.endswith("m"):
-            return timedelta(minutes=int(value[:-1]))
-        elif value.endswith("h"):
-            return timedelta(hours=int(value[:-1]))
-        elif value.endswith("d"):
-            return timedelta(days=int(value[:-1]))
-        raise ValueError(f"Invalid SLA format: {value}")
 
-    res = {'reaction': convert(react),
-           'resolution': convert(resol)}
-    return res
+    def update_solution(self, solution:dict)-> Optional[Ticket]:
+        self.current_state = solution['current_state']
+        self.target = solution.get('target', self.target)
+        self.assigned_to = solution.get('assigned_to', None)
+        return self
+
 def apply_patch(ticket:dict, patch: dict, role: str)-> dict:
     res = copy.deepcopy(ticket)
     res.update(patch)
@@ -615,25 +585,24 @@ def apply_patch(ticket:dict, patch: dict, role: str)-> dict:
 
 
 
-def create_ticket(config, event, user_context, comment=None):
+def create_ticket(config:dict,
+                  event_data:dict,
+                  user: Optional[User]
+                  ):
     try:
-        validate_event(event, config)
+        validate_event(event_data, config)
     except TicketError as e:
-        core_logger.error(f"Event {event['problem_name']} incorrect. {e}")
+        core_logger.error(f"Event {event_data['problem_name']} incorrect. {e}")
         raise
-    res = resolve_decision(event, config)
-    br_id = res["branch_id"] if res["branch_id"] else user_context["branch_id"]
+    res = resolve_decision(event_data, config)
     try:
-        ticket = build_ticket(res, config,
-                              user_context['creator_id'],
-                              user_context['role'],
-                              br_id,
-                              comment=comment)
+        ticket = Ticket.from_created(res,config,user)
         core_logger.info(f'Ticket {ticket["problem_name"]} create')
     except TicketError as e:
         core_logger.error(f"Ticket not create. Reason: {e}")
         raise
     return ticket
+
 def update_ticket(config, ticket, path, role,type_fsm):
     try:
         full_ticket_validator(ticket,config)

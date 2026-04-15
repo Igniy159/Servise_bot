@@ -2,6 +2,7 @@ from Service.service_laier import (check_user, lead_branches, write_ticket, appl
                                    create_user, delete_user, change_user, receive_tickets, rename_user,
                                    receive_user, receive_history)
 from Core.exceptions import PermissionDenied
+from Core.Ticket_core import User
 from datetime import datetime
 
 
@@ -10,7 +11,7 @@ class BaseController:
         user = check_user(api_user_id, con=con)
         if not user:
             raise PermissionDenied("User not found")
-        self.user = user[0]
+        self.user = User(user[0])
         self.config = config
         self.con = con
 
@@ -28,8 +29,9 @@ class BranchController(BaseController):
         return lead_branches(self.user,"delete_branch",self.config,branch_id=branch_id, con=self.con)
 
 class TicketController(BaseController):
-    def create(self, event: dict, comment= None):
-        return write_ticket(self.config,self.user,event,comment, con=self.con)
+    def create(self,
+               event_data: dict):
+        return write_ticket(self.config, self.user, event_data, con=self.con)
 
     def confirm(self, ticket_id: int, comment= None):
         patch = {'current_state': 'CONFIRMED',

@@ -7,9 +7,10 @@ from Repository.write_model import (ticket_assert, insert_history_record, update
                                     assign_ticket, change_priority, update_comment, reject_ticket, update_user_name)
 from Repository.read_model import encode_object, get_users_with_data, get_tickets_with_data, get_branch_with_data, \
  fetch_history_ticket
-from Core.Ticket_core import has_permission,create_ticket,encode_ticket_validator,update_ticket
+from Core.Ticket_core import has_permission,create_ticket,update_ticket,User,Ticket, Branch
 from datetime import datetime
 from Core.loader import config
+from typing import Optional
 
 
 def transactional(func):
@@ -42,28 +43,38 @@ def transactional(func):
     return wrapper
 # CREATE - APPLY -DELETE operations
 @transactional
-def write_ticket(config, user: dict, event: dict, comment= None, con=None)-> int:
-    user_context = {"creator_id": user['user_id'],
-                'branch_id': user['branch_id'],
-                'role': user['role_name']
-                }
-    if not has_permission(user['role_name'], "create_ticket", config):
-        raise PermissionDenied(f" User {user['user_name']} cannot create ticket")
-    need_field = config['roles']['ROLES'][user['role_name']]['required_field']
-    if not need_field['branch_id'] and 'branch_id' not in event:
-        raise ServiseValidationBreak(f"if changed not branch: in event need field branch_id")
-    ticket = create_ticket(config, event, user_context, comment)
-    ticket, api_recipient = escalation(ticket, config, con=con)
-    state_for_history = ticket['current_state']
-    ticket = encode_object(ticket, config, con=con)
-    encode_ticket_validator(ticket)
-    ticket_id = ticket_assert(ticket, con=con)
-    insert_history_record(ticket_id, datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                          ticket['creator_id'], 'current_state', None, state_for_history, con=con)
+def write_ticket(config:dict,
+                 user: Optional[User],
+                 event_data: dict,
+                 con=None)-> dict:
 
-    event_alert = {'branch_name': user['branch_name'],
+    if not has_permission(user.role, "create_ticket", config):
+        raise PermissionDenied(f" User {user['user_name']} cannot create ticket")
+
+    if user.branch_id is None and 'branch_id' not in event_data:
+        raise ServiseValidationBreak(f"if changed not branch: in event need field branch_id")
+
+    solution = escalation(event_data, config, con=con)
+
+    ticket = create_ticket(config, event_data, user)
+    ticket.update_solution(solution)
+    state_for_history = ticket.current_state
+
+    ticket_for_db = Ticket.for_data_base(ticket,config)
+
+    ticket_id = ticket_assert(ticket_for_db, con=con)
+
+    insert_history_record(ticket_id,
+                          datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                          user.id,
+                          'current_state',
+                          None,
+                          state_for_history, con=con)
+
+    api_recipient = solution['api_recipient']
+    event_alert = {'branch_name': user.branch_name,
                    'problem_name': ticket['problem_name'],
-                   'self': user['api_user_id'],
+                   'self': user.api_id,
                    'target':api_recipient.get('target'),
                    'manager':api_recipient.get('manager'),
                    'problem_type': ticket.get('problem_type'),
@@ -153,51 +164,42 @@ def apply_write_path(config, user, patch: dict, ticket_id: int,flag: str,con=Non
     return event_alert
 
 @transactional
-def escalation(ticket, config, con=None):
-    users = get_users_with_data(filter_value={'user_activity': 1},con=con)
-    flag_manager = False
-    flag_depart = False
-    need_confirm = config['scenarios']['SCENARIOS'][ticket['scenario']]["confirmation_required"]
-    own_id = None
-    api_recipient ={}
-    api_target = []
-    api_manager = []
-    for user in users:
-        if user["branch_id"] == ticket['branch_id'] and user["role_name"] == "MANAGER":
-            flag_manager = True
-            api_manager.append(user['api_user_id'])
-        if user["depart_name"] == ticket["target"]:
-            flag_depart = True
-            api_target.append(user['api_user_id'])
-        if user["role_name"] == "OWNER":
-            own_id = user['user_id']
-            own_api = user['api_user_id']
+def escalation(config:dict,
+               event_data:dict,
+               user: Optional[User],
+               con=None):
+    manager = get_users_with_data(filter_value={'user_activity': 1, 'role_id': 2, 'branch_id': user.branch_id},con=con)
+    owner = get_users_with_data(filter_value={'user_activity': 1,'role_id': 4},con=con)
+    depart = get_users_with_data(filter_value={'user_activity': 1, 'role_id': 3, 'depart_id': event_data['target']})
+    need_confirm = config['scenarios']['SCENARIOS'][event_data['scenario']]["confirmation_required"]
+    solution ={}
 
-    if not flag_depart and not flag_manager:
-        ticket['assigned_to'] = own_id
-        ticket['target'] = 'TOP_MANAGEMENT'
-        ticket['current_state'] = "IN_PROGRESS"
-        api_recipient['target'] = own_api
+    if not depart and not manager:
+        solution['assigned_to'] = owner[0]['user_id']
+        solution['target'] = 'TOP_MANAGEMENT'
+        solution['current_state'] = "IN_PROGRESS"
+        solution['api_recipient']['target'] = (owner[0]['api_user_id'])
 
-    elif not flag_depart and flag_manager and need_confirm:
-        ticket['target'] = 'TOP_MANAGEMENT'
-        ticket['current_state'] = "NEW"
-        api_recipient['manager'] = api_manager
+    elif not depart and manager and need_confirm:
+        solution['target'] = 'TOP_MANAGEMENT'
+        solution['current_state'] = "NEW"
+        solution['api_recipient']['manager'] = manager[0]['api_user_id']
 
-    elif not flag_depart and flag_manager and not need_confirm:
-        ticket['target'] = 'TOP_MANAGEMENT'
-        ticket['current_state'] = "CONFIRMED"
-        api_recipient['manager'] = api_manager
+    elif not depart and manager and not need_confirm:
+        solution['target'] = 'TOP_MANAGEMENT'
+        solution['current_state'] = "CONFIRMED"
+        solution['api_recipient']['manager'] = manager[0]['api_user_id']
+        solution['api_recipient']['target'] = [users['api_user_id'] for users in depart]
 
-    elif not flag_manager and flag_depart:
-        ticket['current_state'] = "CONFIRMED"
-        api_recipient['target'] = api_target
+    elif not manager and depart:
+        solution['current_state'] = "CONFIRMED"
+        solution['api_recipient']['target'] = [users['api_user_id'] for users in depart]
 
-    elif flag_manager and flag_depart:
-        ticket['current_state'] = "NEW"
-        api_recipient['manager'] = api_manager
+    elif manager and depart:
+        solution['current_state'] = "NEW"
+        solution['api_recipient']['manager'] = manager[0]['api_user_id']
 
-    return ticket, api_recipient
+    return solution
 
 @transactional
 def lead_branches(user, action: str, config, name=None, branch_id=None, filters= None, con= None):
@@ -228,7 +230,7 @@ def lead_branches(user, action: str, config, name=None, branch_id=None, filters=
 
     elif action == "receive_branch":
         branches = receive_branch(user, filters=filters, con=con)
-        event_alert['branches']= branches
+        event_alert['branches'] = branches
 
 
     elif action == 'delete_branch':
