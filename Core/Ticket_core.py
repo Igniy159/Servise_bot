@@ -386,7 +386,7 @@ def full_ticket_validator(ticket: dict, config: dict)-> None:
         "ticket_id": int,
         'creator_id': int,
         'creator_name': str,
-        'branch_id': (int,type(None)),
+        'branch_id': int,
         'branch_name': str,
         'event_type': str,
         'problem_category':str,
@@ -429,6 +429,99 @@ def full_ticket_validator(ticket: dict, config: dict)-> None:
     if ticket["current_state"] in ("CLOSED", "CANCELLED") and not ticket["date_close"]:
         raise LifecycleError("Closed ticket without date_close")
     core_logger.info(f"ticket {ticket['ticket_id']} correct")
+
+class User:
+    pass
+
+class Ticket:
+    __doc__ = "This class for ticket field validations and patch operations. He without hard logic"
+
+    def __init__(self, data: dict):
+
+        self.ticket_id = data.get('ticket_id',None)
+        self.creator_id = data.get('creator_id')
+        self.creator_name = data.get('creator_name')
+        self.branch_id = data.get('branch_id')
+        self.branch_name = data.get('branch_name')
+        self.event_type = data.get('event_type')
+        self.problem_category = data.get('problem_category')
+        self.problem_name = data.get('problem_name')
+        self.problem_class = data.get('problem_class')
+        self.problem_type = data.get('problem_type')
+        self.zone = data.get('zone')
+        self.scenario = data.get('scenario')
+        self.target = data.get('target')
+        self.date_create = data.get('date_create')
+        self.sla_reaction_deadline =  data.get('sla_reaction_deadline')
+        self.sla_resolution_deadline = data.get('sla_resolution_deadline')
+        self.date_close = data.get('date_close')
+        self.assigned_to = data.get('assigned_to')
+        self.reject_comment = data.get('reject_comment')
+        self.comment = data.get('comment')
+        self.priority = data.get('priority')
+        self.current_state = data.get('current_state')
+        self.history = []
+
+    @staticmethod
+    def _calculate_sla(event_data: dict, config: dict)-> dict:
+        scen = event_data['scenario']
+        type_sla = config['scenarios']['SCENARIOS'][scen]["sla_policy"]
+        need_sla = config["SLA"]["SLA_POLICIES"][type_sla]
+        react, resol = need_sla['reaction'], need_sla['resolution']
+
+        def convert(value: str)-> Optional[timedelta]:
+            if value is None:
+                return None
+            elif value.endswith("m"):
+                return timedelta(minutes=int(value[:-1]))
+            elif value.endswith("h"):
+                return timedelta(hours=int(value[:-1]))
+            elif value.endswith("d"):
+                return timedelta(days=int(value[:-1]))
+            raise ValueError(f"Invalid SLA format: {value}")
+
+        res = {'reaction': convert(react),
+               'resolution': convert(resol)}
+        return res
+
+    @classmethod
+    def from_created(
+            cls,
+            event_data: dict,
+            config: dict,
+            user: Optional[User]):
+        now = datetime.now()
+        sla_delta = cls._calculate_sla(event_data, config)
+        date = {
+        'creator_id': user.id,
+        'creator_name': user.name,
+        'branch_id': user.branch_id if user.branch_id else event_data.get('branch_id'),
+        'branch_name': user.branch_name if user.branch_name else event_data.get('branch_name'),
+        'event_type': event_data["event_type"],
+        'problem_category': event_data['problem_category'],
+        'problem_name': event_data['problem_name'],
+        'problem_class': event_data['problem_class'],
+        'problem_type': event_data['problem_type'],
+        'zone': event_data["zone"],
+        'scenario': event_data['scenario'],
+        'target': event_data['target'],
+        'date_create': now,
+        'sla_reaction_deadline': None if sla_delta['reaction'] is None else now + sla_delta['reaction'],
+        'sla_resolution_deadline': None if sla_delta['resolution'] is None else now + sla_delta['resolution'],
+        'date_close': None,
+        'assigned_to': None,
+        'reject_comment': None,
+        'comment': event_data.get('comment',None),
+        "priority": event_data.get("priority", None),
+        "current_state": event_data.get("current_state"),
+        'history': []
+        }
+
+        return cls(date)
+    @classmethod
+    def from_data_base(cls,
+                       ticket:dict):
+        return cls(ticket)
 
 
 def build_ticket(resolve_dict: dict,
