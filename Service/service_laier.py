@@ -7,7 +7,7 @@ from Repository.write_model import (ticket_assert, insert_history_record, update
                                     assign_ticket, change_priority, update_comment, reject_ticket, update_user_name)
 from Repository.read_model import encode_object, get_users_with_data, get_tickets_with_data, get_branch_with_data, \
  fetch_history_ticket
-from Core.Ticket_core import has_permission,create_ticket,update_ticket,User,Ticket, Branch
+from Core.Ticket_core import has_permission,update_ticket,User,Ticket, Branch, validate_event,resolve_decision
 from datetime import datetime
 from Core.loader import config
 from typing import Optional
@@ -54,37 +54,54 @@ def write_ticket(config:dict,
     if user.branch_id is None and 'branch_id' not in event_data:
         raise ServiseValidationBreak(f"if changed not branch: in event need field branch_id")
 
+    try:
+        validate_event(event_data, config)
+    except CoreValidationBreak as e:
+        core_logger.error(f"Event {event_data['problem_name']} incorrect. {e}")
+        raise
+
+
+    event_res = resolve_decision(event_data, config)
+
     solution = escalation(event_data, config, con=con)
 
-    ticket = create_ticket(config, event_data, user)
+    ticket = Ticket.from_created(event_res,config,user)
     ticket.update_solution(solution)
     state_for_history = ticket.current_state
 
     ticket_for_db = Ticket.for_data_base(ticket,config)
 
-    ticket_id = ticket_assert(ticket_for_db, con=con)
+    try:
+        ticket_id = ticket_assert(ticket_for_db, con=con)
+    except IncorrectWrite as e:
+        core_logger.error(f"Ticket has not write. Reason: {e}")
+        raise
 
-    insert_history_record(ticket_id,
-                          datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                          user.id,
-                          'current_state',
-                          None,
-                          state_for_history, con=con)
+    try:
+        insert_history_record(ticket_id,
+                              datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                              user.id,
+                              'current_state',
+                              None,
+                              state_for_history, con=con)
+    except IncorrectWrite as e:
+        core_logger.error(f"History has not write. Reason: {e}")
+        raise
 
     api_recipient = solution['api_recipient']
-    event_alert = {'branch_name': user.branch_name,
-                   'problem_name': ticket['problem_name'],
+    event_alert = {'branch_name': ticket.branch_name,
+                   'problem_name': ticket.problem_name,
                    'self': user.api_id,
                    'target':api_recipient.get('target'),
                    'manager':api_recipient.get('manager'),
-                   'problem_type': ticket.get('problem_type'),
+                   'problem_type': ticket.problem_type,
                    'ticket_id': ticket_id,
-                   'branch_id': ticket['branch_id'],
+                   'branch_id': ticket.branch_id,
                    'current_state': state_for_history,
                    'action': 'create_ticket',
-                   'comment': ticket.get('comment'),
-                   'type': ticket.get('event_type'),
-                   'scenario': ticket.get('scenario')}
+                   'comment': ticket.comment,
+                   'type': ticket.event_type,
+                   'scenario': ticket.scenario}
     return event_alert
 
 @transactional
