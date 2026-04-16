@@ -585,24 +585,6 @@ def apply_patch(ticket:dict, patch: dict, role: str)-> dict:
 
 
 
-def create_ticket(config:dict,
-                  event_data:dict,
-                  user: Optional[User]
-                  ):
-    try:
-        validate_event(event_data, config)
-    except TicketError as e:
-        core_logger.error(f"Event {event_data['problem_name']} incorrect. {e}")
-        raise
-    res = resolve_decision(event_data, config)
-    try:
-        ticket = Ticket.from_created(res,config,user)
-        core_logger.info(f'Ticket {ticket["problem_name"]} create')
-    except TicketError as e:
-        core_logger.error(f"Ticket not create. Reason: {e}")
-        raise
-    return ticket
-
 def update_ticket(config, ticket, path, role,type_fsm):
     try:
         full_ticket_validator(ticket,config)
