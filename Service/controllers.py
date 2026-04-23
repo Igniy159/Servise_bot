@@ -1,14 +1,15 @@
-from Service.Branch_service import lead_branches
-from Service.User_service import chek_permission,delete_user,change_user,create_user,receive_user,rename_user
-from Service.Common import check_user
-from Ticket_service import write_ticket,apply_write_patch,receive_tickets,receive_history
+from Service.branch_service import create_branch,rename_branch,receive_branch,delete_branch
+from Service.user_service import chek_permission,delete_user,change_user,create_user,receive_user,rename_user,has_permission
+from Service.common import check_user
+from ticket_service import write_ticket,apply_write_patch,receive_tickets,receive_history
 from Core.exceptions import PermissionDenied
 from Core.Ticket_core import User
 from datetime import datetime
+from Logger.logger import core_logger
 
 
 class BaseController:
-    def __init__(self,config,api_user_id:int,con=None):
+    def __init__(self, config: dict, api_user_id: int, con=None) -> None:
         user = check_user(api_user_id, con=con)
         if not user:
             raise PermissionDenied("User not found")
@@ -17,17 +18,27 @@ class BaseController:
         self.con = con
 
 
+    def _check_permission(self,flag):
+        if not has_permission(self.user.role, flag, self.config):
+            core_logger.error(f"This changed {self.user.name} cannot use {flag} action")
+            raise PermissionDenied(f'This {self.user.name} cannot use {flag} action')
+
+
 class BranchController(BaseController):
+    def __init__(self, config, api_user_id: int):
+        super().__init__(config, api_user_id)
+        self._check_permission('lead_branch')
 
     def create_branch(self,name:str):
-        return lead_branches(self.user,"create_branch",self.config,name=name,con=self.con)
+        return create_branch(self.user,name,con=self.con)
     def rename_branch(self,branch_id:int, new_name:str):
-        return lead_branches(self.user,"rename_branch", self.config, branch_id=branch_id,name=new_name,con=self.con)
-    def receive_branch(self):
-        filters = {"branch_activity": 1}
-        return lead_branches(self.user,"receive_branch", self.config, filters=filters, con=self.con)
+        return rename_branch(self.user, branch_id,new_name,con=self.con)
+    def receive_branch(self,filters):
+        return receive_branch(self.user, filters, con=self.con)
     def delete_branch(self, branch_id:int):
-        return lead_branches(self.user,"delete_branch",self.config,branch_id=branch_id, con=self.con)
+        return delete_branch(self.user, branch_id, con=self.con)
+
+
 
 class TicketController(BaseController):
     def create(self,
