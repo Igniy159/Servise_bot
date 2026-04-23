@@ -1,6 +1,7 @@
-from Service.service_laier import (check_user, lead_branches, write_ticket, apply_write_patch, chek_permission,
-                                   create_user, delete_user, change_user, receive_tickets, rename_user,
-                                   receive_user, receive_history)
+from Service.Branch_service import lead_branches
+from Service.User_service import chek_permission,delete_user,change_user,create_user,receive_user,rename_user
+from Service.Common import check_user
+from Ticket_service import write_ticket,apply_write_patch,receive_tickets,receive_history
 from Core.exceptions import PermissionDenied
 from Core.Ticket_core import User
 from datetime import datetime
@@ -50,7 +51,7 @@ class TicketController(BaseController):
         return apply_write_patch(self.config, self.user, patch, ticket_id,'change_priority', con=self.con)
     def assign(self, ticket_id, comment=None):
         patch = {'current_state': 'IN_PROGRESS',
-                 'assigned_to': self.user["user_id"],
+                 'assigned_to': self.user.id,
                  'comment': comment}
         return apply_write_patch(self.config, self.user, patch, ticket_id,'assigned_to', con=self.con)
 
@@ -76,18 +77,18 @@ class TicketController(BaseController):
 
     def get_ticket(self,filters=None, size='short'):
         tickets = receive_tickets(self.user,filters=filters, size=size,con=self.con)
-        event_alert = {'self': self.user['api_user_id'], 'tickets':tickets, 'action': 'receive_tickets'}
+        event_alert = {'self': self.user.api_id, 'tickets':tickets, 'action': 'receive_tickets'}
         return event_alert
 
     def get_history_ticket(self,ticket_id:int):
         history = receive_history(self.user, ticket_id, self.config, con=self.con)
-        event_alert = {'self': self.user['api_user_id'], 'history': history, 'action': 'receive_history'}
+        event_alert = {'self': self.user.api_id, 'history': history, 'action': 'receive_history'}
         return event_alert
 
 class UserController(BaseController):
     def create_user(self,user_name:str, api_user_id:int, role_id, depart_id=None, branch_id=None):
         chek_permission(self.user,'lead_user',self.config)
-        return create_user(self.user, user_name,api_user_id, role_id,
+        return create_user(self.user, user_name,api_user_id, role_id,self.config,
                 depart_id=depart_id, branch_id=branch_id, con=self.con)
 
 
@@ -96,11 +97,12 @@ class UserController(BaseController):
         return delete_user(user=self.user, user_id=user_id,con=self.con)
 
 
-    def change_user(self, user_id:int, role_id:int, depart_id=None, branch_id= None):
+    def change_user(self, user_id:int, role_id:int,config,depart_id=None, branch_id= None):
         chek_permission(self.user, 'admin_lead_user', self.config)
         return change_user(self.user
                            ,user_id= user_id,
                            role_id= role_id,
+                           config = config,
                            depart_id=depart_id,
                            branch_id=branch_id,
                            con=self.con)
