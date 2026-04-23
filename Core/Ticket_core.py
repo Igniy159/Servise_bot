@@ -668,6 +668,7 @@ class Ticket:
             raise
         core_logger.info(f"Ticket {self.ticket_id} update patch {patch.keys()}")
         return self
+
 def has_permission(role_name:str, flag: str, config: dict)->bool:
     permission = config["roles"]["ROLES"][role_name]['permissions']
     return permission.get(flag, False)

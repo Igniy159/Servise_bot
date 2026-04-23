@@ -121,23 +121,18 @@ def ticket_assert(ticket:dict,con=None)-> int:
 
 def ticket_update(ticket:dict,con=None):
     cur = con.cursor()
-    cur.execute("""UPDATE tickets 
-    SET
+    cur.execute("""UPDATE tickets SET
         current_state = (?),
         date_close = (?),
         assigned_to = (?),
         priority = (?),
         comment = (?),
         reject_comment = (?)
-    WHERE ticket_id = ?  
-    """,(ticket['current_state'],
+    WHERE ticket_id = ? """,
+        (ticket['current_state'],
          ticket['date_close'],
          ticket['assigned_to'],
          ticket['priority'],
          ticket['comment'],
          ticket['reject_comment'],
          ticket['ticket_id']))
-
-
-
-
