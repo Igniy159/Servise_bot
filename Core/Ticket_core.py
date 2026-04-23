@@ -541,7 +541,8 @@ class Ticket:
         state_map = config['enum']['TICKET_STATUS']
         depart_map = config['enum']['DEPARTMENTS']
 
-        res = {'creator_id': ticket.creator_id,
+        res = {'ticket_id': getattr(ticket,'ticket_id',None),
+                'creator_id': ticket.creator_id,
                   'branch_id': ticket.branch_name,
                   'event_type': ticket.event_type,
                   'problem_category': ticket.problem_category,
@@ -562,54 +563,111 @@ class Ticket:
                   'priority': priority_map.get(ticket.priority)}
         return res
 
-
     def update_solution(self, solution:dict)-> Optional[Ticket]:
         self.current_state = solution['current_state']
         self.target = solution.get('target', self.target)
         self.assigned_to = solution.get('assigned_to', None)
         return self
 
-def apply_patch(ticket:dict, patch: dict, role: str)-> dict:
-    res = copy.deepcopy(ticket)
-    res.update(patch)
-    for field in patch.keys():
-        history_entry= {
-            "timestamp": datetime.now(),
-            "role": role,
-            "changes": field,
-            "old": ticket[field],
-            "new": patch[field]
-        }
-        res['history'].append(history_entry)
-    return res
+    def _validation_ticket(self,config):
+        if self.priority is not None and self.priority not in config['enum']['priority']:
+            raise CoreValidationBreak(f"{self.priority} incorrect value")
+        if self.current_state not in config['enum']['TICKET_STATUS']:
+            raise CoreValidationBreak(f"{self.current_state} incorrect value")
+        if self.sla_reaction_deadline is not None and self.sla_reaction_deadline < self.date_create:
+            raise CoreValidationBreak("Reaction SLA before creation date")
+        if self.sla_resolution_deadline is not None and self.sla_resolution_deadline < self.date_create:
+            raise CoreValidationBreak("Resolution SLA before creation date")
+        if self.sla_resolution_deadline < self.sla_reaction_deadline:
+            raise CoreValidationBreak("Resolution SLA before reaction SLA date")
+        if self.date_close and self.current_state not in ('CLOSED', 'CANCELLED'):
+            raise LifecycleError(f"{self.date_close} status not CLOSED or CANCELLED")
+        if self.reject_comment and self.current_state != 'CANCELLED':
+            raise LifecycleError(f"{self.reject_comment} status not CANCELLED")
+        if self.assigned_to and self.current_state in ('NEW', 'CONFIRMED'):
+            raise LifecycleError(f"{self.assigned_to} status {self.current_state} incorrect ")
+        if self.current_state in ("CLOSED", "CANCELLED") and not self.date_close:
+            raise LifecycleError("Closed ticket without date_close")
 
+    def _validation_patch(self, patch:dict,config:dict, user: Optional[User],type_fsm:dict):
+        if self.event_type == "ALERT":
+            raise CoreValidationBreak("ALERT not mutable type")
 
+        actual_state = patch.get('current_state',self.current_state)
+        if 'current_state' in patch:
+            if patch['current_state'] not in type_fsm:
+                raise CoreValidationBreak(f"{patch['current_state']} incorrect type")
 
-def update_ticket(config, ticket, path, role,type_fsm):
-    try:
-        full_ticket_validator(ticket,config)
-    except TicketError as e:
-        core_logger.error(f"Ticket {ticket['ticket_id']} incorrect. Reason: {e}")
-        raise
-    try:
-        path_shema_validator(
-            path,
-            role,
-            ticket,
-            config,
-            type_fsm)
-    except TicketError as e:
-        core_logger.error(f"Path incorrect. Reason: {e}")
-        raise
-    updated_ticket = apply_patch(ticket, path, role)
-    try:
-        full_ticket_validator(updated_ticket, config)
-    except TicketError as e:
-        core_logger.error(f"Ticket incorrect. Reason: {e}")
-        raise
-    core_logger.info(f"Ticket {ticket['ticket_id']} update patch {path.keys()}")
-    return updated_ticket
+            next_states = type_fsm[self.current_state]['next'] or []
+            if patch['current_state'] not in next_states:
+                raise LifecycleError("Invalid lifecycle transition")
 
+        if actual_state in ("CLOSED", "CANCELLED") and "date_close" not in patch:
+            raise LifecycleError("Closing ticket requires date_close")
+
+        if 'date_close' in patch:
+            if not isinstance(patch['date_close'], datetime):
+                raise CoreValidationBreak(f" This {patch['date_close']} incorrect type")
+            if actual_state not in ('CLOSED', 'CANCELLED'):
+                raise LifecycleError(f" This {patch['date_close']} incorrect on step {actual_state}")
+
+        if 'assigned_to' in patch:
+            if not isinstance(patch['assigned_to'], int):
+                raise CoreValidationBreak(f" This {patch['assigned_to']} incorrect type")
+            if actual_state != 'IN_PROGRESS':
+                raise LifecycleError(f" This {patch['assigned_to']} incorrect on step {actual_state}")
+            if self.assigned_to:
+                raise CoreValidationBreak(f"Ticket assigned another changed")
+
+        if 'priority' in patch:
+            if not isinstance(patch['priority'], str):
+                raise CoreValidationBreak(f" This {patch['priority']} incorrect type")
+            if actual_state != 'CONFIRMED' and not config['roles']["ROLES"][user.role]['permissions'][
+                'extra_change_priority']:
+                raise LifecycleError(f" This {patch['priority']} incorrect on step {actual_state}")
+
+        if 'comment' in patch:
+            if patch['comment'] and not isinstance(patch['comment'], (str, type(None))):
+                raise CoreValidationBreak(f" This {patch['comment']} incorrect type")
+
+        if actual_state == "CANCELLED" and "reject_comment" not in patch:
+            raise CoreValidationBreak("Cancel requires reject_comment")
+
+        if 'reject_comment' in patch:
+            if not isinstance(patch['reject_comment'], str):
+                raise CoreValidationBreak(f" This {patch['reject_comment']} incorrect type")
+            if actual_state != 'CANCELLED':
+                raise LifecycleError(f" This {patch['reject_comment']} incorrect on step {actual_state}")
+        core_logger.info(f"ticket {self.ticket_id} and patch correct")
+
+    def _apply_patch(self, patch: dict):
+        allowed_fields = {'current_state','date_close','assigned_to',
+                 'priority','comment','reject_comment'}
+        for field, value in patch.items():
+            if field in allowed_fields:
+                old = getattr(self,field)
+                if old != value:
+                    setattr(self,field, value)
+                    self._log_history(field,old,value)
+
+    def _log_history(self, field, old, new):
+        self.history.append({
+            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+             "changes": field,
+             "old": old,
+             "new": new})
+
+    def update_ticket(self, config:dict, patch:dict, user:Optional[User],type_fsm:dict):
+        try:
+            self._validation_patch(patch,config,user,type_fsm)
+            self._apply_patch(patch, user)
+            self._validation_ticket(config)
+        except CoreValidationBreak:
+            raise
+        except LifecycleError:
+            raise
+        core_logger.info(f"Ticket {self.ticket_id} update patch {patch.keys()}")
+        return self
 def has_permission(role_name:str, flag: str, config: dict)->bool:
     permission = config["roles"]["ROLES"][role_name]['permissions']
     return permission.get(flag, False)
