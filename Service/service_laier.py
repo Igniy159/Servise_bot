@@ -2,12 +2,10 @@ from Core.exceptions import *
 from Logger.logger import core_logger
 from Repository.create_migrations import get_connect,sq
 from Repository.write_model import (ticket_assert, insert_history_record, update_user_params,
-                                    user_soft_del, user_activate, user_assert, ticket_state,
-                                    close_ticket, branch_activate, branch_rename, branch_soft_del, branch_assert,
-                                    assign_ticket, change_priority, update_comment, reject_ticket, update_user_name)
-from Repository.read_model import encode_object, get_users_with_data, get_tickets_with_data, get_branch_with_data, \
- fetch_history_ticket
-from Core.Ticket_core import has_permission,update_ticket,User,Ticket, Branch, validate_event,resolve_decision
+                                    user_soft_del, user_activate, user_assert, branch_activate,
+                                    branch_rename, branch_soft_del, branch_assert, update_user_name)
+from Repository.read_model import  get_users_with_data, get_tickets_with_data, get_branch_with_data, fetch_history_ticket
+from Core.Ticket_core import has_permission,User,Ticket, Branch, validate_event,resolve_decision
 from datetime import datetime
 from Core.loader import config
 from typing import Optional
@@ -104,51 +102,37 @@ def write_ticket(config:dict,
                    'scenario': ticket.scenario}
     return event_alert
 
+
 @transactional
-def apply_write_path(config, user, patch: dict, ticket_id: int,flag: str,con=None)-> dict:
-    if user['role_name'] == 'OWNER':
+def apply_write_patch(config:dict, user:Optional[User], patch: dict, ticket_id: int, flag: str, con=None)-> dict:
+    if user.role == 'OWNER':
         type_fsm = config['ticket_lifecycle']['ADMIN_LIFECYCLE']
     else:
         type_fsm = config['ticket_lifecycle']['NORMAL_LIFECYCLE']
 
-    if not has_permission(user['role_name'], flag, config):
-        raise PermissionDenied(f" User {user['user_name']} cannot apply {flag}")
+    if not has_permission(user.role, flag, config):
+        raise PermissionDenied(f" User {user.name} cannot apply {flag}")
 
     ticket = get_tickets_with_data({"ticket_id": ticket_id}, con=con)
     if not ticket:
         raise ServiseValidationBreak("Ticket not found")
     else:
-        ticket = ticket[0]
-    dep_name = ticket.get('target')
+        ticket = Ticket(ticket[0])
+    dep_name = ticket.target
 
-    if user['branch_name'] is not None and user['branch_name'] != ticket['branch_name']:
+    if user.branch_name is not None and user.branch_name != ticket.branch_name:
         raise PermissionDenied(f" User action only mine branch_ticket")
-    if ticket['assigned_to'] and flag == 'assigned_to':
-        raise PermissionDenied(f"Ticket assigned another changed")
-    path_func = {'current_state': ticket_state,
-                 'date_close': close_ticket,
-                 'assigned_to': assign_ticket,
-                 'priority': change_priority,
-                 'comment': update_comment,
-                 'reject_comment': reject_ticket
-                 }
-    if "priority" in patch:
-        priority_map = config['enum']['priority']
-        for i, k in priority_map.items():
-            if k == patch['priority']:
-                patch['priority'] = i
-    ticket = update_ticket(config, ticket, patch, user['role_name'], type_fsm)
-    patch = encode_object(patch,config,con=con)
 
-    for field, value in patch.items():
-        if field not in path_func:
-            continue
-        func = path_func[field]
-        func(ticket_id, value, con=con)
-    for i in ticket['history']:
-        insert_history_record(ticket_id, i['timestamp'].strftime("%Y-%m-%d %H:%M:%S"),
-                              user['user_id'], i['changes'], i['old'], i['new'], con=con)
-    ticket['history'].clear()
+    update_ticket = ticket.update_ticket(config, patch, user, type_fsm)
+
+    for record in update_ticket.history:
+        insert_history_record(ticket_id,
+                            record['timestamp'],
+                            user.id,
+                            record['changes'],
+                            record['old'],
+                            record['new'], con=con)
+    ticket.history.clear()
 
 
     event_alert = {}
@@ -159,9 +143,9 @@ def apply_write_path(config, user, patch: dict, ticket_id: int,flag: str,con=Non
     for key in users:
         if dep_name and key['depart_name'] == dep_name:
             target.append(key['api_user_id'])
-        elif key['branch_name'] == ticket['branch_name'] and key['role_name'] == "MANAGER":
+        elif key['branch_name'] == ticket.branch_name and key['role_name'] == "MANAGER":
             manager.append(key['api_user_id'])
-        elif flag == 'assigned_to' or key['user_id'] == ticket.get('assigned_to'):
+        elif flag == 'assigned_to' or key['user_id'] == ticket.assigned_to:
             assig.append(key['api_user_id'])
             event_alert['assigned_to'] = key['user_name']    #this name for message
 
@@ -173,7 +157,7 @@ def apply_write_path(config, user, patch: dict, ticket_id: int,flag: str,con=Non
     event_alert['comment'] = patch.get('comment')
     event_alert['reject_comment'] = patch.get('reject_comment')
     event_alert['current_state'] = patch.get('current_state')
-    event_alert['self'] = user['api_user_id']
+    event_alert['self'] = user.api_id
     event_alert['manager'] = manager
     event_alert['assigned'] = assig       #this sends api_user_id
 

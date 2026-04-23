@@ -1,4 +1,4 @@
-from Service.service_laier import (check_user, lead_branches, write_ticket, apply_write_path, chek_permission,
+from Service.service_laier import (check_user, lead_branches, write_ticket, apply_write_patch, chek_permission,
                                    create_user, delete_user, change_user, receive_tickets, rename_user,
                                    receive_user, receive_history)
 from Core.exceptions import PermissionDenied
@@ -36,43 +36,43 @@ class TicketController(BaseController):
     def confirm(self, ticket_id: int, comment= None):
         patch = {'current_state': 'CONFIRMED',
                  'comment': comment}
-        return apply_write_path(self.config,self.user, patch, ticket_id, 'confirm', con=self.con)
+        return apply_write_patch(self.config,self.user, patch, ticket_id, 'confirm', con=self.con)
 
     def reject(self, ticket_id: int, reject_comment:str):
         patch = {'current_state': 'CANCELLED',
                  'reject_comment': reject_comment,
                  'date_close': datetime.now()}
-        return apply_write_path(self.config, self.user, patch, ticket_id,'reject_comment', con=self.con)
+        return apply_write_patch(self.config, self.user, patch, ticket_id,'reject_comment', con=self.con)
 
     def priority(self, ticket_id: int, new_priority_id: int,comment=None):
         patch = {"priority": new_priority_id,
                  'comment': comment}
-        return apply_write_path(self.config, self.user, patch, ticket_id,'change_priority', con=self.con)
+        return apply_write_patch(self.config, self.user, patch, ticket_id,'change_priority', con=self.con)
     def assign(self, ticket_id, comment=None):
         patch = {'current_state': 'IN_PROGRESS',
                  'assigned_to': self.user["user_id"],
                  'comment': comment}
-        return apply_write_path(self.config, self.user, patch, ticket_id,'assigned_to', con=self.con)
+        return apply_write_patch(self.config, self.user, patch, ticket_id,'assigned_to', con=self.con)
 
     def on_waiting(self, ticket_id, comment):
         patch = {'current_state': 'WAITING_EXTERNAL',
                  'comment': comment}
-        return apply_write_path(self.config, self.user, patch, ticket_id,'on_off_external', con=self.con)
+        return apply_write_patch(self.config, self.user, patch, ticket_id,'on_off_external', con=self.con)
 
     def off_waiting(self, ticket_id, comment=None):
         patch = {'current_state': 'IN_PROGRESS',
                  'comment': comment}
-        return apply_write_path(self.config, self.user, patch, ticket_id,'on_off_external', con=self.con)
+        return apply_write_patch(self.config, self.user, patch, ticket_id,'on_off_external', con=self.con)
 
     def finish(self, ticket_id, comment=None):
         patch = {'current_state': 'RESOLVED',
                  'comment': comment}
-        return apply_write_path(self.config, self.user, patch, ticket_id,'finish_ticket', con=self.con)
+        return apply_write_patch(self.config, self.user, patch, ticket_id,'finish_ticket', con=self.con)
     def close(self,ticket_id,comment= None):
         patch = {'current_state': 'CLOSED',
                  'comment': comment,
                  'date_close': datetime.now()}
-        return apply_write_path(self.config, self.user, patch, ticket_id,'close_ticket',con=self.con)
+        return apply_write_patch(self.config, self.user, patch, ticket_id,'close_ticket',con=self.con)
 
     def get_ticket(self,filters=None, size='short'):
         tickets = receive_tickets(self.user,filters=filters, size=size,con=self.con)

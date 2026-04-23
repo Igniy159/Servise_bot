@@ -119,25 +119,24 @@ def ticket_assert(ticket:dict,con=None)-> int:
 
     return cur.lastrowid
 
-def ticket_state(ticket_id, new_state,con=None):
+def ticket_update(ticket:dict,con=None):
     cur = con.cursor()
-    cur.execute("""UPDATE tickets SET current_state = (?) WHERE ticket_id = (?)""", (new_state, ticket_id))
-def assign_ticket(ticket_id, user_id,con=None):
-    cur = con.cursor()
-    cur.execute("""UPDATE tickets SET assigned_to = ? WHERE ticket_id = ? """, (user_id, ticket_id))
-def close_ticket(ticket_id, data_close,con=None):
-    cur = con.cursor()
-    cur.execute("""UPDATE tickets SET date_close = (?) WHERE ticket_id = (?)""", (data_close, ticket_id))
-def reject_ticket(ticket_id, reject_comm,con=None):
-    cur = con.cursor()
-    cur.execute("""UPDATE tickets SET reject_comment = (?) WHERE ticket_id = (?)""", (reject_comm, ticket_id))
-def change_priority(ticket_id, priority_id,con=None):
-    cur = con.cursor()
-    cur.execute("""UPDATE tickets SET priority = (?) WHERE ticket_id = (?)""", (priority_id, ticket_id))
-def update_comment(ticket_id, new_comment,con=None):
-    cur = con.cursor()
-    cur.execute("""UPDATE tickets SET comment = (?) WHERE ticket_id = (?)""", (new_comment, ticket_id))
-
+    cur.execute("""UPDATE tickets 
+    SET
+        current_state = (?),
+        date_close = (?),
+        assigned_to = (?),
+        priority = (?),
+        comment = (?),
+        reject_comment = (?)
+    WHERE ticket_id = ?  
+    """,(ticket['current_state'],
+         ticket['date_close'],
+         ticket['assigned_to'],
+         ticket['priority'],
+         ticket['comment'],
+         ticket['reject_comment'],
+         ticket['ticket_id']))
 
 
 
