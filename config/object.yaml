@@ -2,135 +2,195 @@ ARS_OBJECT:
   bar:
    COFFEE_MACHINE:
      class: PRODUCTION_CRITICAL
+     target: ARS
    COFFEE_GRINDER:
      class: PRODUCTION_CRITICAL
+     target: ARS
    ICE_MAKER:
      class: PRODUCTION_IMPORTANT
+     target: ARS
    REFRIGERATOR:
      class: PRODUCTION_IMPORTANT
+     target: ARS
    FREEZER:
      class: PRODUCTION_IMPORTANT
+     target: ARS
    ICE_CRUSH:
      class: PRODUCTION_IMPORTANT
+     target: ARS
    JUICER:
      class: COMFORT
+     target: ARS
    BLENDER:
      class: COMFORT
+     target: ARS
    BOILER:
      class: PRODUCTION_CRITICAL
+     target: ARS
    TV:
      class: COMFORT
+     target: ARS
    LIGHTING:
      class: PRODUCTION_IMPORTANT
+     target: ARS
    FAUCET:
      class: PRODUCTION_IMPORTANT
+     target: ARS
    PIPES:
      class: PRODUCTION_CRITICAL
+     target: ARS
    SOCKET:
      class: PRODUCTION_CRITICAL
+     target: ARS
    WATER_FILTER:
      class: PRODUCTION_CRITICAL
+     target: ARS
    OTHER:
      class: COMFORT
+     target: ARS
 
   sales:
    TV:
      class: COMFORT
+     target: ARS
    LIGHTING:
      class: PRODUCTION_IMPORTANT
+     target: ARS
    MICROWAVE:
      class: COMFORT
+     target: ARS
    BACE_OVEN:
      class: PRODUCTION_IMPORTANT
+     target: ARS
    FAUCET:
      class: PRODUCTION_CRITICAL
+     target: ARS
    PIPES:
      class: PRODUCTION_CRITICAL
+     target: ARS
    SOCKET:
      class: PRODUCTION_CRITICAL
+     target: ARS
    DRY_SHOWCASE:
      class: COMFORT
+     target: ARS
    COLD_SHOWCASE:
      class: PRODUCTION_IMPORTANT
+     target: ARS
    SHOWCASE_REFRIGERATOR:
      class: PRODUCTION_CRITICAL
+     target: ARS
    DOOR_FRIDGE:
      class: PRODUCTION_CRITICAL
+     target: ARS
    SHELF:
      class: COMFORT
+     target: ARS
    OTHER:
      class: COMFORT
+     target: ARS
 
   outdoor:
    SIGNBOARD:
      class: PRODUCTION_IMPORTANT
+     target: ARS
    LIGHTING:
       class: PRODUCTION_IMPORTANT
+      target: ARS
    OUTDOOR_FURNITURE:
      class: COMFORT
+     target: ARS
    CANOPY:
      class: COMFORT
+     target: ARS
    FRONT_DOOR:
      class: COMFORT
+     target: ARS
    OTHER:
      class: COMFORT
+     target: ARS
 
   hall:
    LIGHTING:
      class: PRODUCTION_IMPORTANT
+     target: ARS
    SOCKET:
      class: PRODUCTION_IMPORTANT
+     target: ARS
    SHOWCASE_REFRIGERATOR:
       class: PRODUCTION_CRITICAL
+      target: ARS
    FURNITURE:
      class: COMFORT
+     target: ARS
    AIR_CONDITIONER:
      class: PRODUCTION_IMPORTANT
+     target: ARS
    HEATER:
      class: PRODUCTION_IMPORTANT
+     target: ARS
 
   technical_staff:
    SINK:
      class: PRODUCTION_IMPORTANT
+     target: ARS
    LIGHTING:
      class: PRODUCTION_IMPORTANT
+     target: ARS
    PIPES:
      class: PRODUCTION_CRITICAL
+     target: ARS
    FAUCET:
      class: PRODUCTION_CRITICAL
+     target: ARS
    OTHER:
      class: COMFORT
+     target: ARS
 
   staff:
    MICROWAVE:
      class: COMFORT
+     target: ARS
    LIGHTING:
      class: COMFORT
+     target: ARS
    REFRIGERATOR:
      class: COMFORT
+     target: ARS
    SOCKET:
      class: PRODUCTION_IMPORTANT
+     target: ARS
    LOCKER:
      class: COMFORT
+     target: ARS
    OTHER:
      class: COMFORT
+     target: ARS
 
   freezer_room:
     FREEZER:
       class: PRODUCTION_CRITICAL
+      target: ARS
 
   restroom:
    LIGHTING:
      class: PRODUCTION_IMPORTANT
+     target: ARS
    PIPES:
      class: PRODUCTION_IMPORTANT
+     target: ARS
    SINK:
      class: COMFORT
+     target: ARS
    TOILET:
      class: PRODUCTION_IMPORTANT
+     target: ARS
    HAND_DRYER:
      class: COMFORT
+     target: ARS
    SOAP_DISPENSER:
      class: COMFORT
+     target: ARS
    PAPER_DISPENSER:
      class: COMFORT
+     target: ARS

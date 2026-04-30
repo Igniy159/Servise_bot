@@ -1,11 +1,8 @@
-from copy import deepcopy
 from datetime import datetime, timedelta
 from typing import Optional
-from Logger.logger import core_logger
-import copy
-from Core.exceptions import TicketError,CoreValidationBreak,LifecycleError
-
-
+from api.command import CmdCreateTicket
+from logger.logger import core_logger
+from core.exceptions import CoreValidationBreak,LifecycleError
 
 def string_shema_validator(config: dict) -> None:
     enum_classes = config['enum']
@@ -161,269 +158,6 @@ def string_shema_validator(config: dict) -> None:
                 raise CoreValidationBreak(f"{j} SLA incorrect value")
     core_logger.info("Config correct")
 
-def validate_event(event: dict, config: dict) -> None:
-    if "type" not in event or event['type'] not in config['enum']['TYPE_EVENT']:
-        raise CoreValidationBreak("Incorrect type")
-    if 'problem_category' not in event or event['problem_category'] is None:
-        raise CoreValidationBreak("Incorrect problem_category")
-    if 'problem_name'not in event or event['problem_name'] is None:
-        raise CoreValidationBreak("Incorrect problem_name")
-    if 'problem_class' not in event or event['problem_class'] is None:
-        raise CoreValidationBreak("Incorrect problem_class")
-    if ('problem_type' not in event or event['problem_type'] is None) and event["type"] != "ALERT":
-        raise CoreValidationBreak("Incorrect 'problem_type'")
-
-    if event["type"] == "OBJECT_PROBLEM":
-        validate_object(event,config)
-    elif event["type"] == "REQUEST":
-        validate_request(event,config)
-    elif event['type'] == "ALERT":
-        validate_alert(event,config)
-    core_logger.info(f"Event {event['problem_name']} correct")
-
-def validate_object(event: dict,config:dict):
-    if event['problem_class'] not in config["enum"]['OBJECT_CLASSES']:
-        raise CoreValidationBreak(f"INCORRECT OBJECT_CLASS - {event['problem_class']}")
-    elif event['problem_class'] not in config["priority_matrix"]['OBJECT_CLASSES']:
-        raise CoreValidationBreak(f"INCORRECT OBJECT_CLASS - {event['problem_class']}")
-
-    elif event['problem_type'] not in config["enum"]["PROBLEMS"]:
-        raise CoreValidationBreak(f"INCORRECT type_problem - {event['problem_type']}")
-    elif event['problem_type'] not in config["priority_matrix"]['OBJECT_CLASSES'][event['problem_class']]:
-        raise CoreValidationBreak(f"INCORRECT type_problem - {event['problem_type']}")
-
-    elif event['problem_category'] not in config["enum"]["zones"]:
-        raise CoreValidationBreak(f"INCORRECT type_problem - {event['problem_category']}")
-
-    if "zone" not in event or event["zone"] is None:
-        raise CoreValidationBreak("Incorrect zone")
-    elif event["zone"] not in config["enum"]["zones"]:
-        raise CoreValidationBreak(f"INCORRECT zone - {event['zone']}")
-    elif event["zone"] not in config["object"]["ARS_OBJECT"]:
-        raise CoreValidationBreak(f"INCORRECT zone - {event['zone']}")
-
-    elif event['problem_name'] not in config["object"]["ARS_OBJECT"][event['zone']]:
-        raise CoreValidationBreak(f"INCORRECT problem - {event['problem_name']}")
-
-    if config['object']['ARS_OBJECT'][event['zone']][event['problem_name']]['class'] != event["problem_class"]:
-        raise CoreValidationBreak(f"Incorrect class - {event['problem_class']}")
-    elif event['problem_name'] not in config['object']['ARS_OBJECT'][event['zone']]:
-        raise CoreValidationBreak(f"Incorrect name - {event['problem_name']}")
-    elif event['zone'] != event["problem_category"]:
-        raise CoreValidationBreak(f"Incorrect zone - {event['zone']}")
-
-def validate_request(event: dict,config:dict):
-    if event['problem_class'] not in config["enum"]['REQUEST_CLASSES']:
-        raise CoreValidationBreak(f"INCORRECT request_class - {event['problem_class']}")
-    elif event['problem_class'] not in config["rules_request"]["REQUEST_CLASSES"]:
-        raise CoreValidationBreak(f"INCORRECT request_class - {event['problem_class']}")
-
-    if event['problem_type'] not in config['enum']['TYPE_REQUEST']:
-        raise CoreValidationBreak(f"INCORRECT request_type - {event['problem_type']}")
-    elif event['problem_type'] not in config["rules_request"]["REQUEST_CLASSES"][event['problem_class']]:
-        raise CoreValidationBreak(f"INCORRECT request_type - {event['problem_type']}")
-
-    if event['problem_category'] not in config["enum"]["REQUEST_CATEGORY"]:
-        raise CoreValidationBreak(f"INCORRECT request_category - {event['problem_category']}")
-
-    elif event['problem_name'] not in config['request'][event['problem_category']]:
-        raise CoreValidationBreak(f"INCORRECT request - {event['problem_name']}")
-
-    if event['problem_class'] != config['request'][event['problem_category']][event['problem_name']]['class']:
-        raise CoreValidationBreak(f"INCORRECT request_class - {event['problem_class']}")
-    elif event['problem_name'] not in config['request'][event['problem_category']]:
-        raise CoreValidationBreak(f"INCORRECT request_name - {event['problem_name']}")
-
-def validate_alert(event: dict,config:dict):
-    if event.get("problem_type") is not None:
-        raise CoreValidationBreak("ALERT must not contain problem_type")
-
-    if event['problem_class'] not in config['enum']['CLASS_ALERTS']:
-        raise CoreValidationBreak(f"INCORRECT alert_class - {event['problem_class']}")
-    elif event['problem_class'] not in config["rules_alert"]:
-        raise CoreValidationBreak(f"INCORRECT alert_class - {event['problem_class']}")
-
-    if event['problem_category'] not in config['enum']['CATEGORY_ALERTS']:
-        raise CoreValidationBreak(f"INCORRECT alert_category - {event['problem_category']}")
-    elif event['problem_category'] not in config["alerts"]:
-        raise CoreValidationBreak(f"INCORRECT alert_category - {event['problem_category']}")
-
-    if event['problem_class'] != config['alerts'][event['problem_category']][event['problem_name']]['class']:
-        raise CoreValidationBreak(f"INCORRECT alert_problem - {event['problem_class']}")
-    if event['problem_name'] not in config['alerts'][event['problem_category']]:
-        raise CoreValidationBreak(f"INCORRECT alert_problem - {event['problem_name']}")
-
-
-def resolve_decision(event_data: dict, config: dict)-> dict:
-
-    res_dict = deepcopy(event_data)
-
-    if event_data["type"] == "OBJECT_PROBLEM":
-        matrix = config["priority_matrix"]['OBJECT_CLASSES'][event_data['problem_class']][event_data['problem_type']]
-        res_dict["priority"] = matrix["priority"]
-        res_dict["scenario"] = matrix["scenario"]
-        res_dict["target"] = 'ARS'  #target object only ARS
-
-    elif event_data["type"] == "REQUEST":
-        req = config["rules_request"]['REQUEST_CLASSES'][event_data['problem_class']][event_data['problem_type']]
-        res_dict["priority"] = req["priority"]
-        res_dict["scenario"] = req["scenario"]
-        res_dict["target"] = config["rules_request"]['REQUEST_CLASSES'][event_data["problem_class"]]["target"]
-
-    elif event_data['type'] == "ALERT":
-        al = config['rules_alert'][event_data['problem_class']]
-        res_dict["scenario"] = al["scenario"]
-        res_dict["target"] = al["target"]
-
-    return res_dict
-
-
-def path_shema_validator(path: dict, role:str, ticket:dict, config: dict,type_fsm:dict)-> None:
-    for field in path:
-        if field not in config['ticket']['TICKET']['mutable']:
-            raise CoreValidationBreak(f"{field} not mutable type")
-    if role not in config['enum']['ROLES']:
-        raise CoreValidationBreak(f"{role} incorrect type")
-    if ticket['event_type'] == "ALERT":
-        raise CoreValidationBreak("ALERT not mutable type")
-
-    actual_state = ticket['current_state']
-    if 'current_state'in path:
-        actual_state = path['current_state']
-        if path['current_state'] not in type_fsm:
-            raise CoreValidationBreak(f"{path['current_state']} incorrect type")
-        life = type_fsm
-        next_states = life[ticket["current_state"]]['next'] or []
-
-        if path['current_state'] not in next_states:
-            raise LifecycleError("Invalid lifecycle transition")
-
-    if actual_state in ("CLOSED", "CANCELLED") and "date_close" not in path:
-        raise LifecycleError("Closing ticket requires date_close")
-
-    if 'date_close' in path:
-        if  not isinstance(path['date_close'],datetime):
-            raise CoreValidationBreak(f" This {path['date_close']} incorrect type")
-        if actual_state not in ('CLOSED', 'CANCELLED'):
-            raise LifecycleError(f" This {path['date_close']} incorrect on step {actual_state}")
-
-    if 'assigned_to' in path:
-        if not isinstance(path['assigned_to'], int):
-            raise CoreValidationBreak(f" This {path['assigned_to']} incorrect type")
-        if actual_state != 'IN_PROGRESS':
-            raise LifecycleError(f" This {path['assigned_to']} incorrect on step {actual_state}")
-
-    if 'priority' in path:
-        if not isinstance(path['priority'], str):
-            raise CoreValidationBreak(f" This {path['priority']} incorrect type")
-        if actual_state != 'CONFIRMED' and not config['roles']["ROLES"][role]['permissions']['extra_change_priority']:
-            raise LifecycleError(f" This {path['priority']} incorrect on step {actual_state}")
-
-    if 'comment' in path:
-        if path['comment'] and not isinstance(path['comment'], (str,type(None))):
-            raise CoreValidationBreak(f" This {path['comment']} incorrect type")
-
-    if actual_state == "CANCELLED" and "reject_comment" not in path:
-        raise CoreValidationBreak("Cancel requires reject_comment")
-
-    if 'reject_comment' in path:
-        if not isinstance(path['reject_comment'], str):
-            raise CoreValidationBreak(f" This {path['reject_comment']} incorrect type")
-        if  actual_state != 'CANCELLED':
-            raise LifecycleError(f" This {path['reject_comment']} incorrect on step {actual_state}")
-    core_logger.info("path_correct")
-
-
-def encode_ticket_validator(ticket:dict)-> None:
-    required_fields = ['creator_id', 'branch_id','event_type','problem_category',
-    'problem_name','problem_class','problem_type','zone','scenario','target',
-        'date_create','sla_reaction_deadline','sla_resolution_deadline',
-        'date_close','assigned_to','reject_comment','comment',
-        "priority","current_state",'history']
-
-    for field in required_fields:
-        if field not in ticket:
-            raise CoreValidationBreak(f"This {field} not in ticket")
-    type_map= {
-        'creator_id': int,
-        'branch_id': int,
-        'event_type': str,
-        'problem_category':str,
-        'problem_name': str,
-        'problem_class': str,
-        'problem_type': (type(None),str),
-        'zone': (type(None),str),
-        'scenario': str,
-        'target': int,
-        'date_create': str,
-        'sla_reaction_deadline': (type(None),str),
-        'sla_resolution_deadline': (type(None),str),
-        'date_close': (type(None), str),
-        'assigned_to': (type(None), int),
-        'reject_comment': (type(None), str),
-        'comment': (str,type(None)),
-        "priority": (int,type(None)),
-        "current_state": int,
-        'history': list
-    }
-    for field, expected in type_map.items():
-        if not isinstance(ticket.get(field), expected):
-            raise CoreValidationBreak(f"{field} incorrect type")
-    core_logger.info("party_ticket correct")
-def full_ticket_validator(ticket: dict, config: dict)-> None:
-    required_fields = list(config["ticket"]["TICKET"]["immutable"]) + list(config["ticket"]["TICKET"]["mutable"])
-    if "comment" in ticket:
-        required_fields.remove("comment")
-    for field in required_fields:
-        if field not in ticket:
-            raise CoreValidationBreak(f"This {field} not in ticket")
-    type_map= {
-        "ticket_id": int,
-        'creator_id': int,
-        'creator_name': str,
-        'branch_id': int,
-        'branch_name': str,
-        'event_type': str,
-        'problem_category':str,
-        'problem_name': str,
-        'problem_class': str,
-        'problem_type': (type(None),str),
-        'zone': (type(None),str),
-        'scenario': str,
-        'target': str,
-        'date_create': datetime,
-        'sla_reaction_deadline': (type(None),datetime),
-        'sla_resolution_deadline': (type(None),datetime),
-        'date_close': (type(None), datetime),
-        'assigned_to': (type(None), int, str),
-        'reject_comment': (type(None), str),
-        'comment': (str,type(None)),
-        "priority": (str,type(None)),
-        "current_state": str,
-        'history': list
-    }
-    for field, expected in type_map.items():
-        if not isinstance(ticket.get(field), expected):
-            raise CoreValidationBreak(f"{field} incorrect type")
-    if ticket["priority"] is not None and ticket["priority"] not in config['enum']['priority']:
-        raise CoreValidationBreak(f"{ticket['priority']} incorrect value")
-    if ticket["current_state"] not in config['enum']['TICKET_STATUS']:
-        raise CoreValidationBreak(f"{ticket['current_state']} incorrect value")
-    if ticket["sla_reaction_deadline"] is not None and ticket["sla_reaction_deadline"] < ticket["date_create"]:
-        raise CoreValidationBreak("Reaction SLA before creation date")
-    if ticket["sla_resolution_deadline"] is not None and ticket["sla_resolution_deadline"] < ticket["date_create"]:
-        raise CoreValidationBreak("Resolution SLA before creation date")
-    if ticket["sla_resolution_deadline"] < ticket["sla_reaction_deadline"]:
-        raise CoreValidationBreak("Resolution SLA before reaction SLA date")
-    if ticket['date_close']  and ticket["current_state"] not in ('CLOSED','CANCELLED'):
-        raise LifecycleError(f"{ticket['date_close']} status not CLOSED or CANCELLED")
-    if ticket['reject_comment'] and ticket["current_state"] != 'CANCELLED':
-        raise LifecycleError(f"{ticket['reject_comment']} status not CANCELLED")
-    if ticket['assigned_to'] and ticket["current_state"] in ('NEW','CONFIRMED'):
-        raise LifecycleError(f"{ticket['assigned_to']} status {ticket['current_state']} incorrect ")
-    if ticket["current_state"] in ("CLOSED", "CANCELLED") and not ticket["date_close"]:
-        raise LifecycleError("Closed ticket without date_close")
-    core_logger.info(f"ticket {ticket['ticket_id']} correct")
 
 class User:
     __doc__ = "This class for user operations"
@@ -438,13 +172,6 @@ class User:
         self.branch_id = user.get('branch_id', None)
         self.branch_name = user.get('branch_name',None)
 
-class Branch:
-    __doc__ = "This class for branch operations"
-
-    def __init__(self, branch:dict):
-        self.branch_id = branch['branch_id']
-        self.branch_name = branch['branch_name']
-        self.branch_manager = branch.get('branch_manager',None)
 
 class Ticket:
     __doc__ = "This class for ticket field validations and patch operations. He without hard logic"
@@ -475,11 +202,11 @@ class Ticket:
         self.history = []
 
     @staticmethod
-    def _calculate_sla(event_data: dict, config: dict)-> dict:
-        scen = event_data['scenario']
+    def _calculate_sla(resolve: dict, config: dict)-> tuple:
+        scen = resolve['scenario']
         type_sla = config['scenarios']['SCENARIOS'][scen]["sla_policy"]
         need_sla = config["SLA"]["SLA_POLICIES"][type_sla]
-        react, resol = need_sla['reaction'], need_sla['resolution']
+        react_time, resol_time = need_sla['reaction'], need_sla['resolution']
 
         def convert(value: str)-> Optional[timedelta]:
             if value is None:
@@ -492,40 +219,39 @@ class Ticket:
                 return timedelta(days=int(value[:-1]))
             raise ValueError(f"Invalid SLA format: {value}")
 
-        res = {'reaction': convert(react),
-               'resolution': convert(resol)}
-        return res
+        return convert(react_time), convert(resol_time)
 
     @classmethod
     def from_created(
             cls,
-            event_data: dict,
+            cmd: CmdCreateTicket,
+            resolve: dict,
             config: dict,
-            user: Optional[User])-> Optional[Ticket]:
+            user: User)-> Ticket:
         now = datetime.now()
-        sla_delta = cls._calculate_sla(event_data, config)
+        react_time, resol_time = cls._calculate_sla(resolve, config)
         date = {
         'creator_id': user.id,
         'creator_name': user.name,
-        'branch_id': user.branch_id if user.branch_id else event_data.get('branch_id'),
-        'branch_name': user.branch_name if user.branch_name else event_data.get('branch_name'),
-        'event_type': event_data["event_type"],
-        'problem_category': event_data['problem_category'],
-        'problem_name': event_data['problem_name'],
-        'problem_class': event_data['problem_class'],
-        'problem_type': event_data['problem_type'],
-        'zone': event_data["zone"],
-        'scenario': event_data['scenario'],
-        'target': event_data['target'],
+        'branch_id': user.branch_id if user.branch_id else cmd.branch_id,
+        'branch_name': user.branch_name if user.branch_name else resolve.get('branch_name'),
+        'event_type': cmd.event_type,
+        'problem_category': cmd.problem_category,
+        'problem_name': cmd.problem_name,
+        'problem_class': cmd.problem_class,
+        'problem_type': cmd.problem_type,
+        'zone': cmd.zone,
+        'scenario': resolve['scenario'],
+        'target': resolve['target'],
         'date_create': now,
-        'sla_reaction_deadline': None if sla_delta['reaction'] is None else now + sla_delta['reaction'],
-        'sla_resolution_deadline': None if sla_delta['resolution'] is None else now + sla_delta['resolution'],
+        'sla_reaction_deadline': None if react_time is None else now + react_time,
+        'sla_resolution_deadline': None if resol_time is None else now + resol_time,
         'date_close': None,
         'assigned_to': None,
         'reject_comment': None,
-        'comment': event_data.get('comment',None),
-        "priority": event_data.get("priority", None),
-        "current_state": event_data.get("current_state"),
+        'comment': cmd.comment,
+        "priority": cmd.priority or resolve['priority'],
+        "current_state": None,
         'history': []
         }
 
@@ -668,7 +394,3 @@ class Ticket:
             raise
         core_logger.info(f"Ticket {self.ticket_id} update patch {patch.keys()}")
         return self
-
-def has_permission(role_name:str, flag: str, config: dict)->bool:
-    permission = config["roles"]["ROLES"][role_name]['permissions']
-    return permission.get(flag, False)
