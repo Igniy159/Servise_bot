@@ -1,80 +1,99 @@
 ROLES:
   EMPLOYEE:
     permissions:
-      create_ticket: true
-      assigned_to: false
-      change_state: false
-      on_off_external: false
-      finish_ticket: false
-      close_ticket: false
-      change_priority: false
-      reject_comment: false
-      extra_change_priority: false
       lead_branch: false
       lead_user: false
-      admin_lead_user: false
-      confirm: false
-      history_vision: false
+      lead_ticket:
+        create: true
+        confirm: false
+        reject: false
+        priority: false
+        assign: false
+        on_waiting: false
+        off_waiting: false
+        finish: false
+        close: false
+        get_ticket: true
+        get_history: true
+
     required_field:
       branch_id: true
       depart_id: false
 
   MANAGER:
     permissions:
-      create_ticket: true
-      assigned_to: false
-      change_state: true
-      on_off_external: false
-      finish_ticket: false
-      close_ticket: true
-      change_priority: true
-      reject_comment: true
-      extra_change_priority: false
       lead_branch: false
-      lead_user: true
-      admin_lead_user: false
-      confirm: true
-      history_vision: true
+      lead_user:
+        create_user: true
+        delete_user: true
+        change_user: false
+        rename_user: false
+        receive_user: true
+
+      lead_ticket:
+        create: true
+        confirm: true
+        reject: true
+        priority: true
+        assign: false
+        on_waiting: false
+        off_waiting: false
+        finish: false
+        close: true
+        get_ticket: true
+        get_history: true
+
     required_field:
       branch_id: true
       depart_id: false
 
   SPECIALIST:
     permissions:
-      create_ticket: false
-      assigned_to: true
-      on_off_external: true
-      finish_ticket: true
-      change_state: true
-      close_ticket: false
-      change_priority: false
-      reject_comment: false
-      extra_change_priority: false
       lead_branch: false
       lead_user: false
-      admin_lead_user: false
-      confirm: false
-      history_vision: true
+      lead_ticket:
+        create: false
+        confirm: false
+        reject: false
+        priority: false
+        assign: true
+        on_waiting: true
+        off_waiting: true
+        finish: true
+        close: false
+        get_ticket: true
+        get_history: true
+
     required_field:
       branch_id: false
       depart_id: true
 
   OWNER:
     permissions:
-      create_ticket: true
-      assigned_to: true
-      change_state: true
-      on_off_external: true
-      finish_ticket: true
-      close_ticket: true
-      change_priority: true
-      reject_comment: true
-      extra_change_priority: true   #only OWNER can change priority at any time lifecycle
-      lead_branch: true
-      lead_user: true
-      admin_lead_user: true
-      confirm: true
-      history_vision: true
+      lead_branch:
+        create_branch: true
+        rename_branch: true
+        receive_branch: true
+        delete_branch: true
+      lead_user:
+        create_user: true
+        delete_user: true
+        change_user: true
+        rename_user: true
+        receive_user: true
+      lead_ticket:
+        create: true
+        confirm: true
+        reject: true
+        priority: true
+        assign: true
+        on_waiting: true
+        off_waiting: true
+        finish: true
+        close: true
+        get_ticket: true
+        get_history: true
+
     required_field:
       branch_id: false
       depart_id: false
