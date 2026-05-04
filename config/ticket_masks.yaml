@@ -1,0 +1,54 @@
+FULL_VIEW:
+  OWNER:
+    - ticket_id
+    - creator_name
+    - branch_name
+    - problem_name
+    - problem_type
+    - zone
+    - target
+    - date_create
+    - sla_reaction_deadline
+    - sla_resolution_deadline
+    - current_state
+    - date_close
+    - assigned_to
+    - reject_comment
+    - comment
+    - priority
+  SPECIALIST:
+    - ticket_id
+    - branch_name
+    - problem_name
+    - problem_type
+    - zone
+    - current_state
+    - date_create
+    - date_close
+    - assigned_to
+    - comment
+    - priority
+  MANAGER:
+    - ticket_id
+    - creator_name
+    - zone
+    - date_create
+    - date_close
+    - comment
+    - priority
+    - current_state
+  EMPLOYEE:
+    - ticket_id
+    - problem_name
+    - problem_type
+    - zone
+    - date_create
+    - current_state
+
+SHORT_VIEW:
+  - ticket_id
+  - date_create
+  - branch_name
+  - priority
+  - problem_name
+  - current_state
