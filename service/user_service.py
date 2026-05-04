@@ -1,10 +1,10 @@
-from Service.Common import transactional,filters_key_validator,filters_validator,apply_scope
-from Core.Ticket_core import has_permission
-from Core.exceptions import PermissionDenied,ServiseValidationBreak
-from Logger.logger import core_logger
-from Repository.write_model import user_assert,user_activate,user_soft_del,update_user_params,update_user_name
-from Repository.read_model import get_users_with_data
-
+from service.common import transactional,filters_key_validator,filters_validator,apply_scope
+from core.exceptions import PermissionDenied,ServiseValidationBreak
+from logger.logger import core_logger
+from repository.write_model import user_assert,user_activate,user_soft_del,update_user_params,update_user_name
+from repository.read_model import get_users_with_data
+from core.ticket_core import User
+from api.command import CmdRenameUser, CmdCreateUser, CmdDeleteUser, CmdChangeUser, QueryReceiveUser
 
 @transactional
 def create_first_owner(name:str,api_user_id:int,config,con=None):
@@ -19,12 +19,10 @@ def create_first_owner(name:str,api_user_id:int,config,con=None):
     return user_assert(name,api_user_id,role_id=role,con=con)
 
 @transactional
-def create_user(user:dict,
-                name: str,
-                api_user_id: int,
-                role_id:int,
+def create_user(user: User,
+                cmd: CmdCreateUser,
                 config:dict,
-                depart_id=None, branch_id=None, con=None):
+                con=None):
     if not name or not name.strip():
         raise ServiseValidationBreak("Name cannot be empty")
     created_user = {}
@@ -46,7 +44,9 @@ def create_user(user:dict,
     return event_alert
 
 @transactional
-def delete_user(user=None, user_id=None, con=None):
+def delete_user(user:User,
+                cmd: CmdDeleteUser,
+                con):
     event_alert = {'action': 'delete_user', 'user_id': user_id, "self": user['api_user_id']}
     if user['role_name'] == "MANAGER":
         deletable = get_users_with_data({"branch_id": user["branch_id"],
@@ -61,7 +61,9 @@ def delete_user(user=None, user_id=None, con=None):
     return event_alert
 
 @transactional
-def change_user(user,user_id:int, role_id:int,config, depart_id=None, branch_id=None, con=None):
+def change_user(user: User,
+               cmd: CmdChangeUser,
+               con):
     users= get_users_with_data(filter_value={'user_id': user_id},con=con)
     if not users:
         core_logger.error(f'User not found')
@@ -79,7 +81,9 @@ def change_user(user,user_id:int, role_id:int,config, depart_id=None, branch_id=
     return event_alert
 
 @transactional
-def rename_user(user,user_id:int, user_name:str,con=None):
+def rename_user(user:User,
+                cmd: CmdRenameUser,
+                con):
     users= get_users_with_data(filter_value={'user_id': user_id},con=con)
     if not users:
         core_logger.error(f'User not found')
@@ -90,7 +94,9 @@ def rename_user(user,user_id:int, user_name:str,con=None):
 
 
 @transactional
-def receive_user(user:dict,filters= None,con=None):
+def receive_user(user:User,
+                 cmd:QueryReceiveUser,
+                 con):
     if filters:
         filters_key_validator(filters)
     filters_validator(user, filters)
@@ -100,8 +106,7 @@ def receive_user(user:dict,filters= None,con=None):
     return event_alert
 
 
-    return res[0] if res else None
-def normalise_user(user:dict,config):
+def normalise_user(user:User,config:dict):
     roles = config['enum']['ROLES']
     role_name = ""
     for i, k in roles.items():
@@ -117,10 +122,10 @@ def normalise_user(user:dict,config):
         if is_required and not user.get(field):
             raise PermissionDenied(f" {role_name} requires {field}")
     return user
-def chek_permission(user:dict,action:str,config,user_id=None):
-    if not has_permission(user['role_name'],action,config):
-        core_logger.error(f'This changed {user['user_id']} cannot use this {action}')
-        raise PermissionDenied('This changed cannot use changed action')
-    if user_id and user['user_id'] == user_id:
-        core_logger('User cannot use self action')
-        raise PermissionDenied('User cannot use self action')
+# def chek_permission(user:User,action:str,config,user_id=None):
+#     if not has_permission(user['role_name'],action,config):
+#         core_logger.error(f'This changed {user['user_id']} cannot use this {action}')
+#         raise PermissionDenied('This changed cannot use changed action')
+#     if user_id and user['user_id'] == user_id:
+#         core_logger('User cannot use self action')
+#         raise PermissionDenied('User cannot use self action')

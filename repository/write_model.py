@@ -1,5 +1,5 @@
-from Core.exceptions import IncorrectWrite
-from Logger.logger import core_logger
+from core.exceptions import IncorrectWrite
+from logger.logger import core_logger
 
 
 #BRANCH

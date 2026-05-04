@@ -1,9 +1,9 @@
 import pytest
 
 from tests.create_test_bd import init_test_db
-from Core.loader import load_config
-from Core.Ticket_core import validate_event
-from Core.exceptions import CoreValidationBreak
+from core.loader import load_config
+from core.ticket_core import validate_event
+from core.exceptions import CoreValidationBreak
 import sqlite3 as sq
 
 

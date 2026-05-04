@@ -145,34 +145,54 @@ ROLES:
     4 #description: полный контроль над сетью. Руководитель
 
 ROLES_PERMISSION:
-    create_ticket:
+  lead_branch:
+    description: управление филиалами
+    create_branch:
+      description: создать филиал
+    rename_branch:
+      description: переименовать филиал
+    receive_branch:
+      description: показать филиалы
+    delete_branch:
+      description: удалить филиал
+
+  lead_user:
+    description: управление пользователями
+    create_user:
+      description: создать пользователя
+    delete_user:
+      description: удалить пользователя
+    change_user:
+      description: изменить пользователя
+    rename_user:
+      description: переименовать пользователя
+    receive_user:
+      description: показать пользователей
+
+  lead_ticket:
+    description: управление заявками
+    create:
       description: создать заявку
     confirm:
       description: подтвердить  новую заявку
-    assigned_to:
-      description: принять заявку
-    change_state:
-      description: изменить статус
-    close_ticket:
-      description: закрыть заявку
-    change_priority:
+    reject:
+      description: отклонить заявку
+    priority:
       description: изменить приоритет
-    reject_comment:
-      description: написать коммент при отклонении
-    extra_change_priority:
-      description: возможность изменить приоритет в любой момент
-    lead_branch:
-      description: управление филиалами
-    lead_user:
-      description: управление пользователями
-    admin_lead_user:
-      description: функции для админа по управлению пользователями
-    history_vision:
+    assign:
+      description: принять заявку
+    on_waiting:
+      description: включить ожидание внешних служб
+    off_waiting:
+      description: включить ожидание внешних служб
+    finish:
+      description: закончить работу над заявкой
+    close:
+      description: принять работу и закрыть заявку
+    get_ticket:
+      description: просмотр заявок
+    get_history:
       description: просмотр истории изменения
-    on_off_external:
-      description: включить-выключить ожидание внешних служб
-    finish_ticket:
-      description: закончить работу
 
 
 DEPARTMENTS:

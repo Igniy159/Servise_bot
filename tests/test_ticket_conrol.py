@@ -1,10 +1,10 @@
 import pytest
-from Service.service_laier import create_first_owner
+from service.user_service import create_first_owner
 from tests.create_test_bd import init_test_db
-from Core.loader import load_config
-from Service.controllers import CreateApplyTicket, BranchController, UserController
-from Repository.read_model import get_tickets_with_data
-from Core.exceptions import PermissionDenied, TicketError
+from core.loader import load_config
+from service.controllers import TicketController, BranchController, UserController
+from repository.read_model import get_tickets_with_data
+from core.exceptions import PermissionDenied, TicketError
 import sqlite3 as sq
 
 @pytest.fixture
@@ -24,12 +24,12 @@ def test_create_ticket(db,config):
     create_first_owner('Один',9999,config,con=db)
     branch_ctr = BranchController(config,9999,con=db)
     user_ctr = UserController(config,9999,con=db)
-    odin_ctr = CreateApplyTicket(config,9999,con=db)
+    odin_ctr = TicketController(config,9999,con=db)
     branch_ctr.create_branch("Асгард")
     user_ctr.create_user("Тор",1234,role_id=1,branch_id=1)
     user_ctr.create_user("Фрейя", 2345, role_id=2, branch_id=1)
-    tor = CreateApplyTicket(config,1234,con=db)
-    freya = CreateApplyTicket(config,2345,con=db)
+    tor = TicketController(config,1234,con=db)
+    freya = TicketController(config,2345,con=db)
     event_valid_object = {
         "type": "OBJECT_PROBLEM",
         "problem_category": "sales",
