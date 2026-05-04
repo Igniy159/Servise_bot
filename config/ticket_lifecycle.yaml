@@ -1,28 +1,4 @@
-NORMAL_LIFECYCLE:
-  NEW:
-    next:
-      - CONFIRMED
-      - CANCELLED
-  CONFIRMED:
-    next:
-      - IN_PROGRESS
-  IN_PROGRESS:
-    next:
-      - WAITING_EXTERNAL
-      - RESOLVED
-  WAITING_EXTERNAL:
-    next:
-      - IN_PROGRESS
-      - RESOLVED
-  RESOLVED:
-    next:
-      - CLOSED
-  CLOSED:
-    next: []
-  CANCELLED:
-    next: []
-
-ADMIN_LIFECYCLE:
+LIFECYCLE:
   NEW:
     next:
       - CONFIRMED

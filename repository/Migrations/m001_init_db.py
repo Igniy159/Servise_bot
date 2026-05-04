@@ -1,4 +1,4 @@
-from  Core.loader import config
+from  core.loader import config
 
 def up(con):
     cur = con.cursor()

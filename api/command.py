@@ -4,6 +4,7 @@ The module is used to validate input data types through Pydantic and generate in
 
 
 from pydantic import BaseModel
+from typing import Literal
 
 class CmdCreateBranch(BaseModel):
     """Command for create branch"""
@@ -30,7 +31,6 @@ class CmdDeleteBranch(BaseModel):
 
 class CmdCreateTicket(BaseModel):
     """ Command for create ticket. Old name - EVENT DATA"""
-    event_type: str
     problem_category: str
     problem_name: str
     problem_class: str
@@ -93,9 +93,9 @@ class QueryGetTicket(BaseModel):
     creator_id: int | None = None
     status: int | None = None
     priority: int | None = None
-    sort_priority: str | None = None
-    sort_status: str | None = None
-    size: str | None = None
+    sort_priority: Literal['asc','desc'] = 'asc'
+    sort_status: Literal['asc','desc']  = 'asc'
+    size: Literal['full','short'] = 'short'
 
 class QueryGetHistoryTicket(BaseModel):
     """ Command for get history 1 ticket"""

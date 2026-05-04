@@ -3,10 +3,10 @@ from pathlib import Path
 import importlib
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-DB_PATH = BASE_DIR /'Repository'/'servise_bot.db'
+DB_PATH = BASE_DIR /'repository'/'servise_bot.db'
 
-MIGRATION = BASE_DIR /'Repository'/'Migrations'
-MIGRATIONS_PACKAGE = "Repository.Migrations"
+MIGRATION = BASE_DIR /'repository'/'Migrations'
+MIGRATIONS_PACKAGE = "repository.Migrations"
 
 def get_connect():
     con = sq.connect(DB_PATH)

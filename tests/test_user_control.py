@@ -1,11 +1,11 @@
 import pytest
 
-from Service.service_laier import create_first_owner
+from service.service_laier import create_first_owner
 from tests.create_test_bd import init_test_db
-from Core.loader import load_config
-from Service.controllers import UserController,BranchController
-from Repository.read_model import get_users_with_data
-from Core.exceptions import PermissionDenied, IncorrectWrite,ServiseValidationBreak
+from core.loader import load_config
+from service.controllers import UserController,BranchController
+from repository.read_model import get_users_with_data
+from core.exceptions import PermissionDenied, IncorrectWrite,ServiseValidationBreak
 import sqlite3 as sq
 
 @pytest.fixture

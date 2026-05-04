@@ -1,8 +1,12 @@
-from datetime import datetime, timedelta
-from typing import Optional
+from datetime import datetime
 from api.command import CmdCreateTicket
 from logger.logger import core_logger
-from core.exceptions import CoreValidationBreak,LifecycleError
+from core.exceptions import CoreValidationBreak, LifecycleError
+from policy.policy_ticket import Actions, ConfirmAction, RejectAction, AssignAction, OffWaitAction, OnWaitAction, \
+    CloseAction, FinishAction, PriorityAction
+from enum import Enum,auto
+
+
 
 def string_shema_validator(config: dict) -> None:
     enum_classes = config['enum']
@@ -15,7 +19,7 @@ def string_shema_validator(config: dict) -> None:
                 raise CoreValidationBreak(f"Error in priority_matrix_PROBLEMS: {problem}")
             elif type(two_keys) != dict:
                 raise CoreValidationBreak("Incorrect type in priority_matrix")
-            elif set(two_keys.keys()) != {'priority','scenario'}:
+            elif set(two_keys.keys()) != {'priority', 'scenario'}:
                 raise CoreValidationBreak(f"Incorrect type in priority_matrix: {two_keys.keys()}")
             elif two_keys['priority'] not in enum_classes['priority']:
                 raise CoreValidationBreak(f"Error in priority_matrix_priority: {two_keys['priority']}")
@@ -26,7 +30,7 @@ def string_shema_validator(config: dict) -> None:
     for type_alert, two_keys in r_alert.items():
         if type_alert not in enum_classes['CLASS_ALERTS']:
             raise CoreValidationBreak(f"Error in rules_alert_type: {type_alert}")
-        elif set(two_keys.keys()) != {'target','scenario'}:
+        elif set(two_keys.keys()) != {'target', 'scenario'}:
             raise CoreValidationBreak(f"Incorrect type in rules_alert: {two_keys.keys()}")
         elif two_keys['scenario'] not in enum_classes["SCENARIOS"]:
             raise CoreValidationBreak(f"Error in rules_alert_scenario: {two_keys['scenario']}")
@@ -67,15 +71,15 @@ def string_shema_validator(config: dict) -> None:
         elif 'permissions' not in key_role.keys():
             raise CoreValidationBreak(f" Error this roles: {type_role} Not permissions")
         elif set(key_role["permissions"]) != set(enum_classes['ROLES_PERMISSION']):
-            print(set(key_role["permissions"]),'права')
-            print(set(enum_classes['ROLES_PERMISSION']),'словарь')
+            print(set(key_role["permissions"]), 'права')
+            print(set(enum_classes['ROLES_PERMISSION']), 'словарь')
             raise CoreValidationBreak(f" Error this roles: {type_role} incorrect permissions")
 
     ars_object = config['object']["ARS_OBJECT"]
     for zones, zone_obj in ars_object.items():
         if zones not in enum_classes["zones"]:
             raise CoreValidationBreak(f" Error in object: {zones} incorrect")
-        elif not isinstance(zone_obj,dict):
+        elif not isinstance(zone_obj, dict):
             raise CoreValidationBreak(f" Error in object: {zone_obj} incorrect type")
         for obj_name, obj_data in zone_obj.items():
             if "class" not in obj_data:
@@ -91,7 +95,7 @@ def string_shema_validator(config: dict) -> None:
     for class_req, type_req in req.items():
         if class_req not in enum_classes["REQUEST_CATEGORY"]:
             raise CoreValidationBreak(f"This class_request {class_req} incorrect")
-        elif not isinstance(type_req,dict):
+        elif not isinstance(type_req, dict):
             raise CoreValidationBreak(f"This type_request {type_req} incorrect ")
         for name_req, data_req in type_req.items():
             if "class" not in data_req:
@@ -149,35 +153,45 @@ def string_shema_validator(config: dict) -> None:
         if key not in enum_classes["SLA_TYPE"]:
             raise CoreValidationBreak(f"{key} incorrect SLA type")
         for i, j in val.items():
-            if i not in ("reaction",'resolution'):
+            if i not in ("reaction", 'resolution'):
                 raise CoreValidationBreak(f"{i} SLA incorrect value")
             elif j is None:
                 continue
             a = j[-1]
-            if a not in ("m","d","h"):
+            if a not in ("m", "d", "h"):
                 raise CoreValidationBreak(f"{j} SLA incorrect value")
     core_logger.info("Config correct")
+
+
+class State(Enum):
+    NEW = auto()
+    CONFIRMED = auto()
+    IN_PROGRESS = auto()
+    WAITING_EXTERNAL = auto()
+    RESOLVED = auto()
+    CLOSED = auto()
+    CANCELLED = auto()
 
 
 class User:
     __doc__ = "This class for user operations"
 
-    def __init__(self,user: dict):
+    def __init__(self, user: dict):
         self.id = user['user_id']
         self.name = user['user_name']
         self.api_id = user['api_user_id']
         self.role = user['role_name']
-        self.depart_id = user.get('depart_id',None)
+        self.depart_id = user.get('depart_id', None)
         self.depart_name = user.get('depart_name', None)
         self.branch_id = user.get('branch_id', None)
-        self.branch_name = user.get('branch_name',None)
+        self.branch_name = user.get('branch_name', None)
 
 
 class Ticket:
-    __doc__ = "This class for ticket field validations and patch operations. He without hard logic"
+    __doc__ = "This class for ticket field validations and patch operations."
 
     def __init__(self, data: dict):
-        self.ticket_id = data.get('ticket_id',None)
+        self.ticket_id = data.get('ticket_id', None)
         self.creator_id = data.get('creator_id')
         self.creator_name = data.get('creator_name')
         self.branch_id = data.get('branch_id')
@@ -191,7 +205,7 @@ class Ticket:
         self.scenario = data.get('scenario')
         self.target = data.get('target')
         self.date_create = data.get('date_create')
-        self.sla_reaction_deadline =  data.get('sla_reaction_deadline')
+        self.sla_reaction_deadline = data.get('sla_reaction_deadline')
         self.sla_resolution_deadline = data.get('sla_resolution_deadline')
         self.date_close = data.get('date_close')
         self.assigned_to = data.get('assigned_to')
@@ -201,196 +215,159 @@ class Ticket:
         self.current_state = data.get('current_state')
         self.history = []
 
-    @staticmethod
-    def _calculate_sla(resolve: dict, config: dict)-> tuple:
-        scen = resolve['scenario']
-        type_sla = config['scenarios']['SCENARIOS'][scen]["sla_policy"]
-        need_sla = config["SLA"]["SLA_POLICIES"][type_sla]
-        react_time, resol_time = need_sla['reaction'], need_sla['resolution']
-
-        def convert(value: str)-> Optional[timedelta]:
-            if value is None:
-                return None
-            elif value.endswith("m"):
-                return timedelta(minutes=int(value[:-1]))
-            elif value.endswith("h"):
-                return timedelta(hours=int(value[:-1]))
-            elif value.endswith("d"):
-                return timedelta(days=int(value[:-1]))
-            raise ValueError(f"Invalid SLA format: {value}")
-
-        return convert(react_time), convert(resol_time)
-
     @classmethod
     def from_created(
             cls,
             cmd: CmdCreateTicket,
             resolve: dict,
-            config: dict,
-            user: User)-> Ticket:
+            user: User) -> Ticket:
         now = datetime.now()
-        react_time, resol_time = cls._calculate_sla(resolve, config)
         date = {
-        'creator_id': user.id,
-        'creator_name': user.name,
-        'branch_id': user.branch_id if user.branch_id else cmd.branch_id,
-        'branch_name': user.branch_name if user.branch_name else resolve.get('branch_name'),
-        'event_type': cmd.event_type,
-        'problem_category': cmd.problem_category,
-        'problem_name': cmd.problem_name,
-        'problem_class': cmd.problem_class,
-        'problem_type': cmd.problem_type,
-        'zone': cmd.zone,
-        'scenario': resolve['scenario'],
-        'target': resolve['target'],
-        'date_create': now,
-        'sla_reaction_deadline': None if react_time is None else now + react_time,
-        'sla_resolution_deadline': None if resol_time is None else now + resol_time,
-        'date_close': None,
-        'assigned_to': None,
-        'reject_comment': None,
-        'comment': cmd.comment,
-        "priority": cmd.priority or resolve['priority'],
-        "current_state": None,
-        'history': []
+            'creator_id': user.id,
+            'creator_name': user.name,
+            'branch_id': user.branch_id or cmd.branch_id,
+            'branch_name': user.branch_name or resolve['branch_name'],
+            'event_type': cmd.event_type,
+            'problem_category': cmd.problem_category,
+            'problem_name': cmd.problem_name,
+            'problem_class': cmd.problem_class,
+            'problem_type': cmd.problem_type,
+            'zone': cmd.zone,
+            'scenario': resolve['scenario'],
+            'target': resolve['target'],
+            'date_create': now,
+            'sla_reaction_deadline': resolve['react_time'],
+            'sla_resolution_deadline': resolve['resol_time'],
+            'date_close': None,
+            'assigned_to': None,
+            'reject_comment': None,
+            'comment': cmd.comment,
+            "priority": cmd.priority or resolve['priority'],
+            "current_state": None,
+            'history': []
         }
 
         return cls(date)
+
     @classmethod
     def from_data_base(cls,
-                       ticket:dict):
+                       ticket: dict):
         return cls(ticket)
 
     @staticmethod
-    def for_data_base(ticket, config:dict)->dict:
-        priority_map = config['enum']['priority']
-        state_map = config['enum']['TICKET_STATUS']
-        depart_map = config['enum']['DEPARTMENTS']
+    def for_data_base(ticket, enum: dict) -> dict:
+        priority_map = enum['priority']
+        state_map = enum['TICKET_STATUS']
+        depart_map = enum['DEPARTMENTS']
 
-        res = {'ticket_id': getattr(ticket,'ticket_id',None),
-                'creator_id': ticket.creator_id,
-                  'branch_id': ticket.branch_name,
-                  'event_type': ticket.event_type,
-                  'problem_category': ticket.problem_category,
-                  'problem_name': ticket.problem_name,
-                  'problem_class': ticket.problem_class,
-                  'problem_type': ticket.problem_type,
-                  'zone': ticket.zone,
-                  'scenario': ticket.scenario,
-                  'target': depart_map.get(ticket.target),
-                  'date_create': ticket.date_create.strftime("%Y-%m-%d %H:%M:%S"),
-                  'sla_reaction_deadline': ticket.sla_reaction_deadline.strftime("%Y-%m-%d %H:%M:%S") if ticket.sla_reaction_deadline else None,
-                  'sla_resolution_deadline': ticket.sla_resolution_deadline.strftime("%Y-%m-%d %H:%M:%S") if ticket.sla_resolution_deadline else None,
-                  'current_state': state_map.get(ticket.current_state),
-                  'date_close': ticket.date_close.strftime("%Y-%m-%d %H:%M:%S") if ticket.date_close else None,
-                  'assigned_to': ticket.assigned_to,
-                  'reject_comment': ticket.reject_comment,
-                  'comment': ticket.comment,
-                  'priority': priority_map.get(ticket.priority)}
+        res = {'ticket_id': getattr(ticket, 'ticket_id', None),
+               'creator_id': ticket.creator_id,
+               'branch_id': ticket.branch_name,
+               'event_type': ticket.event_type,
+               'problem_category': ticket.problem_category,
+               'problem_name': ticket.problem_name,
+               'problem_class': ticket.problem_class,
+               'problem_type': ticket.problem_type,
+               'zone': ticket.zone,
+               'scenario': ticket.scenario,
+               'target': depart_map.get(ticket.target),
+               'date_create': ticket.date_create.strftime("%Y-%m-%d %H:%M:%S"),
+               'sla_reaction_deadline': ticket.sla_reaction_deadline.strftime(
+                   "%Y-%m-%d %H:%M:%S") if ticket.sla_reaction_deadline else None,
+               'sla_resolution_deadline': ticket.sla_resolution_deadline.strftime(
+                   "%Y-%m-%d %H:%M:%S") if ticket.sla_resolution_deadline else None,
+               'current_state': str(state_map.get(ticket.current_state)),
+               'date_close': ticket.date_close.strftime("%Y-%m-%d %H:%M:%S") if ticket.date_close else None,
+               'assigned_to': ticket.assigned_to,
+               'reject_comment': ticket.reject_comment,
+               'comment': ticket.comment,
+               'priority': priority_map.get(ticket.priority)}
         return res
 
-    def update_solution(self, solution:dict)-> Optional[Ticket]:
+    def update_solution(self, solution: dict) -> Ticket:
         self.current_state = solution['current_state']
         self.target = solution.get('target', self.target)
         self.assigned_to = solution.get('assigned_to', None)
         return self
 
-    def _validation_ticket(self,config):
-        if self.priority is not None and self.priority not in config['enum']['priority']:
-            raise CoreValidationBreak(f"{self.priority} incorrect value")
-        if self.current_state not in config['enum']['TICKET_STATUS']:
-            raise CoreValidationBreak(f"{self.current_state} incorrect value")
-        if self.sla_reaction_deadline is not None and self.sla_reaction_deadline < self.date_create:
-            raise CoreValidationBreak("Reaction SLA before creation date")
-        if self.sla_resolution_deadline is not None and self.sla_resolution_deadline < self.date_create:
-            raise CoreValidationBreak("Resolution SLA before creation date")
+    def validate_sla(self):
+        if self.sla_reaction_deadline is not None:
+            if self.sla_reaction_deadline < self.date_create:
+                raise CoreValidationBreak("Reaction SLA before creation date")
+        if self.sla_resolution_deadline is not None:
+            if self.sla_resolution_deadline < self.date_create:
+                raise CoreValidationBreak("Resolution SLA before creation date")
         if self.sla_resolution_deadline < self.sla_reaction_deadline:
             raise CoreValidationBreak("Resolution SLA before reaction SLA date")
-        if self.date_close and self.current_state not in ('CLOSED', 'CANCELLED'):
-            raise LifecycleError(f"{self.date_close} status not CLOSED or CANCELLED")
-        if self.reject_comment and self.current_state != 'CANCELLED':
+
+    def _validate_fsm(self):
+        if self.date_close:
+            if self.current_state not in (State.CLOSED, State.CANCELLED):
+                raise LifecycleError(f"{self.date_close} status not CLOSED or CANCELLED")
+        if self.reject_comment and self.current_state != State.CANCELLED:
             raise LifecycleError(f"{self.reject_comment} status not CANCELLED")
-        if self.assigned_to and self.current_state in ('NEW', 'CONFIRMED'):
+        if self.assigned_to and self.current_state in (State.NEW, State.CONFIRMED):
             raise LifecycleError(f"{self.assigned_to} status {self.current_state} incorrect ")
-        if self.current_state in ("CLOSED", "CANCELLED") and not self.date_close:
+        if self.current_state in (State.CLOSED, State.CANCELLED) and not self.date_close:
             raise LifecycleError("Closed ticket without date_close")
 
-    def _validation_patch(self, patch:dict,config:dict, user: Optional[User],type_fsm:dict):
-        if self.event_type == "ALERT":
-            raise CoreValidationBreak("ALERT not mutable type")
+    def _apply_action(self, action: Actions, state: State= None):
+        if state:
+            self._log_history('current_state',self.current_state,str(state))
+            self.current_state = state
+        allowed_field = {'comment',
+                         'reject_comment',
+                         'priority',
+                         'date_close',
+                         'assigned_to'}
+        for field, value in action.cmd.items():
+            if field in allowed_field:
+                if getattr(self,field) != value:
+                    self._log_history(field,getattr(self,field),value)
+                    setattr(self,field,value)
+        return self
 
-        actual_state = patch.get('current_state',self.current_state)
-        if 'current_state' in patch:
-            if patch['current_state'] not in type_fsm:
-                raise CoreValidationBreak(f"{patch['current_state']} incorrect type")
-
-            next_states = type_fsm[self.current_state]['next'] or []
-            if patch['current_state'] not in next_states:
-                raise LifecycleError("Invalid lifecycle transition")
-
-        if actual_state in ("CLOSED", "CANCELLED") and "date_close" not in patch:
-            raise LifecycleError("Closing ticket requires date_close")
-
-        if 'date_close' in patch:
-            if not isinstance(patch['date_close'], datetime):
-                raise CoreValidationBreak(f" This {patch['date_close']} incorrect type")
-            if actual_state not in ('CLOSED', 'CANCELLED'):
-                raise LifecycleError(f" This {patch['date_close']} incorrect on step {actual_state}")
-
-        if 'assigned_to' in patch:
-            if not isinstance(patch['assigned_to'], int):
-                raise CoreValidationBreak(f" This {patch['assigned_to']} incorrect type")
-            if actual_state != 'IN_PROGRESS':
-                raise LifecycleError(f" This {patch['assigned_to']} incorrect on step {actual_state}")
-            if self.assigned_to:
-                raise CoreValidationBreak(f"Ticket assigned another changed")
-
-        if 'priority' in patch:
-            if not isinstance(patch['priority'], str):
-                raise CoreValidationBreak(f" This {patch['priority']} incorrect type")
-            if actual_state != 'CONFIRMED' and not config['roles']["ROLES"][user.role]['permissions'][
-                'extra_change_priority']:
-                raise LifecycleError(f" This {patch['priority']} incorrect on step {actual_state}")
-
-        if 'comment' in patch:
-            if patch['comment'] and not isinstance(patch['comment'], (str, type(None))):
-                raise CoreValidationBreak(f" This {patch['comment']} incorrect type")
-
-        if actual_state == "CANCELLED" and "reject_comment" not in patch:
-            raise CoreValidationBreak("Cancel requires reject_comment")
-
-        if 'reject_comment' in patch:
-            if not isinstance(patch['reject_comment'], str):
-                raise CoreValidationBreak(f" This {patch['reject_comment']} incorrect type")
-            if actual_state != 'CANCELLED':
-                raise LifecycleError(f" This {patch['reject_comment']} incorrect on step {actual_state}")
-        core_logger.info(f"ticket {self.ticket_id} and patch correct")
-
-    def _apply_patch(self, patch: dict):
-        allowed_fields = {'current_state','date_close','assigned_to',
-                 'priority','comment','reject_comment'}
-        for field, value in patch.items():
-            if field in allowed_fields:
-                old = getattr(self,field)
-                if old != value:
-                    setattr(self,field, value)
-                    self._log_history(field,old,value)
-
-    def _log_history(self, field, old, new):
+    def _log_history(self, field:str, old: str, new: str) -> None:
         self.history.append({
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-             "changes": field,
-             "old": old,
-             "new": new})
+            "changes": field,
+            "old": old,
+            "new": new})
 
-    def update_ticket(self, config:dict, patch:dict, user:Optional[User],type_fsm:dict):
+    def _fsm(self, action: Actions, fsm_config: dict) -> State:
+        current_state = self.current_state
+        allowed_state = fsm_config[current_state]['next']
+        mapper_actions = {
+            ConfirmAction: State.CONFIRMED,
+            RejectAction: State.CANCELLED,
+            AssignAction: State.IN_PROGRESS,
+            OnWaitAction: State.WAITING_EXTERNAL,
+            OffWaitAction: State.IN_PROGRESS,
+            FinishAction: State.RESOLVED,
+            CloseAction: State.CLOSED}
+        for field, value in mapper_actions.items():
+            if isinstance(action, field):
+                next_state = value
+                break
+        else:
+            raise LifecycleError("Unknown action")
+
+        if next_state in allowed_state:
+            return next_state
+        raise LifecycleError('Incorrect action')
+
+    def update_ticket(self, fsm, action: Actions):
         try:
-            self._validation_patch(patch,config,user,type_fsm)
-            self._apply_patch(patch, user)
-            self._validation_ticket(config)
+            if not isinstance(action,PriorityAction):
+                state = self._fsm(action, fsm)
+                self._apply_action(action, state)
+                self._validate_fsm()
+            else:
+                self._apply_action(action)
+
         except CoreValidationBreak:
             raise
         except LifecycleError:
             raise
-        core_logger.info(f"Ticket {self.ticket_id} update patch {patch.keys()}")
+        core_logger.info(f"Ticket {self.ticket_id} update patch {action}")
         return self

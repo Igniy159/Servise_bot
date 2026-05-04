@@ -1,4 +1,4 @@
-from Logger.logger import core_logger
+from logger.logger import core_logger
 from aiogram import Bot, Dispatcher
 import asyncio
 
