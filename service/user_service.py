@@ -1,131 +1,133 @@
-from service.common import transactional,filters_key_validator,filters_validator,apply_scope
-from core.exceptions import PermissionDenied,ServiseValidationBreak
+from sqlite3 import Connection
+
+from policy.policy_user import PolicyCreateUser, PolicyDeleteUser, PolicyChangeUser, PolicyRenameUser, PolicyGetUsers
+from core.exceptions import CoreValidationBreak
 from logger.logger import core_logger
 from repository.write_model import user_assert,user_activate,user_soft_del,update_user_params,update_user_name
 from repository.read_model import get_users_with_data
 from core.ticket_core import User
-from api.command import CmdRenameUser, CmdCreateUser, CmdDeleteUser, CmdChangeUser, QueryReceiveUser
+from api.command import CmdRenameUser, CmdCreateUser, CmdDeleteUser, CmdChangeUser, QueryReceiveUser, CmdFirstUser
+from service.event_builder import EventUser, EventGetUser
+from service.recipients import RecipientUser, Recipient
 
-@transactional
-def create_first_owner(name:str,api_user_id:int,config,con=None):
-    if not name or not name.strip():
-        raise ServiseValidationBreak("Name cannot be empty")
-    existing_owner = get_users_with_data(
-        filter_value={'role_name': 'OWNER'},
-        con=con)
-    if existing_owner:
-        raise ServiseValidationBreak("Owner already exists")
+
+
+def create_first_owner(cmd: CmdFirstUser,config,con):
+    """The function of initiating the very first user of the system,
+     with the issuance of maximum access rights"""
     role = config['enum']['ROLES']['OWNER']
-    return user_assert(name,api_user_id,role_id=role,con=con)
+    with con:
+        existing_owner = get_users_with_data(
+            filter_value={'role_id': role},
+            con=con)
+        if existing_owner:
+            raise CoreValidationBreak("Owner already exists")
+        return user_assert(con,cmd.user_name,cmd.api_user_id,role_id=role)
 
-@transactional
-def create_user(user: User,
+
+def create_user(actor: User,
                 cmd: CmdCreateUser,
-                config:dict,
-                con=None):
-    if not name or not name.strip():
-        raise ServiseValidationBreak("Name cannot be empty")
-    created_user = {}
-    chek_user = get_users_with_data(filter_value={"api_user_id": api_user_id}, con=con)
-    if chek_user:
-        return user_activate(chek_user[0]['api_user_id'], con=con)
-    else:
-        if user['role_name'] == "MANAGER":
-            created_user['branch_id'] = user['branch_id']  # manager can assert only mine branch
-            created_user['role_id'] = config['enum']['ROLES']['EMPLOYEE']  # manager assert only new employee
-            created_user['depart_id'] = None
-        elif user['role_name'] == "OWNER":
-            created_user['branch_id'] = branch_id
-            created_user['role_id'] = role_id
-            created_user['depart_id'] = depart_id
-        created_user = normalise_user(created_user, config)
-    user_assert(name, api_user_id, role_id, depart_id=created_user['depart_id'], branch_id=created_user['branch_id'], con=con)
-    event_alert = {'action': 'create_user','user_name': name,"self": user['api_user_id']}
-    return event_alert
+                config: dict,
+                con: Connection)->tuple[EventUser,RecipientUser]:
 
-@transactional
-def delete_user(user:User,
-                cmd: CmdDeleteUser,
-                con):
-    event_alert = {'action': 'delete_user', 'user_id': user_id, "self": user['api_user_id']}
-    if user['role_name'] == "MANAGER":
-        deletable = get_users_with_data({"branch_id": user["branch_id"],
-                                              'role_name': "EMPLOYEE",
-                                              'user_id': user_id}, con=con)
-        if deletable:
-            user_soft_del(user_id, con=con)
-            return event_alert
+    control = PolicyCreateUser(actor,config,cmd)
+    control.access_user()
+    with con:
+        chek_user = get_users_with_data(filter_value={"api_user_id": cmd.api_user_id}, con=con)
+        if chek_user:
+            user_activate(chek_user[0]['api_user_id'], con=con)
+            new_user = chek_user[0]
         else:
-            raise PermissionDenied('User cannot delete')
-    user_soft_del(user_id, con=con)
-    return event_alert
+            control.validate_cmd()
+            cmd = control.normalize_user_fields_by_role()
+            user_id = user_assert(con,
+                        cmd.name,
+                        cmd.api_user_id,
+                        cmd.role_id,
+                        depart_id=cmd.depart_id,
+                        branch_id=cmd.branch_id,
+                        )
+            new_user = dict(cmd)
+            new_user['user_id'] = user_id
+    event_alert = EventUser(actor,User(new_user),"create_user")
+    recipient = RecipientUser(actor,User(new_user))
+    return event_alert, recipient
 
-@transactional
-def change_user(user: User,
+
+def delete_user(actor:User,
+                cmd: CmdDeleteUser,
+                config:dict,
+                con: Connection)->tuple[EventUser,RecipientUser]:
+    control = PolicyDeleteUser(actor,config,cmd)
+    control.access_user()
+    with con:
+        deletable = get_users_with_data(con,{"user_id": cmd.user_id})
+        if not deletable:
+            core_logger.error('User not found')
+            raise CoreValidationBreak("User not found")
+        deletable = User(deletable[0])
+        control.check_modified(deletable)
+        user_soft_del(cmd.user_id,con)
+    event_alert = EventUser(actor,deletable,"delete_user")
+    recipient = RecipientUser(actor,deletable)
+    return event_alert, recipient
+
+
+def change_user(actor: User,
                cmd: CmdChangeUser,
-               con):
-    users= get_users_with_data(filter_value={'user_id': user_id},con=con)
-    if not users:
-        core_logger.error(f'User not found')
-        raise ServiseValidationBreak(f'User not found')
-    changed = users[0]
+                config:dict,
+               con:Connection)->tuple[EventUser,RecipientUser]:
+    with con:
+        changed = get_users_with_data(con,{'user_id': cmd.user_id})
+        if not changed:
+            core_logger.error('User not found')
+            raise CoreValidationBreak('User not found')
+        control = PolicyChangeUser(actor,config,cmd)
+        control.access_user()
+        control.check_modified(User(changed[0]))
+        cmd = control.normalize_user_fields_by_role()
+        control.validate_cmd()
+        update_user_params(cmd.user_id,
+                           cmd.role_id,
+                           cmd.branch_id,
+                           cmd.depart_id,
+                           con)
+        modified = User(get_users_with_data(con,{'user_id': cmd.user_id})[0])
+    event_alert = EventUser(actor,modified,"change_user")
+    recipient = RecipientUser(actor,modified)
+    return event_alert, recipient
 
-    changed['role_id'] = role_id
 
-    changed['depart_id'] = depart_id
-    changed['branch_id'] = branch_id
-    changed = normalise_user(changed, config)
-    update_user_params(user_id, changed['role_id'], changed['branch_id'], changed['depart_id'], con=con)
-
-    event_alert = {'action': 'change_user','user_name': changed['user_name'],"self": user['api_user_id']}
-    return event_alert
-
-@transactional
-def rename_user(user:User,
+def rename_user(actor:User,
                 cmd: CmdRenameUser,
-                con):
-    users= get_users_with_data(filter_value={'user_id': user_id},con=con)
-    if not users:
-        core_logger.error(f'User not found')
-        raise ServiseValidationBreak(f'User not found')
-    update_user_name(user_id,user_name,con=con)
-    event_alert = {'action': 'rename_user','user_name': user_name,"self": user['api_user_id']}
-    return event_alert
+                config:dict,
+                con:Connection)->tuple[EventUser,RecipientUser]:
+    with con:
+        changed = get_users_with_data(con,{'user_id': cmd.user_id})
+        if not changed:
+            core_logger.error('User not found')
+            raise CoreValidationBreak('User not found')
+        changed = User(changed[0])
+        control = PolicyRenameUser(actor,config,cmd)
+        control.access_user()
+        control.check_modified(changed)
+        update_user_name(cmd.user_id,cmd.user_name,con)
+        modified = User(get_users_with_data(con,{'user_id': cmd.user_id})[0])
+    event_alert = EventUser(actor,modified,"rename_user")
+    recipient = RecipientUser(actor,changed)
+    return event_alert, recipient
 
 
-@transactional
-def receive_user(user:User,
+
+def receive_user(actor:User,
                  cmd:QueryReceiveUser,
-                 con):
-    if filters:
-        filters_key_validator(filters)
-    filters_validator(user, filters)
-    filters = apply_scope(user, filters)
-    res = get_users_with_data(filter_value=filters, con=con)
-    event_alert = {'self': user['api_user_id'],"users": res, 'action': 'receive_user'}
-    return event_alert
-
-
-def normalise_user(user:User,config:dict):
-    roles = config['enum']['ROLES']
-    role_name = ""
-    for i, k in roles.items():
-        if k == user['role_id']:
-            role_name = i
-
-    need_field = config['roles']['ROLES'][role_name]['required_field']
-    if not need_field['branch_id']:
-        user['branch_id'] = None
-    if not need_field['depart_id']:
-        user['depart_id'] = None
-    for field, is_required in need_field.items():
-        if is_required and not user.get(field):
-            raise PermissionDenied(f" {role_name} requires {field}")
-    return user
-# def chek_permission(user:User,action:str,config,user_id=None):
-#     if not has_permission(user['role_name'],action,config):
-#         core_logger.error(f'This changed {user['user_id']} cannot use this {action}')
-#         raise PermissionDenied('This changed cannot use changed action')
-#     if user_id and user['user_id'] == user_id:
-#         core_logger('User cannot use self action')
-#         raise PermissionDenied('User cannot use self action')
+                config:dict,
+                 con:Connection)->tuple[EventGetUser,Recipient]:
+    control = PolicyGetUsers(actor,config,cmd)
+    control.access_user()
+    cmd = control.role_filter()
+    with con:
+        users = get_users_with_data(con, cmd)
+    event_alert = EventGetUser(actor,users)
+    recipient = Recipient(actor)
+    return event_alert, recipient

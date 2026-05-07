@@ -2,8 +2,11 @@ from datetime import datetime
 from api.command import CmdCreateTicket
 from logger.logger import core_logger
 from core.exceptions import CoreValidationBreak, LifecycleError
-from policy.policy_ticket import Actions, ConfirmAction, RejectAction, AssignAction, OffWaitAction, OnWaitAction, \
-    CloseAction, FinishAction, PriorityAction
+from core.actions import (Actions, ConfirmAction,
+                          RejectAction, AssignAction,
+                          OffWaitAction, OnWaitAction,
+                        CloseAction, FinishAction,
+                        PriorityAction)
 from enum import Enum,auto
 
 

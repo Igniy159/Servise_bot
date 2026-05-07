@@ -1,5 +1,5 @@
 from core.ticket_core import User
-from policy.policy_ticket import Actions, ConfirmAction, CloseAction, PriorityAction, AssignAction, OnWaitAction, \
+from core.actions import Actions, ConfirmAction, CloseAction, PriorityAction, AssignAction, OnWaitAction, \
     OffWaitAction, FinishAction, RejectAction
 
 
@@ -38,3 +38,8 @@ class RecipientsApplyTicket(Recipient):
             self.target = self.context['depart']
         if self.action in link_manager:
             self.target += self.context['manager']
+
+class RecipientUser(Recipient):
+    def __init__(self, creator: User, target: User):
+        super().__init__(creator)
+        self.target = target

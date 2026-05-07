@@ -1,4 +1,4 @@
-from service.common import transactional
+from sqlite3 import Connection
 from core.ticket_core import User,State
 from core.exceptions import PermissionDenied, CoreValidationBreak, IncorrectWrite
 from core.ticket_core import Ticket
@@ -16,14 +16,17 @@ from service.event_builder import EventCreateTicket, EventApplyTicket, EventGetT
 from service.recipients import RecipientsCreateTicket, RecipientsApplyTicket, Recipient
 
 class CreatorTicket:
-    def __init__(self,user:User,cmd: CmdCreateTicket,config:dict,con):
+    def __init__(self,user:User,
+                 cmd: CmdCreateTicket,
+                 config:dict,
+                 con:Connection):
         self.user = user
         self.cmd = cmd
         self.config = config
         self.con = con
 
-    @transactional
-    def write_ticket(self) -> tuple:
+
+    def write_ticket(self) -> tuple[EventCreateTicket,RecipientsCreateTicket]:
         #Определяем тип события
         type_event = self._type_resolver()
         if type_event == "OBJECT_PROBLEM":
@@ -42,21 +45,25 @@ class CreatorTicket:
             core_logger.error(f"Error in access user: {e}")
             raise
         if self.cmd.branch_id:
-            resolve['branch_name'] = get_branch_with_data(
-                {'branch_id': self.cmd.branch_id}, self.con
+            resolve['branch_name'] = get_branch_with_data(self.con,
+                {'branch_id': self.cmd.branch_id}
             )[0]['branch_name']
         resolve = self.calculate_sla(resolve, self.config['scenarios'], self.config['SLA'])
         #Собираем контекст из БД
-        manager = get_users_with_data({'user_activity': 1,
-                                       'role_id': 2,
-                                       'branch_id': self.user.branch_id},
-                                      self.con)
-        owner = get_users_with_data({'user_activity': 1,
-                                     'role_id': 4},
-                                    self.con)
-        depart = get_users_with_data({'user_activity': 1,
-                                      'role_id': 3,
-                                      'depart_id': resolve['target_id']})
+        with self.con:
+            manager = get_users_with_data(self.con,
+                                          {'user_activity': 1,
+                                           'role_id': 2,
+                                           'branch_id': self.user.branch_id},
+                                          )
+            owner = get_users_with_data(self.con,
+                                        {'user_activity': 1,
+                                         'role_id': 4},
+                                        )
+            depart = get_users_with_data(self.con,
+                                         {'user_activity': 1,
+                                          'role_id': 3,
+                                          'depart_id': resolve['target_id']})
         context = {'manager': manager,
                    'owner': owner,
                    'depart': depart}
@@ -69,21 +76,22 @@ class CreatorTicket:
         state_for_history = ticket.current_state
         ticket_for_db = Ticket.for_data_base(ticket, self.config['enum'])
         #Записываем тикет и историю в БД
-        try:
-            ticket_id = ticket_assert(ticket_for_db,self.con)
-        except IncorrectWrite as e:
-            core_logger.error(f"Ticket has not write. Reason: {e}")
-            raise
-        try:
-            insert_history_record(ticket_id,
-                                  datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                                  self.user.id,
-                                  'current_state',
-                                  None,
-                                  state_for_history, con=self.con)
-        except IncorrectWrite as e:
-            core_logger.error(f"History has not write. Reason: {e}")
-            raise
+        with self.con:
+            try:
+                ticket_id = ticket_assert(ticket_for_db,self.con)
+            except IncorrectWrite as e:
+                core_logger.error(f"Ticket has not write. Reason: {e}")
+                raise
+            try:
+                insert_history_record(ticket_id,
+                                      datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                                      self.user.id,
+                                      'current_state',
+                                      None,
+                                      state_for_history, con=self.con)
+            except IncorrectWrite as e:
+                core_logger.error(f"History has not write. Reason: {e}")
+                raise
         #Формируем событие и ответ для API
         event_alert = EventCreateTicket(self.user,ticket)
         recipient = RecipientsCreateTicket(self.user,recipient)
@@ -128,7 +136,7 @@ class CreatorTicket:
     @staticmethod
     def escalation(scenarios: dict,
                    cmd: CmdCreateTicket,
-                   context: dict) -> tuple:
+                   context: dict) -> tuple[dict,dict]:
         need_confirm = scenarios['SCENARIOS'][cmd['scenario']]["confirmation_required"]
         solution = {}
         recipient = {}
@@ -161,22 +169,25 @@ class CreatorTicket:
         return solution, recipient
 
 class UpdaterTicket:
-    def __init__(self,user:User, cmd, config:dict, con):
+    def __init__(self,user:User,
+                 cmd,
+                 config:dict,
+                 con: Connection):
         self.user = user
         self.cmd = cmd
         self.config = config
         self.con = con
 
 
-    @transactional
-    def apply_write_patch(self) -> tuple:
+    def apply_write_patch(self) -> tuple[EventApplyTicket,RecipientsApplyTicket]:
         fsm = self.config['ticket_lifecycle']['LIFECYCLE']
         # из БД поднимаем заявку для изменения
-        ticket = get_tickets_with_data({"ticket_id": self.cmd.ticket_id}, self.con)
-        if ticket:
-            ticket = Ticket(ticket[0])
-        else:
-            raise CoreValidationBreak("Ticket not found")
+        with self.con:
+            ticket = get_tickets_with_data(self.con,{"ticket_id": self.cmd.ticket_id})
+            if ticket:
+                ticket = Ticket(ticket[0])
+            else:
+                raise CoreValidationBreak("Ticket not found")
         #маппер для вызова нужного класса, в зависимости от типа команды
         cmd_policy_map = {
             CmdRejectTicket: PolicyReject,
@@ -196,26 +207,29 @@ class UpdaterTicket:
         #переписываем тикет
         updated_ticket = ticket.update_ticket(fsm, action)
         #записываем в БД
-        ticket_update(updated_ticket, self.con)
-        for record in updated_ticket.history:
-            insert_history_record(updated_ticket.ticket_id,
-                                  record['timestamp'],
-                                  self.user.id,
-                                  record['changes'],
-                                  record['old'],
-                                  record['new'],
-                                  self.con)
-        ticket.history.clear()
+        with self.con:
+            ticket_update(updated_ticket, self.con)
+            for record in updated_ticket.history:
+                insert_history_record(updated_ticket.ticket_id,
+                                      record['timestamp'],
+                                      self.user.id,
+                                      record['changes'],
+                                      record['old'],
+                                      record['new'],
+                                      self.con)
+            ticket.history.clear()
 
         #Собираем контекст из БД
-        manager = get_users_with_data({'user_activity': 1,
-                                       'role_id': 2,
-                                       'branch_id': ticket.branch_id},
-                                      self.con)
-        target_id = self.config['enum'][ticket.target]
-        depart = get_users_with_data({'user_activity': 1,
-                                      'role_id': 3,
-                                      'depart_id': target_id})
+        with self.con:
+            manager = get_users_with_data(self.con,
+                                          {'user_activity': 1,
+                                           'role_id': 2,
+                                           'branch_id': ticket.branch_id})
+            target_id = self.config['enum'][ticket.target]
+            depart = get_users_with_data(self.con,
+                                         {'user_activity': 1,
+                                          'role_id': 3,
+                                          'depart_id': target_id})
         context = {'manager': manager,
                    'depart': depart}
         event_alert = EventApplyTicket(self.user,ticket,action)
@@ -223,18 +237,22 @@ class UpdaterTicket:
         return  event_alert, recipient
 
 class GetterTicket:
-    def __init__(self,user:User, cmd:QueryGetTicket, config:dict,con):
+    def __init__(self,
+                 user:User,
+                 cmd:QueryGetTicket,
+                 config:dict,
+                 con:Connection):
         self.user = user
         self.cmd = cmd
         self.config = config
         self.con = con
 
-    @transactional
-    def receive_tickets(self) -> tuple:
+    def receive_tickets(self) -> tuple[EventGetTicket,Recipient]:
         control = PolicyGetTicket(self.user,self.config,self.cmd)
         control.access_user()
-        modified_cmd = control.role_filter
-        tickets = get_tickets_with_data(modified_cmd, self.con)
+        modified_cmd = control.role_filter()
+        with self.con:
+            tickets = get_tickets_with_data(self.con,modified_cmd)
         res = []
         if tickets:
             for ticket in tickets:
@@ -242,7 +260,7 @@ class GetterTicket:
                     res.append(self._full_view(ticket, self.user.role, self.config['ticket_masks']))
                 else:
                     res.append(self._short_view(ticket,self.config['ticket_masks']))
-        event_alert = EventGetTicket(res)
+        event_alert = EventGetTicket(self.user,res)
         recipient = Recipient(self.user)
         return event_alert, recipient
 
@@ -265,16 +283,14 @@ class GetterTicket:
         return ticket_view
 
 
-
-@transactional
 def receive_history(user: User,
                     cmd: QueryGetHistoryTicket,
                     config:dict,
-                    con)->tuple:
+                    con: Connection)->tuple[EventGetHistory,Recipient]:
     control = PolicyGetHistory(user,config,cmd)
     control.access_user()
-    modified_cmd = control.role_filter
-    history = fetch_history_ticket(modified_cmd, con=con)
-    event_alert = EventGetHistory(history)
+    modified_cmd = control.role_filter()
+    history = fetch_history_ticket(con, modified_cmd)
+    event_alert = EventGetHistory(user,history)
     recipient = Recipient(user)
     return event_alert, recipient

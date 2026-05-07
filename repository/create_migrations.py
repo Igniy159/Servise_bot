@@ -8,7 +8,7 @@ DB_PATH = BASE_DIR /'repository'/'servise_bot.db'
 MIGRATION = BASE_DIR /'repository'/'Migrations'
 MIGRATIONS_PACKAGE = "repository.Migrations"
 
-def get_connect():
+def get_connect()-> sq.Connection:
     con = sq.connect(DB_PATH)
     con.execute("PRAGMA foreign_keys = ON")
     con.row_factory = sq.Row
@@ -37,7 +37,3 @@ def run_migrations(con):
             module.up(con)
             cur.execute("INSERT INTO migrations (name) VALUES (?) ",(patch,))
             con.commit()
-
-
-
-

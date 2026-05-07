@@ -3,16 +3,17 @@ The module represents the boundary of the domain model.
 Authorization occurs in this module.
 Initial access checks to the service layer are also performed.
 """
+from sqlite3 import Connection
 from api.command import (
-CmdCreateBranch, CmdDeleteBranch, CmdRenameBranch, QueryReceiveBranch,
-CmdCreateTicket, CmdCloseTicket, CmdAssignTicket, CmdFinishTicket,
-CmdRejectTicket,CmdPriorityTicket,CmdConfirmTicket, CmdOnWaitingTicket,
-CmdOffWaitingTicket, QueryGetTicket, QueryGetHistoryTicket,
-CmdRenameUser, CmdCreateUser, CmdDeleteUser, CmdChangeUser, QueryReceiveUser
+    CmdCreateBranch, CmdDeleteBranch, CmdRenameBranch, QueryReceiveBranch,
+    CmdCreateTicket, CmdCloseTicket, CmdAssignTicket, CmdFinishTicket,
+    CmdRejectTicket, CmdPriorityTicket, CmdConfirmTicket, CmdOnWaitingTicket,
+    CmdOffWaitingTicket, QueryGetTicket, QueryGetHistoryTicket,
+    CmdRenameUser, CmdCreateUser, CmdDeleteUser, CmdChangeUser, QueryReceiveUser, CmdFirstUser
 )
+from repository.read_model import get_users_with_data
 from service.branch_service import create_branch, rename_branch, receive_branch, delete_branch
-from service.user_service import delete_user,change_user,create_user,receive_user,rename_user
-from service.common import check_user
+from service.user_service import delete_user, change_user, create_user, receive_user, rename_user, create_first_owner
 from service.ticket_service import CreatorTicket, UpdaterTicket, receive_history, GetterTicket
 from core.exceptions import PermissionDenied
 from core.ticket_core import User
@@ -31,15 +32,24 @@ class BaseController:
     4. config - configuration from policy(optional)
     5. con - connection from DB
     """
-    def __init__(self, config: dict, api_user_id: int, con=None) -> None:
-        user = check_user(api_user_id, con=con)
+    def __init__(self, config: dict, api_user_id: int, con: Connection) -> None:
+        user = self._check_user(api_user_id, con)
         if user:
             self.user = User(user[0])
         else:
             raise PermissionDenied("User not found")
         self.config = config
         self.con = con
-        self.user_access = self.config['roles'][self.user.role]['permissions']
+        self.user_access = self.config['roles']['ROLES'][self.user.role]['permissions']
+
+    @staticmethod
+    def _check_user(api_user: int,con: Connection):
+        with con:
+            user = get_users_with_data({
+            'user_activity': 1,
+            'api_user_id': api_user
+            },con)
+        return user
 
     def _check_permission(self, flag: str) -> None:
         if not self.user_access.get(flag, False):
@@ -53,8 +63,8 @@ class BranchController(BaseController):
      to manage the branch
     if the user has the "lead branch" access right.
     """
-    def __init__(self, config, api_user_id: int):
-        super().__init__(config, api_user_id)
+    def __init__(self, config: dict, api_user_id: int, con: Connection):
+        super().__init__(config, api_user_id, con)
         self._check_permission('lead_branch')
 
     def create_branch(self,cmd: CmdCreateBranch):
@@ -78,8 +88,8 @@ class TicketController(BaseController):
     if the user has the "lead ticket" access right.
     """
 
-    def __init__(self, config, api_user_id: int):
-        super().__init__(config, api_user_id)
+    def __init__(self, config:dict, api_user_id: int, con: Connection):
+        super().__init__(config, api_user_id, con)
         self._check_permission('lead_ticket')
 
     def create(self,
@@ -135,7 +145,6 @@ class TicketController(BaseController):
         return receive_history(self.user, cmd, self.config, con=self.con)
 
 
-
 class UserController(BaseController):
     """
     This class calls service layer functions
@@ -143,31 +152,34 @@ class UserController(BaseController):
     if the user has the "lead users" access right.
     """
 
-    def __init__(self, config, api_user_id: int):
-        super().__init__(config, api_user_id)
+    def __init__(self, config:dict, api_user_id: int, con: Connection):
+        super().__init__(config, api_user_id, con)
         self._check_permission('lead_user')
+
+    def create_first_user(self, cmd: CmdFirstUser):
+        return create_first_owner(cmd, self.config, self.con)
 
     def create_user(self, cmd: CmdCreateUser):
         """The function create new user """
-        return create_user(self.user, cmd, self.config, con=self.con)
+        return create_user(self.user, cmd, self.config,self.con)
 
     def delete_user(self, cmd: CmdDeleteUser):
         """The function deletes user """
-        return delete_user(self.user,cmd ,con=self.con)
+        return delete_user(self.user,cmd,self.config, self.con)
 
 
     def change_user(self, cmd:CmdChangeUser):
         """The function causes a user to change here field.
         Need to clearly indicate the role and,
         preferably, other data (branch/department)"""
-        return change_user(self.user, cmd, con=self.con)
+        return change_user(self.user, cmd,self.config, self.con)
 
     def rename_user(self,cmd:CmdRenameUser):
         """The function renames the user"""
-        return rename_user(self.user, cmd, con=self.con)
+        return rename_user(self.user, cmd,self.config, self.con)
 
-    def receive_users(self,cmd: QueryReceiveUser)-> list[dict]:
+    def receive_users(self,cmd: QueryReceiveUser):
         """function sends a request
          to the service layer to receive users
          with optional filters"""
-        return receive_user(self.user, cmd, con=self.con)
+        return receive_user(self.user, cmd,self.config, self.con)
