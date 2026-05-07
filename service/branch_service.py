@@ -7,18 +7,18 @@ Contains use-case functions for branch management:
 - receive
 Handles validation, filtering, and transaction boundaries.
 """
-from typing import Optional
-from service.common import transactional, filters_key_validator, filters_validator, apply_scope
+from sqlite3 import Connection
+from core.exceptions import CoreValidationBreak
 from api.command import CmdCreateBranch, CmdDeleteBranch, CmdRenameBranch, QueryReceiveBranch
 from repository.write_model import branch_activate, branch_rename, branch_soft_del, branch_assert
 from repository.read_model import get_branch_with_data
-from logger.logger import core_logger
-from core.exceptions import ServiseValidationBreak
 from core.ticket_core import User
+from service.event_builder import EventBranch,EventGetBranch
+from service.recipients import Recipient
 
-
-@transactional
-def create_branch(user: User, cmd: CmdCreateBranch, con=None) -> dict:
+def create_branch(user: User,
+                  cmd: CmdCreateBranch,
+                  con: Connection) -> tuple[EventBranch,Recipient]:
     """
     Creates or reactivates a branch in the database
     :param user: authenticated user performing the action
@@ -26,21 +26,23 @@ def create_branch(user: User, cmd: CmdCreateBranch, con=None) -> dict:
     :param con: active connect in db
     :return: event dict containing action result and metadata
     """
-    if not name or not name.strip():
-        core_logger.error("Name cannot be empty")
-        raise ServiseValidationBreak("Name cannot be empty")
-    branch = get_branch_with_data(filter_value={"branch_name": name}, con=con)
-    if branch:
-        branch = branch[0]
-        branch_activate(branch['branch_id'], con=con)
-    else:
-        branch_assert(name, con=con)
-    event_alert = {'branch_name': name, 'action': 'create_branch', 'self': user.api_id}
-    return event_alert
+    with con:
+        branch = get_branch_with_data(con,{"branch_name": cmd.name})
+        if branch:
+            branch = branch[0]
+            branch_activate(branch['branch_id'], con)
+        else:
+            branch_assert(cmd.name, con)
+            branch = get_branch_with_data(con,{"branch_name": cmd.name})
+    event_alert = EventBranch(user,branch,'create_branch')
+    recipient = Recipient(user)
+    return event_alert, recipient
 
 
-@transactional
-def rename_branch(user: User, cmd: CmdRenameBranch, con=None):
+
+def rename_branch(user: User,
+                  cmd: CmdRenameBranch,
+                  con:Connection) -> tuple[EventBranch,Recipient]:
     """
     Overwrites the new name for the branch
     :param user: authenticated user performing the action
@@ -48,16 +50,20 @@ def rename_branch(user: User, cmd: CmdRenameBranch, con=None):
     :param con: active connect in db
     :return: event dict containing action result and metadata
     """
-    if not name or not name.strip():
-        core_logger.error("Name cannot be empty")
-        raise ServiseValidationBreak("Name cannot be empty")
-    branch_rename(branch_id, name, con=con)
-    event_alert = {'branch_name': name, 'action': 'rename_branch', 'self': user.api_id}
-    return event_alert
+    with con:
+        branch = get_branch_with_data(con,{"branch_id": cmd.branch_id})
+        if not branch:
+            raise CoreValidationBreak('Branch not found')
+        branch_rename(cmd.branch_id, cmd.new_name, con=con)
+        branch = get_branch_with_data(con,{"branch_id": cmd.branch_id})[0]
+    event_alert = EventBranch(user, branch, 'rename_branch')
+    recipient = Recipient(user)
+    return event_alert, recipient
 
 
-@transactional
-def receive_branch(user: User, cmd:QueryReceiveBranch, con=None):
+def receive_branch(user:User,
+                   cmd:QueryReceiveBranch,
+                   con:Connection)-> tuple[EventGetBranch,Recipient]:
     """
     shows user a list of branches
     :param user:  authenticated user performing the action
@@ -65,17 +71,16 @@ def receive_branch(user: User, cmd:QueryReceiveBranch, con=None):
     :param con: active connect in db
     :return: event containing a selection based on the branch filter
     """
-    if filters:
-        filters_key_validator(filters)
-    filters_validator(user, filters)
-    filters = apply_scope(user, filters)
-    branches = get_branch_with_data(filters, con=con)
-    event_alert = {'action': 'receive_branch', 'branches': branches, 'self': user.api_id}
-    return event_alert
+    with con:
+        branches = get_branch_with_data(con, dict(cmd))
+    event_alert = EventGetBranch(user, branches)
+    recipient = Recipient(user)
+    return event_alert, recipient
 
 
-@transactional
-def delete_branch(user: User, cmd: CmdDeleteBranch, con=None):
+def delete_branch(user: User,
+                  cmd: CmdDeleteBranch,
+                  con: Connection)-> tuple[EventBranch,Recipient]:
     """
     deactivates a branch without actually deleting it
     :param user: authenticated user performing the action
@@ -83,8 +88,11 @@ def delete_branch(user: User, cmd: CmdDeleteBranch, con=None):
     :param con: active connect in db
     :return: event dict containing action result and metadata
     """
-    branch_soft_del(branch_id, con=con)
-    event_alert = {'action': 'delete_branch',
-                   'branch_id': branch_id,
-                   'self': user.api_id}
-    return event_alert
+    with con:
+        branch = get_branch_with_data(con,{"branch_id": cmd.branch_id},)
+        if not branch:
+            raise CoreValidationBreak('Branch not found')
+        branch_soft_del(cmd.branch_id, con)
+    event_alert = EventBranch(user, branch[0], 'delete_branch')
+    recipient = Recipient(user)
+    return event_alert, recipient

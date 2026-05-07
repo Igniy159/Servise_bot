@@ -5,9 +5,12 @@ Checking object relationships for consistency with business logic
 from api.command import CmdCreateTicket
 from core.exceptions import CoreValidationBreak, PermissionDenied
 from core.ticket_core import User,Ticket
-from datetime import datetime
+from core.actions import (PriorityAction,CloseAction,
+                          ConfirmAction, AssignAction,
+                          RejectAction, OffWaitAction,
+                          OnWaitAction,FinishAction)
 
-class Policy:
+class PolicyTicket:
     """
     Base class for command policies.
     Handles config-based validation and user access control for specific functionality.
@@ -23,7 +26,7 @@ class Policy:
         if not self.access[action]:
             raise PermissionDenied(f" User {self.user.name} cannot access {action} ticket")
 
-class PolicyCreateTicket(Policy):
+class PolicyCreateTicket(PolicyTicket):
     """
     Validates ticket creation requests.
     Coordinates config checks through child policies and determines the routing context
@@ -138,31 +141,7 @@ class PolicyAlert(PolicyCreateTicket):
         return resolve
 
 
-class Actions:
-    def __init__(self, cmd):
-        self.cmd = cmd
-class ConfirmAction(Actions):
-    pass
-class RejectAction(Actions):
-    def __init__(self, cmd):
-        cmd.date_close = datetime.now()
-        super().__init__(cmd)
-class PriorityAction(Actions):
-    pass
-class AssignAction(Actions):
-    pass
-class OnWaitAction(Actions):
-    pass
-class OffWaitAction(Actions):
-    pass
-class FinishAction(Actions):
-    pass
-class CloseAction(Actions):
-    def __init__(self, cmd):
-        cmd.date_close = datetime.now()
-        super().__init__(cmd)
-
-class PolicyApplyTicket(Policy):
+class PolicyApplyTicket(PolicyTicket):
     def __init__(self, ticket: Ticket, user: User, config: dict, cmd):
         super().__init__(user, config, cmd)
         self.ticket = ticket
@@ -190,7 +169,6 @@ class PolicyConfirm(PolicyApplyTicket):
 
     def resolve_patch(self):
         return ConfirmAction(self.cmd)
-
 class PolicyReject(PolicyApplyTicket):
     def access_user(self):
         self._access_user("reject")
@@ -203,13 +181,11 @@ class PolicyReject(PolicyApplyTicket):
         if self.user.role != 'OWNER':
             if self.ticket.current_state not in ('NEW','CONFIRMED'):
                 raise PermissionDenied("You can cancel a new application or with admin access.")
-
 class PolicyPriority(PolicyApplyTicket):
     def access_user(self):
         self._access_user("priority")
     def resolve_patch(self):
         return PriorityAction(self.cmd)
-
 class PolicyAssign(PolicyApplyTicket):
     def access_user(self):
         self._access_user("assign")
@@ -225,7 +201,6 @@ class PolicyOnWait(PolicyApplyTicket):
         self._access_user("on_waiting")
     def resolve_patch(self):
         return OnWaitAction(self.cmd)
-
 class PolicyOffWait(PolicyApplyTicket):
     def access_user(self):
         self._access_user("off_waiting")
@@ -243,21 +218,21 @@ class PolicyClose(PolicyApplyTicket):
     def resolve_patch(self):
         return CloseAction(self.cmd)
 
-class PolicyGet(Policy):
-    def role_filter(self):
+class PolicyTicketGet(PolicyTicket):
+    def role_filter(self)->dict:
+        filter_value = dict(self.cmd)
         if self.user.role == "MANAGER":
-            self.cmd.branch_id = self.user.branch_id
+            filter_value['branch_id'] = self.user.branch_id
         if self.user.role == "SPECIALIST":
-            self.cmd.depart_id = self.user.depart_id
+            filter_value['depart_id'] = self.user.depart_id
         if self.user.role == "EMPLOYEE":
-            self.cmd.creator_id = self.user.id
-        return self.cmd
+            filter_value['creator_id'] = self.user.id
+        return filter_value
 
-
-class PolicyGetTicket(PolicyGet):
+class PolicyGetTicket(PolicyTicketGet):
     def access_user(self):
         self._access_user('get_ticket')
 
-class PolicyGetHistory(PolicyGet):
+class PolicyGetHistory(PolicyTicketGet):
     def access_user(self):
         self._access_user('get_history')

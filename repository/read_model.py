@@ -1,10 +1,12 @@
 import sqlite3 as sq
 from datetime import datetime
-from core.exceptions import RepositoryError,SQLValidationBreak
+from typing import Optional
+from core.exceptions import RepositoryError
 
 
 #BRANCH
-def get_branch_with_data(filter_value= None,con= None)-> list:  #filter(None, branch_id: value, branch_name: value, activity:(1-0))
+def get_branch_with_data(con: sq.Connection,
+                         filter_value: Optional[dict] = None)-> list[dict]:
     cur = con.cursor()
     base_query = """SELECT b.branch_id,
                             b.branch_name,
@@ -35,7 +37,8 @@ def get_branch_with_data(filter_value= None,con= None)-> list:  #filter(None, br
         raise RepositoryError(f"Error in get_branch_with_data: {e}") from e
 
 #USERS
-def get_users_with_data(filter_value= None, con=None)-> list:  #filter(None, branch_id, depart_id, role_id, api_user_id, id, activity:(1-0))
+def get_users_with_data(con: sq.Connection,
+                        filter_value: Optional[dict]=None)-> list[dict]:
     cur = con.cursor()
     condition = []
     param = []
@@ -84,7 +87,8 @@ def get_users_with_data(filter_value= None, con=None)-> list:  #filter(None, bra
         raise RepositoryError(f"Error in get_tickets: {e}") from e
 
 #TICKET
-def get_tickets_with_data(filter_value,con)-> list:
+def get_tickets_with_data(con:sq.Connection,
+                          filter_value: Optional[dict]=None)-> list:
     cur = con.cursor()
     condition = []
     sort_condition = []
@@ -169,70 +173,10 @@ def get_tickets_with_data(filter_value,con)-> list:
         res['date_close'] = datetime.strptime(res['date_close'], "%Y-%m-%d %H:%M:%S") if res['date_close'] else None
         res['history'] = []
     return results
-def encode_object(my_dict: dict, config: dict,con=None) -> dict:
-    cur = con.cursor()
-    res = my_dict.copy()
-
-    priority_map = config['enum']['priority']
-    state_map = config['enum']['TICKET_STATUS']
-    depart_map = config['enum']['DEPARTMENTS']
-
-    # foreign keys
-    if 'creator_name' in res:
-        row = cur.execute(
-            "SELECT user_id FROM users WHERE user_name = ?",
-            (res['creator_name'],)
-        ).fetchone()
-        if not row:
-            raise SQLValidationBreak("Creator not found")
-        res['creator_id'] = row[0]
-
-    if 'branch_name' in res:
-        row = cur.execute(
-            "SELECT branch_id FROM branch WHERE branch_name = ?",
-            (res['branch_name'],)
-        ).fetchone()
-        if not row:
-            raise SQLValidationBreak("Branch not found")
-        res['branch_id'] = row[0]
-
-    # datetime formatting
-    for field in (
-        'date_create',
-        'sla_reaction_deadline',
-        'sla_resolution_deadline',
-        'date_close'
-    ):
-        if field in res and res[field] is not None:
-            res[field] = res[field].strftime("%Y-%m-%d %H:%M:%S")
-
-    # enum mapping
-    if 'priority' in res and res['priority'] is not None:
-        res['priority'] = priority_map[res['priority']]
-
-    if 'current_state' in res:
-        res['current_state'] = state_map[res['current_state']]
-
-    if 'target' in res:
-        res['target'] = depart_map[res['target']]
-
-    return res
 
 #HISTORY
-def show_history(con=None):
-    cur = con.cursor()
-    try:
-        res = cur.execute(
-            """SELECT patch_id, ticket_id, timestamp, field, old, new, u.user_name, r.role_name'
-            FROM history AS h 
-            JOIN users AS u ON h.user_id = u.user_id
-            JOIN role AS r ON u.role_id = r.role_id
-            """).fetchall()
-        return res
-    except sq.Error as e :
-        raise RepositoryError(f"Error in show_history: {e}") from e
-
-def fetch_history_ticket(filter_value,con=None):
+def fetch_history_ticket(con:sq.Connection,
+                         filter_value:dict)->list[dict]:
     cur = con.cursor()
     param = []
     condition = []

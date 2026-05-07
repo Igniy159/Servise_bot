@@ -2,14 +2,12 @@
 The module is used to validate input data types through Pydantic and generate initial commands.
 """
 
-
-from pydantic import BaseModel
 from typing import Literal
+from pydantic import BaseModel
 
 class CmdCreateBranch(BaseModel):
     """Command for create branch"""
     name: str
-
 
 class CmdRenameBranch(BaseModel):
     """Command for rename branch"""
@@ -21,7 +19,7 @@ class QueryReceiveBranch(BaseModel):
     """Command for receive branch"""
     branch_id: int | None = None
     branch_name: str | None = None
-    branch_activity: int | None = None
+    branch_activity: int | None = 1
 
 
 class CmdDeleteBranch(BaseModel):
@@ -101,6 +99,10 @@ class QueryGetHistoryTicket(BaseModel):
     """ Command for get history 1 ticket"""
     ticket_id: int
 
+class CmdFirstUser(BaseModel):
+    user_name: str
+    api_user_id: int
+
 class CmdCreateUser(BaseModel):
     """Command for create user"""
     user_name: str
@@ -135,4 +137,4 @@ class QueryReceiveUser(BaseModel):
     user_branch_id: int | None = None
     user_depart_id: int | None = None
     user_role_id: int | None = None
-    user_activity: int | None = None
+    user_activity: int | None = 1
