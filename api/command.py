@@ -100,6 +100,7 @@ class QueryGetHistoryTicket(BaseModel):
     ticket_id: int
 
 class CmdFirstUser(BaseModel):
+    """Command for create first user"""
     user_name: str
     api_user_id: int
 

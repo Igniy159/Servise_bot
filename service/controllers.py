@@ -3,7 +3,6 @@ The module represents the boundary of the domain model.
 Authorization occurs in this module.
 Initial access checks to the service layer are also performed.
 """
-from sqlite3 import Connection
 from api.command import (
     CmdCreateBranch, CmdDeleteBranch, CmdRenameBranch, QueryReceiveBranch,
     CmdCreateTicket, CmdCloseTicket, CmdAssignTicket, CmdFinishTicket,
@@ -11,10 +10,11 @@ from api.command import (
     CmdOffWaitingTicket, QueryGetTicket, QueryGetHistoryTicket,
     CmdRenameUser, CmdCreateUser, CmdDeleteUser, CmdChangeUser, QueryReceiveUser, CmdFirstUser
 )
-from repository.read_model import get_users_with_data
-from service.branch_service import create_branch, rename_branch, receive_branch, delete_branch
-from service.user_service import delete_user, change_user, create_user, receive_user, rename_user, create_first_owner
-from service.ticket_service import CreatorTicket, UpdaterTicket, receive_history, GetterTicket
+
+from repository.unit_of_work import UoW
+from service.branch_service import BranchService
+from service.user_service import UserService
+from service.ticket_service import TicketService
 from core.exceptions import PermissionDenied
 from core.ticket_core import User
 from logger.logger import core_logger
@@ -30,32 +30,30 @@ class BaseController:
     2. cmd  - command action
     3. flag - flag action(optional)
     4. config - configuration from policy(optional)
-    5. con - connection from DB
+    5. uow - configuration DB with connect
     """
-    def __init__(self, config: dict, api_user_id: int, con: Connection) -> None:
-        user = self._check_user(api_user_id, con)
+    def __init__(self, config: dict, api_user_id: int, uow_factory: UoW) -> None:
+        user = self._check_user(api_user_id)
         if user:
             self.user = User(user[0])
         else:
             raise PermissionDenied("User not found")
         self.config = config
-        self.con = con
+        self.uow_factory = uow_factory
         self.user_access = self.config['roles']['ROLES'][self.user.role]['permissions']
 
-    @staticmethod
-    def _check_user(api_user: int,con: Connection):
-        with con:
-            user = get_users_with_data({
-            'user_activity': 1,
-            'api_user_id': api_user
-            },con)
-        return user
+    def _check_user(self, api_user: int):
+        with self.uow_factory() as uow:
+            user = uow.users.get({
+        'user_activity': 1,
+        'api_user_id': api_user
+        })
+            return user
 
     def _check_permission(self, flag: str) -> None:
         if not self.user_access.get(flag, False):
             core_logger.error(f"This changed {self.user.name} cannot use {flag} action")
             raise PermissionDenied(f'This {self.user.name} cannot use {flag} action')
-
 
 class BranchController(BaseController):
     """
@@ -63,22 +61,28 @@ class BranchController(BaseController):
      to manage the branch
     if the user has the "lead branch" access right.
     """
-    def __init__(self, config: dict, api_user_id: int, con: Connection):
-        super().__init__(config, api_user_id, con)
-        self._check_permission('lead_branch')
 
-    def create_branch(self,cmd: CmdCreateBranch):
+    def __init__(self, config: dict, api_user_id: int, uow: UoW) -> None:
+        super().__init__(config, api_user_id, uow)
+        self._check_permission('lead_branch')
+        self.service = BranchService(uow)
+
+    def create(self,cmd: CmdCreateBranch):
         """Calls the function to create a branch after authorization"""
-        return create_branch(self.user,cmd,con=self.con)
-    def rename_branch(self,cmd:CmdRenameBranch):
+        with self.uow_factory():
+            return self.service.create(self.user,cmd)
+    def rename(self,cmd:CmdRenameBranch):
         """Calls the function to rename a branch after authorization"""
-        return rename_branch(self.user, cmd,con=self.con)
-    def receive_branch(self,cmd:QueryReceiveBranch):
+        with self.uow_factory():
+            return self.service.rename(self.user, cmd)
+    def get(self,cmd:QueryReceiveBranch):
         """Calls the function to get branches with filters after authorization"""
-        return receive_branch(self.user, cmd, con=self.con)
-    def delete_branch(self, cmd: CmdDeleteBranch):
+        with self.uow_factory():
+            return self.service.receive(self.user, cmd)
+    def delete(self, cmd: CmdDeleteBranch):
         """Calls the function to delete a branch after authorization"""
-        return delete_branch(self.user, cmd, con=self.con)
+        with self.uow_factory():
+            return self.service.delete(self.user, cmd)
 
 
 class TicketController(BaseController):
@@ -88,9 +92,11 @@ class TicketController(BaseController):
     if the user has the "lead ticket" access right.
     """
 
-    def __init__(self, config:dict, api_user_id: int, con: Connection):
-        super().__init__(config, api_user_id, con)
+    def __init__(self, config:dict, api_user_id: int, uow:UoW):
+        super().__init__(config, api_user_id,uow)
         self._check_permission('lead_ticket')
+        self.service = TicketService(config, uow)
+
 
     def create(self,
                cmd: CmdCreateTicket):
@@ -98,51 +104,29 @@ class TicketController(BaseController):
         The function causes a ticket to be created
          from the service layer with the command and user
         """
-        return CreatorTicket(self.user, cmd, self.config, self.con).write_ticket()
+        return self.service.write(self.user,cmd)
 
-    def confirm(self, cmd: CmdConfirmTicket):
-        """The function causes a ticket to be confirmed"""
-        return UpdaterTicket(self.user, cmd,self.config, self.con).apply_write_patch()
+    def update(self, cmd: CmdCloseTicket | CmdAssignTicket |CmdFinishTicket|
+    CmdRejectTicket | CmdPriorityTicket| CmdConfirmTicket | CmdOnWaitingTicket |
+    CmdOffWaitingTicket):
+        """The function causes update ticket"""
+        with self.uow_factory():
+            return self.service.patch(self.user,cmd)
 
-    def reject(self, cmd: CmdRejectTicket):
-        """The function causes a ticket to be rejected"""
-        return UpdaterTicket(self.user, cmd,self.config, self.con).apply_write_patch()
 
-    def priority(self, cmd: CmdPriorityTicket):
-        """The function causes a ticket to be changed priority"""
-        return UpdaterTicket(self.user, cmd,self.config, self.con).apply_write_patch()
-
-    def assign(self, cmd:CmdAssignTicket):
-        """The function causes a ticket to be assigned to"""
-        return UpdaterTicket(self.user, cmd, self.config, self.con).apply_write_patch()
-
-    def on_waiting(self, cmd:CmdOnWaitingTicket):
-        """The function causes a ticket to be on_waiting """
-        return UpdaterTicket(self.user, cmd, self.config,self.con).apply_write_patch()
-
-    def off_waiting(self, cmd: CmdOffWaitingTicket):
-        """The function causes a ticket to be off waiting """
-        return UpdaterTicket(self.user, cmd, self.config, self.con).apply_write_patch()
-
-    def finish(self, cmd: CmdFinishTicket):
-        """The function causes a ticket to be finish """
-        return UpdaterTicket(self.user, cmd, self.config, self.con).apply_write_patch()
-
-    def close(self,cmd: CmdCloseTicket):
-        """The function causes a ticket to be closed """
-        return UpdaterTicket( self.user, cmd, self.config, self.con).apply_write_patch()
-
-    def get_ticket(self,cmd:QueryGetTicket):
+    def get(self,cmd:QueryGetTicket):
         """ The function sends a request
          to the service layer to receive tickets
           with a certain filtering/sorting"""
-        return GetterTicket(self.user,cmd,self.config,con=self.con).receive_tickets()
+        with self.uow_factory():
+            return self.service.get(self.user,cmd)
 
 
-    def get_history_ticket(self,cmd:QueryGetHistoryTicket):
+    def get_history(self,cmd:QueryGetHistoryTicket):
         """function sends a request
          to the service layer to receive history"""
-        return receive_history(self.user, cmd, self.config, con=self.con)
+        with self.uow_factory():
+            return self.service.history(self.user,cmd)
 
 
 class UserController(BaseController):
@@ -152,34 +136,41 @@ class UserController(BaseController):
     if the user has the "lead users" access right.
     """
 
-    def __init__(self, config:dict, api_user_id: int, con: Connection):
-        super().__init__(config, api_user_id, con)
+    def __init__(self, config:dict, api_user_id: int, uow):
+        super().__init__(config, api_user_id, uow)
         self._check_permission('lead_user')
+        self.service = UserService(config,uow)
 
     def create_first_user(self, cmd: CmdFirstUser):
-        return create_first_owner(cmd, self.config, self.con)
+        """The function create first user """
+        with self.uow_factory():
+            return self.service.create_first_owner(cmd)
 
-    def create_user(self, cmd: CmdCreateUser):
+    def create(self, cmd: CmdCreateUser):
         """The function create new user """
-        return create_user(self.user, cmd, self.config,self.con)
+        with self.uow_factory():
+            return self.service.create(self.user, cmd)
 
-    def delete_user(self, cmd: CmdDeleteUser):
+    def delete(self, cmd: CmdDeleteUser):
         """The function deletes user """
-        return delete_user(self.user,cmd,self.config, self.con)
+        with self.uow_factory():
+            return self.service.delete(self.user,cmd)
 
-
-    def change_user(self, cmd:CmdChangeUser):
+    def change(self, cmd:CmdChangeUser):
         """The function causes a user to change here field.
         Need to clearly indicate the role and,
         preferably, other data (branch/department)"""
-        return change_user(self.user, cmd,self.config, self.con)
+        with self.uow_factory():
+            return self.service.change(self.user, cmd)
 
-    def rename_user(self,cmd:CmdRenameUser):
+    def rename(self,cmd:CmdRenameUser):
         """The function renames the user"""
-        return rename_user(self.user, cmd,self.config, self.con)
+        with self.uow_factory():
+            return self.service.rename(self.user, cmd)
 
-    def receive_users(self,cmd: QueryReceiveUser):
+    def get(self, cmd: QueryReceiveUser):
         """function sends a request
          to the service layer to receive users
          with optional filters"""
-        return receive_user(self.user, cmd,self.config, self.con)
+        with self.uow_factory():
+            return self.service.get(self.user, cmd)

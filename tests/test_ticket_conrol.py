@@ -1,4 +1,6 @@
 import pytest
+
+from api.command import CmdCreateBranch, CmdCreateUser
 from service.user_service import create_first_owner
 from tests.create_test_bd import init_test_db
 from core.loader import load_config
@@ -24,9 +26,10 @@ def test_create_ticket(db,config):
     create_first_owner('Один',9999,config,con=db)
     branch_ctr = BranchController(config,9999,con=db)
     user_ctr = UserController(config,9999,con=db)
+
     odin_ctr = TicketController(config,9999,con=db)
-    branch_ctr.create_branch("Асгард")
-    user_ctr.create_user("Тор",1234,role_id=1,branch_id=1)
+    branch_ctr.create_branch(CmdCreateBranch(name='Асгард'))
+    user_ctr.create_user(CmdCreateUser(name="Тор", 1234, role_id=1, branch_id=1))
     user_ctr.create_user("Фрейя", 2345, role_id=2, branch_id=1)
     tor = TicketController(config,1234,con=db)
     freya = TicketController(config,2345,con=db)

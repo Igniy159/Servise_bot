@@ -1,4 +1,4 @@
-from  core.ticket_core import User,Ticket
+from core.ticket_core import User,Ticket
 from core.actions import Actions
 
 
