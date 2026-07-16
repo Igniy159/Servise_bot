@@ -1,99 +1,95 @@
-ROLES:
-  EMPLOYEE:
-    permissions:
-      lead_branch: false
-      lead_user: false
-      lead_ticket:
-        create: true
-        confirm: false
-        reject: false
-        priority: false
-        assign: false
-        on_waiting: false
-        off_waiting: false
-        finish: false
-        close: false
-        get_ticket: true
-        get_history: true
+EMPLOYEE:
+  permissions:
+    lead_branch: {}
+    lead_user: {}
+    lead_ticket:
+      create: true
+      confirm: false
+      reject: false
+      priority: false
+      assign: false
+      on_waiting: false
+      off_waiting: false
+      finish: false
+      close: false
+      get_ticket: true
+      get_history: true
 
-    required_field:
-      branch_id: true
-      depart_id: false
+  required_field:
+    - branch_id
 
-  MANAGER:
-    permissions:
-      lead_branch: false
-      lead_user:
-        create_user: true
-        delete_user: true
-        change_user: false
-        rename_user: false
-        receive_user: true
 
-      lead_ticket:
-        create: true
-        confirm: true
-        reject: true
-        priority: true
-        assign: false
-        on_waiting: false
-        off_waiting: false
-        finish: false
-        close: true
-        get_ticket: true
-        get_history: true
+MANAGER:
+  permissions:
+    lead_branch: {}
+    lead_user:
+      create_user: true
+      delete_user: true
+      change_user: false
+      rename_user: false
+      receive_user: true
+    lead_ticket:
+      create: true
+      confirm: true
+      reject: true
+      priority: true
+      assign: false
+      on_waiting: false
+      off_waiting: false
+      finish: false
+      close: true
+      get_ticket: true
+      get_history: true
 
-    required_field:
-      branch_id: true
-      depart_id: false
+  required_field:
+    - branch_id
 
-  SPECIALIST:
-    permissions:
-      lead_branch: false
-      lead_user: false
-      lead_ticket:
-        create: false
-        confirm: false
-        reject: false
-        priority: false
-        assign: true
-        on_waiting: true
-        off_waiting: true
-        finish: true
-        close: false
-        get_ticket: true
-        get_history: true
 
-    required_field:
-      branch_id: false
-      depart_id: true
+SPECIALIST:
+  permissions:
+    lead_branch: {}
+    lead_user: {}
+    lead_ticket:
+      create: false
+      confirm: false
+      reject: false
+      priority: false
+      assign: true
+      on_waiting: true
+      off_waiting: true
+      finish: true
+      close: false
+      get_ticket: true
+      get_history: true
 
-  OWNER:
-    permissions:
-      lead_branch:
-        create_branch: true
-        rename_branch: true
-        receive_branch: true
-        delete_branch: true
-      lead_user:
-        create_user: true
-        delete_user: true
-        change_user: true
-        rename_user: true
-        receive_user: true
-      lead_ticket:
-        create: true
-        confirm: true
-        reject: true
-        priority: true
-        assign: true
-        on_waiting: true
-        off_waiting: true
-        finish: true
-        close: true
-        get_ticket: true
-        get_history: true
+  required_field:
+    - depart_id
 
-    required_field:
-      branch_id: false
-      depart_id: false
+OWNER:
+  permissions:
+    lead_branch:
+      create_branch: true
+      rename_branch: true
+      receive_branch: true
+      delete_branch: true
+    lead_user:
+      create_user: true
+      delete_user: true
+      change_user: true
+      rename_user: true
+      receive_user: true
+    lead_ticket:
+      create: true
+      confirm: true
+      reject: true
+      priority: true
+      assign: true
+      on_waiting: true
+      off_waiting: true
+      finish: true
+      close: true
+      get_ticket: true
+      get_history: true
+
+  required_field:
+    []

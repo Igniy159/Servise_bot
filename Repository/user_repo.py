@@ -1,7 +1,7 @@
 from sqlite3 import Error
 from typing import Optional
 from core.exceptions import RepositoryError, IncorrectWrite
-from repository.unit_of_work import Repo
+from repository.base import Repo
 
 
 class UserRepo(Repo):
@@ -66,6 +66,7 @@ class UserRepo(Repo):
             """INSERT INTO users (user_name, api_user_id, role_id, depart_id, branch_id)
              VALUES (?, ?, ?, ?, ?)""",
             (user_name, api_user_id, role_id, depart_id, branch_id))
+        print('Запись в БД успешная')
         return cur.lastrowid
 
     def delete(self,

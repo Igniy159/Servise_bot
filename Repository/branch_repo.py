@@ -2,7 +2,7 @@ from sqlite3 import Error
 from typing import Optional
 from core.exceptions import RepositoryError, IncorrectWrite
 from logger.logger import core_logger
-from repository.unit_of_work import Repo
+from repository.base import Repo
 
 
 class BranchRepo(Repo):

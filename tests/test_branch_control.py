@@ -1,6 +1,7 @@
 import pytest
 
-from service.service_laier import create_first_owner
+from api.command import CmdFirstUser
+from service.user_service import create_first_owner
 from tests.create_test_bd import init_test_db
 from core.loader import load_config
 from service.controllers import BranchController, UserController
@@ -23,7 +24,8 @@ def config():
     return load_config("C:/Users/User/Desktop/Servise bot/config")
 
 def test_owner_branch_create(db, config):
-    create_first_owner("Атрейдес",1234,config,con=db)
+    create_first_owner(CmdFirstUser(user_name="Атрейдес",
+                                    api_user_id=1234,config,con=db)
     atrey = BranchController(config,1234,con=db)
     atrey.create_branch("Арракис")
     branch = get_branch_with_data(con=db)[0]
