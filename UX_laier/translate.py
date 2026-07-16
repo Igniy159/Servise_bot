@@ -53,5 +53,3 @@ def union_history(history: list,config)->str:
         if patch['change'].get("assigned_to"):
             msg += 'Принял в работу: ' + patch['change']["assigned_to"] + '\n'
     return msg
-
-

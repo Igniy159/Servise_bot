@@ -6,6 +6,23 @@ Checking object relationships for consistency with business logic
 from core.ticket_core import User
 from core.exceptions import PermissionDenied
 
+# self.user_access = self.config['roles'][self.user.role]['permissions']
+#
+#
+# def _check_user(self, api_user: int):
+#     with self.uow_factory() as uow:
+#         user = uow.users.get({
+#             'user_activity': 1,
+#             'api_user_id': api_user
+#         })
+#         return user
+#
+#
+# def _check_permission(self, flag: str) -> None:
+#     if not self.user_access.get(flag, False):
+#         core_logger.error(f"This changed {self.user.name} cannot use {flag} action")
+#         raise PermissionDenied(f'This {self.user.name} cannot use {flag} action')
+
 class PolicyUser:
     """
     Base class for command policies.

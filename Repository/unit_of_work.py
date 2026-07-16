@@ -1,18 +1,18 @@
 from sqlite3 import Connection
+from typing import Optional
 from repository.branch_repo import BranchRepo
+from repository.create_migrations import get_connect, DB_PATH
 from repository.ticket_repo import TicketRepo
 from repository.user_repo import UserRepo
-
-
-class Repo:
-    def __init__(self, con:Connection):
-        self.con = con
+from repository.mapper_repo import MapperRoles, MapperDepart
 
 class UoW:
     def __init__(self, con: Connection):
         self.tickets = TicketRepo(con)
         self.users = UserRepo(con)
         self.branches = BranchRepo(con)
+        self.dep_mapper = MapperDepart(con)
+        self.role_mapper = MapperRoles(con)
         self.con = con
 
     def __enter__(self):
@@ -23,5 +23,15 @@ class UoW:
             self.con.commit()
         else:
             self.con.rollback()
+
+class UowFactory:
+    def __init__(self, path: Optional[str]=None):
+        self.path = path
+
     def __call__(self):
-        return self.con
+        return UoW(get_connect(self.path))
+
+main_factory_uow = UowFactory(DB_PATH)
+
+def get_uow():
+    return main_factory_uow

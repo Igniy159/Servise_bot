@@ -1,4 +1,4 @@
-from  core.loader import config
+from core.loader import raw_config
 
 def up(con):
     cur = con.cursor()
@@ -7,7 +7,6 @@ def up(con):
     branch_name TEXT UNIQUE,
     branch_activity INTEGER DEFAULT 1
     )""")
-
     cur.execute(""" CREATE TABLE IF NOT EXISTS history(
     patch_id INTEGER PRIMARY KEY AUTOINCREMENT,
     ticket_id INTEGER,
@@ -24,40 +23,36 @@ def up(con):
     state TEXT)
     """)
     if not cur.execute("SELECT status_id FROM ticket_status").fetchall():
-        dep = [i for i in config['enum']['TICKET_STATUS'].keys()]
-        for i in range(len(dep)):
-            if dep[i] not in ('CLOSED', 'CANCELLED'):
+        for key in raw_config['enum']['TICKET_STATUS']:
+            if key not in ('CLOSED', 'CANCELLED'):
                 state = "open"
             else:
                 state = "close"
-            cur.execute("INSERT INTO ticket_status (status_name, state) VALUES (?, ?)", (dep[i], state))
-
+            cur.execute("INSERT INTO ticket_status (status_name, state) VALUES (?, ?)",
+                        (key, state))
     cur.execute(""" CREATE TABLE IF NOT EXISTS department(
     depart_id INTEGER PRIMARY KEY AUTOINCREMENT,
     depart_name TEXT
     )""")
     if not cur.execute("SELECT depart_id FROM department").fetchall():
-        dep = [i for i in config['enum']['DEPARTMENTS'].keys()]
-        for i in range(len(dep)):
-            cur.execute("INSERT INTO department (depart_name) VALUES (?)", (dep[i],))
+        for dep in raw_config['enum']['DEPARTMENTS'].keys():
+            cur.execute("INSERT INTO department (depart_name) VALUES (?)", (dep,))
 
     cur.execute("""CREATE TABLE IF NOT EXISTS priority(
     priority_id  INTEGER PRIMARY KEY AUTOINCREMENT,
     priority_name TEXT)
     """)
     if not cur.execute("SELECT priority_id FROM priority").fetchall():
-        dep = [i for i in config['enum']['priority'].keys()]
-        for i in range(len(dep)):
-            cur.execute("INSERT INTO priority (priority_name) VALUES (?)", (dep[i],))
+        for priority in raw_config['enum']['priority']:
+            cur.execute("INSERT INTO priority (priority_name) VALUES (?)", (priority,))
 
     cur.execute(""" CREATE TABLE IF NOT EXISTS role(
     role_id INTEGER PRIMARY KEY AUTOINCREMENT,
     role_name TEXT
     )""")
     if not cur.execute("SELECT role_id FROM role").fetchall():
-        dep = [i for i in config['enum']['ROLES'].keys()]
-        for i in range(len(dep)):
-            cur.execute("INSERT INTO role (role_name) VALUES (?)", (dep[i],))
+        for role in raw_config['enum']['ROLES']:
+            cur.execute("INSERT INTO role (role_name) VALUES (?)", (role,))
 
     cur.execute(""" CREATE TABLE IF NOT EXISTS users(
      user_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -82,14 +77,11 @@ def up(con):
     ticket_id INTEGER PRIMARY KEY AUTOINCREMENT,
     creator_id INTEGER,
     branch_id INTEGER,
-    event_type TEXT,
-    problem_category TEXT,
-    problem_name TEXT,
-    problem_class TEXT,
-    problem_type TEXT,
-    zone TEXT,
-    scenario TEXT,
     target INTEGER,
+    problem_name TEXT,
+    problem_category TEXT,
+    problem_type TEXT, 
+    zone TEXT,
     date_create TEXT,
     sla_reaction_deadline TEXT,
     sla_resolution_deadline TEXT,

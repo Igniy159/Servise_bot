@@ -16,13 +16,13 @@ SCENARIOS:
 
 priority:
   critical:
-    1  #Description: Критический. Не отреагируем сию секунду и будет куча проблем!
+    Description: Критический. Не отреагируем сию секунду и будет куча проблем!
   high:
-    2  #Description: Высокий. Вот сегодня точно нужно будет решить
+   Description: Высокий. Вот сегодня точно нужно будет решить
   medium:
-    3   #Description: Средний. Пара дней - норм.
+    Description: Средний. Пара дней - норм.
   low:
-    4   #description: Низкий. Не горит от слова совсем. Завтра или на следующей неделе - неважно
+    description: Низкий. Не горит от слова совсем. Завтра или на следующей неделе - неважно
 
 TYPE_EVENT:
   OBJECT_PROBLEM:
@@ -136,13 +136,13 @@ CLASS_ALERTS:
 
 ROLES:
   EMPLOYEE:
-    1 #description: линейный персонал или менеджер смены
+    description: линейный персонал или менеджер смены
   MANAGER:
-    2 #description: управляющий филиала
+    description: управляющий филиала
   SPECIALIST:
-    3 #description: рабочий отдела
+    description: рабочий отдела
   OWNER:
-    4 #description: полный контроль над сетью. Руководитель
+    description: полный контроль над сетью. Руководитель
 
 ROLES_PERMISSION:
   lead_branch:
@@ -194,48 +194,47 @@ ROLES_PERMISSION:
     get_history:
       description: просмотр истории изменения
 
-
 DEPARTMENTS:
   HR:
-    1 #description: HR отдел
+   description: HR отдел
   SECURITY:
-    2 #description: отдел безопасности
+    description: отдел безопасности
   ACCOUNTANT:
-    3 #description: бухгалтерия
+    description: бухгалтерия
   ARS:
-    4 #description: отдел аварийного ремонта
+    description: отдел аварийного ремонта
   IT:
-    5 #description: ремонт и настройка POS
+    description: ремонт и настройка POS
   INVENTORY:
-    6 #description: отдел снабжения
+    description: отдел снабжения
   STORE:
-    7 #description: склад
+    description: склад
   MARKETING:
-    8 #description: отдел маркетинга
+    description: отдел маркетинга
   SERVICE:
-    9 #description: сервис менеджер. жалобы посетителей
+    description: сервис менеджер. жалобы посетителей
   TOP_MANAGEMENT:
-    10 #description: руководство
+    description: руководство
   BRANCH_MANAGER:
-    11 #description: управляющий филиала
+    description: управляющий филиала
   LINE_STAFF:
-    12 #description: линейный персонал
+    description: линейный персонал
 
 TICKET_STATUS:
   NEW:
-    1  #description: новая заявка
+   description: новая заявка
   CONFIRMED:
-    2  #description: подтвержденная заявка
+    description: подтвержденная заявка
   IN_PROGRESS:
-    3  #description: в процессе
+    description: в процессе
   WAITING_EXTERNAL:
-    4   #description: ожидание необходимого
+    description: ожидание необходимого
   RESOLVED:
-    5   #description: технически выполнено. ожидает закрытия
+    description: технически выполнено. ожидает закрытия
   CLOSED:
-    6  #description: подтверждено и закрыто
+    description: подтверждено и закрыто
   CANCELLED:
-    7  #description: отклонена
+    description: отклонена
 
 SLA_TYPE:
   CRITICAL:

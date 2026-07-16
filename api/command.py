@@ -29,9 +29,8 @@ class CmdDeleteBranch(BaseModel):
 
 class CmdCreateTicket(BaseModel):
     """ Command for create ticket. Old name - EVENT DATA"""
-    problem_category: str
+    department: str
     problem_name: str
-    problem_class: str
     problem_type: str | None = None
     zone: str | None = None
     comment: str | None = None

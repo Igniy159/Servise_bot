@@ -1,5 +1,6 @@
 from datetime import datetime
 from api.command import CmdCreateTicket
+from core.loader import raw_config
 from logger.logger import core_logger
 from core.exceptions import CoreValidationBreak, LifecycleError
 from core.actions import (Actions, ConfirmAction,
@@ -7,173 +8,9 @@ from core.actions import (Actions, ConfirmAction,
                           OffWaitAction, OnWaitAction,
                         CloseAction, FinishAction,
                         PriorityAction)
-from enum import Enum,auto
+from enum import Enum
 
-
-
-def string_shema_validator(config: dict) -> None:
-    enum_classes = config['enum']
-    matrix = config['priority_matrix']
-    for classes, problems in matrix['OBJECT_CLASSES'].items():
-        if classes not in enum_classes['OBJECT_CLASSES']:
-            raise CoreValidationBreak(f"Error in priority_matrix_OBJECT_CLASSES: {classes}")
-        for problem, two_keys in problems.items():
-            if problem not in enum_classes["PROBLEMS"]:
-                raise CoreValidationBreak(f"Error in priority_matrix_PROBLEMS: {problem}")
-            elif type(two_keys) != dict:
-                raise CoreValidationBreak("Incorrect type in priority_matrix")
-            elif set(two_keys.keys()) != {'priority', 'scenario'}:
-                raise CoreValidationBreak(f"Incorrect type in priority_matrix: {two_keys.keys()}")
-            elif two_keys['priority'] not in enum_classes['priority']:
-                raise CoreValidationBreak(f"Error in priority_matrix_priority: {two_keys['priority']}")
-            elif two_keys['scenario'] not in enum_classes['SCENARIOS']:
-                raise CoreValidationBreak(f"Error in priority_matrix_SCENARIOS: {two_keys['scenario']}")
-
-    r_alert = config['rules_alert']
-    for type_alert, two_keys in r_alert.items():
-        if type_alert not in enum_classes['CLASS_ALERTS']:
-            raise CoreValidationBreak(f"Error in rules_alert_type: {type_alert}")
-        elif set(two_keys.keys()) != {'target', 'scenario'}:
-            raise CoreValidationBreak(f"Incorrect type in rules_alert: {two_keys.keys()}")
-        elif two_keys['scenario'] not in enum_classes["SCENARIOS"]:
-            raise CoreValidationBreak(f"Error in rules_alert_scenario: {two_keys['scenario']}")
-        elif two_keys['target'] not in enum_classes["DEPARTMENTS"]:
-            raise CoreValidationBreak(f"Error in rules_alert_target: {two_keys['target']}")
-
-    r_request = config['rules_request']['REQUEST_CLASSES']
-    for classes, problems in r_request.items():
-        if classes not in enum_classes['REQUEST_CLASSES']:
-            raise CoreValidationBreak(f"Error in rules_request_CLASSES: {classes}")
-        if problems['target'] not in enum_classes["DEPARTMENTS"]:
-            raise CoreValidationBreak(f"Error in rules_request_target: {problems['target']}")
-        for type_problem, two_keys in problems.items():
-            if type_problem in ['description', "target"]:
-                continue
-            elif type_problem not in enum_classes["TYPE_REQUEST"]:
-                raise CoreValidationBreak(f"Error in rules_request_type_problem: {type_problem}")
-            elif type(two_keys) != dict:
-                raise CoreValidationBreak(f"Incorrect type in rules_request")
-            elif set(two_keys.keys()) != {'scenario', 'priority'}:
-                raise CoreValidationBreak(f"Incorrect type in rules_request: {two_keys.keys()}")
-            elif two_keys['priority'] not in enum_classes["priority"]:
-                raise CoreValidationBreak(f"Error in rules_request_priority: {two_keys['priority']}")
-            elif two_keys['scenario'] not in enum_classes['SCENARIOS']:
-                raise CoreValidationBreak(f"Error in rules_request_SCENARIOS: {two_keys['scenario']}")
-
-    depart = config['departments']['DEPARTMENTS']
-    for dep, role in depart.items():
-        if dep not in enum_classes['DEPARTMENTS']:
-            raise CoreValidationBreak(f"Error in DEPARTMENTS: {dep}")
-        if role['role'] not in enum_classes['ROLES']:
-            raise CoreValidationBreak(f"Error in DEPARTMENTS_roles: {role['role']}")
-
-    role = config['roles']["ROLES"]
-    for type_role, key_role in role.items():
-        if type_role not in enum_classes["ROLES"]:
-            raise CoreValidationBreak(f" Error in roles: {type_role}")
-        elif 'permissions' not in key_role.keys():
-            raise CoreValidationBreak(f" Error this roles: {type_role} Not permissions")
-        elif set(key_role["permissions"]) != set(enum_classes['ROLES_PERMISSION']):
-            print(set(key_role["permissions"]), 'права')
-            print(set(enum_classes['ROLES_PERMISSION']), 'словарь')
-            raise CoreValidationBreak(f" Error this roles: {type_role} incorrect permissions")
-
-    ars_object = config['object']["ARS_OBJECT"]
-    for zones, zone_obj in ars_object.items():
-        if zones not in enum_classes["zones"]:
-            raise CoreValidationBreak(f" Error in object: {zones} incorrect")
-        elif not isinstance(zone_obj, dict):
-            raise CoreValidationBreak(f" Error in object: {zone_obj} incorrect type")
-        for obj_name, obj_data in zone_obj.items():
-            if "class" not in obj_data:
-                raise CoreValidationBreak(f"Error in object '{obj_name}': missing 'class'")
-            obj_class = obj_data["class"]
-            if obj_class not in enum_classes["OBJECT_CLASSES"]:
-                raise CoreValidationBreak(
-                    f"Error in object '{obj_name}': "
-                    f"unknown class '{obj_class}'"
-                )
-
-    req = config["request"]
-    for class_req, type_req in req.items():
-        if class_req not in enum_classes["REQUEST_CATEGORY"]:
-            raise CoreValidationBreak(f"This class_request {class_req} incorrect")
-        elif not isinstance(type_req, dict):
-            raise CoreValidationBreak(f"This type_request {type_req} incorrect ")
-        for name_req, data_req in type_req.items():
-            if "class" not in data_req:
-                raise CoreValidationBreak(f"Error in object '{data_req}': missing 'class'")
-
-            class_req = data_req["class"]
-            if class_req not in enum_classes["REQUEST_CLASSES"]:
-                raise CoreValidationBreak(
-                    f"Error in object '{name_req}': "
-                    f"unknown class '{class_req}'"
-                )
-
-    al = config["alerts"]
-    for category, type_al in al.items():
-        if category not in enum_classes['CATEGORY_ALERTS']:
-            raise CoreValidationBreak(f" This category {category} incorrect")
-        for name, key_al in type_al.items():
-            if not isinstance(key_al, dict):
-                raise CoreValidationBreak(f" This {key_al} incorrect type")
-            elif 'class' not in key_al:
-                raise CoreValidationBreak(f" This {key_al} missing class")
-            class_al = key_al["class"]
-            if class_al not in enum_classes["CLASS_ALERTS"]:
-                raise CoreValidationBreak(
-                    f"Error in object '{name}': "
-                    f"unknown class '{class_al}'"
-                )
-
-    life = config['ticket_lifecycle']["NORMAL_LIFECYCLE"]
-    life_admin = config['ticket_lifecycle']["ADMIN_LIFECYCLE"]
-    for key, val in life.items():
-        if key not in enum_classes["TICKET_STATUS"]:
-            raise CoreValidationBreak(f"{key} not in lifecycle ticket")
-        for name, step in val.items():
-            if name != "next":
-                raise CoreValidationBreak(f"{name} Incorrect name in lifecycle ticket")
-            if step is None:
-                continue
-            elif set(step) - set(enum_classes["TICKET_STATUS"]):
-                raise CoreValidationBreak(f" {step} Incorrect name in lifecycle ticket")
-
-    for key, val in life_admin.items():
-        if key not in enum_classes["TICKET_STATUS"]:
-            raise CoreValidationBreak(f"{key} not in lifecycle ticket")
-        for name, step in val.items():
-            if name != "next":
-                raise CoreValidationBreak(f"{name} Incorrect name in lifecycle ticket")
-            if step is None:
-                continue
-            elif set(step) - set(enum_classes["TICKET_STATUS"]):
-                raise CoreValidationBreak(f" {step} Incorrect name in lifecycle ticket")
-
-    sla = config['SLA']['SLA_POLICIES']
-    for key, val in sla.items():
-        if key not in enum_classes["SLA_TYPE"]:
-            raise CoreValidationBreak(f"{key} incorrect SLA type")
-        for i, j in val.items():
-            if i not in ("reaction", 'resolution'):
-                raise CoreValidationBreak(f"{i} SLA incorrect value")
-            elif j is None:
-                continue
-            a = j[-1]
-            if a not in ("m", "d", "h"):
-                raise CoreValidationBreak(f"{j} SLA incorrect value")
-    core_logger.info("Config correct")
-
-
-class State(Enum):
-    NEW = auto()
-    CONFIRMED = auto()
-    IN_PROGRESS = auto()
-    WAITING_EXTERNAL = auto()
-    RESOLVED = auto()
-    CLOSED = auto()
-    CANCELLED = auto()
+State = Enum('State', list(raw_config['enum']['TICKET_STATUS']))
 
 
 class User:
@@ -262,10 +99,11 @@ class Ticket:
         priority_map = enum['priority']
         state_map = enum['TICKET_STATUS']
         depart_map = enum['DEPARTMENTS']
+        f = "%Y-%m-%d %H:%M:%S"
 
         res = {'ticket_id': getattr(ticket, 'ticket_id', None),
                'creator_id': ticket.creator_id,
-               'branch_id': ticket.branch_name,
+               'branch_id': ticket.branch_id,
                'event_type': ticket.event_type,
                'problem_category': ticket.problem_category,
                'problem_name': ticket.problem_name,
@@ -274,13 +112,13 @@ class Ticket:
                'zone': ticket.zone,
                'scenario': ticket.scenario,
                'target': depart_map.get(ticket.target),
-               'date_create': ticket.date_create.strftime("%Y-%m-%d %H:%M:%S"),
+               'date_create': ticket.date_create.strftime(f),
                'sla_reaction_deadline': ticket.sla_reaction_deadline.strftime(
-                   "%Y-%m-%d %H:%M:%S") if ticket.sla_reaction_deadline else None,
+                   f) if ticket.sla_reaction_deadline else None,
                'sla_resolution_deadline': ticket.sla_resolution_deadline.strftime(
-                   "%Y-%m-%d %H:%M:%S") if ticket.sla_resolution_deadline else None,
+                   f) if ticket.sla_resolution_deadline else None,
                'current_state': str(state_map.get(ticket.current_state)),
-               'date_close': ticket.date_close.strftime("%Y-%m-%d %H:%M:%S") if ticket.date_close else None,
+               'date_close': ticket.date_close.strftime(f) if ticket.date_close else None,
                'assigned_to': ticket.assigned_to,
                'reject_comment': ticket.reject_comment,
                'comment': ticket.comment,

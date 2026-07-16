@@ -2,7 +2,7 @@ from datetime import datetime
 from sqlite3 import Error
 from typing import Optional
 from core.exceptions import RepositoryError,  IncorrectWrite
-from repository.unit_of_work import Repo
+from repository.base import Repo
 
 
 class TicketRepo(Repo):

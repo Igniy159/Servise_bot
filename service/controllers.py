@@ -3,6 +3,8 @@ The module represents the boundary of the domain model.
 Authorization occurs in this module.
 Initial access checks to the service layer are also performed.
 """
+from typing import Optional
+
 from api.command import (
     CmdCreateBranch, CmdDeleteBranch, CmdRenameBranch, QueryReceiveBranch,
     CmdCreateTicket, CmdCloseTicket, CmdAssignTicket, CmdFinishTicket,
@@ -10,50 +12,49 @@ from api.command import (
     CmdOffWaitingTicket, QueryGetTicket, QueryGetHistoryTicket,
     CmdRenameUser, CmdCreateUser, CmdDeleteUser, CmdChangeUser, QueryReceiveUser, CmdFirstUser
 )
-
+from core.exceptions import PermissionDenied
+from core.loader import raw_config
 from repository.unit_of_work import UoW
 from service.branch_service import BranchService
 from service.user_service import UserService
 from service.ticket_service import TicketService
-from core.exceptions import PermissionDenied
 from core.ticket_core import User
-from logger.logger import core_logger
+
+
+
+class AuthController:
+    def __init__(self,
+                 uow_example: UoW,
+                 user_name: str,
+                 api_user_id: int,
+                 first_owner_id: int):
+        self.repo = uow_example
+        self.user_name = user_name
+        self.api_user_id = api_user_id
+        self.first_owner_id = first_owner_id
+        self.service = UserService(raw_config, self.repo)
+
+    def auth(self)-> Optional[User]:
+        uow = self.repo.users
+        with uow.con:
+            users = uow.get(filter_value={'api_user_id': self.api_user_id})
+            user = users[0] if users else None
+            if user:
+                return User(user)
+            elif self.api_user_id == self.first_owner_id and not users:
+                return self.service.create_first_owner(CmdFirstUser(user_name=self.user_name,
+                                                            api_user_id=self.api_user_id))
+            else:
+                raise PermissionDenied('401 Unauthorized')
 
 
 class BaseController:
-    """
-    This class provides its descendants
-    with user authorization
-    and access control for the modules below.
-    Rule all class output data -
-    1. self.user - Actor
-    2. cmd  - command action
-    3. flag - flag action(optional)
-    4. config - configuration from policy(optional)
-    5. uow - configuration DB with connect
-    """
-    def __init__(self, config: dict, api_user_id: int, uow_factory: UoW) -> None:
-        user = self._check_user(api_user_id)
-        if user:
-            self.user = User(user[0])
-        else:
-            raise PermissionDenied("User not found")
+    def __init__(self,
+                 config: dict,
+                 uow_factory: UoW) -> None:
         self.config = config
         self.uow_factory = uow_factory
-        self.user_access = self.config['roles']['ROLES'][self.user.role]['permissions']
 
-    def _check_user(self, api_user: int):
-        with self.uow_factory() as uow:
-            user = uow.users.get({
-        'user_activity': 1,
-        'api_user_id': api_user
-        })
-            return user
-
-    def _check_permission(self, flag: str) -> None:
-        if not self.user_access.get(flag, False):
-            core_logger.error(f"This changed {self.user.name} cannot use {flag} action")
-            raise PermissionDenied(f'This {self.user.name} cannot use {flag} action')
 
 class BranchController(BaseController):
     """

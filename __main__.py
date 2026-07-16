@@ -1,10 +1,24 @@
-from core.ticket_core import string_shema_validator
-from core.loader import config
-from repository.create_migrations import get_connect, create_migration_shema,run_migrations
+from os import getenv
+import asyncio
+from dotenv import load_dotenv
+from aiogram import Bot, Dispatcher
+from repository.create_migrations import run_migrations, create_migration_shema
+from api.handlers import router as auth_router
+from repository.unit_of_work import  main_factory_uow
+
+load_dotenv()
+dp = Dispatcher()
 
 
-if __name__== '__main__':
-    string_shema_validator(config)
-    con = get_connect()
-    create_migration_shema(con)
-    run_migrations(con)
+
+async def main():
+    TOKEN = getenv("BOT_TOKEN")
+    bot = Bot(token=TOKEN)
+    with main_factory_uow() as uow:
+        create_migration_shema(uow.con)
+        run_migrations(uow.con)
+    dp.include_router(auth_router)
+    await dp.start_polling(bot)
+
+if __name__ == '__main__':
+    asyncio.run(main())

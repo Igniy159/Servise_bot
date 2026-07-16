@@ -15,14 +15,21 @@ class UserService:
         self.config = config
 
     def create_first_owner(self,
-                           cmd: CmdFirstUser):
+                           cmd: CmdFirstUser)-> User:
         """The function of initiating the very first user of the system,
          with the issuance of maximum access rights"""
-        role = self.config['enum']['ROLES']['OWNER']
-        existing_owner = self.uow.users.get({'role_id': role})
-        if existing_owner:
-            raise CoreValidationBreak("Owner already exists")
-        return self.uow.users.create(cmd.user_name,cmd.api_user_id,role_id=role)
+        role_id = self.uow.role_mapper.get_roles_id("OWNER")
+        existing_users = self.uow.users.get()
+        if existing_users:
+            raise CoreValidationBreak("System already initialized")
+        self.uow.users.create(cmd.user_name,
+                                     cmd.api_user_id,
+                                     role_id=role_id)
+        print('Сервис слой отработал')
+        return User({'user_id':1,
+                     'user_name': cmd.user_name,
+                     'api_user_id':cmd.api_user_id,
+                     'role_name': "OWNER"})
 
     def create(self,
                     actor: User,
