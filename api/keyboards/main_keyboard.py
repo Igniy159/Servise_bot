@@ -1,18 +1,15 @@
-from aiogram.types import (ReplyKeyboardMarkup,
-                           KeyboardButton as KB,
-                           InlineKeyboardButton as InB,
-                           InlineKeyboardMarkup)
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton as KB
 from core.ticket_core import User
-
-
 
 def get_owner_menu():
     keyboard = ReplyKeyboardMarkup(
-        keyboard=[[KB(text="Филиалы"), KB(text='Сотрудники')],
-                [KB(text='Заявки'), KB(text='Cтатистика')]
+        keyboard=[[KB(text="Филиалы")],
+                   [KB(text='Сотрудники')],
+                    [KB(text='Заявки')]
                   ],
         resize_keyboard=True)
     return keyboard
+
 def get_manager_menu():
     keyboard = ReplyKeyboardMarkup(
         keyboard=[[KB(text='Заявки')],
@@ -20,13 +17,14 @@ def get_manager_menu():
                 ],
         resize_keyboard=True)
     return keyboard
+
 def get_specialist_menu():
     keyboard = ReplyKeyboardMarkup(
-        keyboard=[[KB(text='Активные заявки')],
-                  [KB(text='Статистика')]
+        keyboard=[[KB(text='Активные заявки')]
                   ],
         resize_keyboard=True)
     return keyboard
+
 def get_employee_menu():
     keyboard = ReplyKeyboardMarkup(
         keyboard=[[KB(text="Срочные уведомления"), KB(text='ARS служба')],
@@ -46,14 +44,3 @@ def get_main_menu(actor: User)-> ReplyKeyboardMarkup:
         'OWNER': get_owner_menu
     }
     return mapper[actor.role]()
-
-def get_branch_menu():
-    keyboard = InlineKeyboardMarkup(
-        inline_keyboard=[
-            [InB(text='Активные филиалы')],
-            [InB(text='Создать новый филиал')],
-            [InB(text='Переименовать филиал')],
-            [InB(text='Удалить филиал')]
-        ],resize_keyboard=True
-    )
-    return keyboard

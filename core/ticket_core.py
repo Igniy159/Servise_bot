@@ -13,6 +13,15 @@ from enum import Enum
 State = Enum('State', list(raw_config['enum']['TICKET_STATUS']))
 
 
+class Branch:
+    def __init__(self, branch: dict):
+        self.id = branch['branch_id']
+        self.name = branch['branch_name']
+
+    def __str__(self):
+        return f"Филиал №{self.id} {self.name} "
+
+
 class User:
     __doc__ = "This class for user operations"
 

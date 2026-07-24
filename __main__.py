@@ -2,23 +2,26 @@ from os import getenv
 import asyncio
 from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher
+
+from api.midleware import AuthMiddleware
+from core.loader import raw_config
 from repository.create_migrations import run_migrations, create_migration_shema
-from api.handlers import router as auth_router
-from repository.unit_of_work import  main_factory_uow
-
-load_dotenv()
-dp = Dispatcher()
-
-
+from api.handlers.main_handler import main_routers
+from repository.unit_of_work import main_factory_uow
 
 async def main():
-    TOKEN = getenv("BOT_TOKEN")
-    bot = Bot(token=TOKEN)
+    dp = Dispatcher()
+    bot = Bot(token=getenv("BOT_TOKEN"))
+    middleware_example = AuthMiddleware(main_factory_uow, raw_config)
+    for router in main_routers:
+        router.message.middleware(middleware_example)
+        router.callback_query.middleware(middleware_example)
+        dp.include_router(router)
     with main_factory_uow() as uow:
         create_migration_shema(uow.con)
         run_migrations(uow.con)
-    dp.include_router(auth_router)
     await dp.start_polling(bot)
 
 if __name__ == '__main__':
+    load_dotenv()
     asyncio.run(main())

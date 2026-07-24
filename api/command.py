@@ -17,10 +17,7 @@ class CmdRenameBranch(BaseModel):
 
 class QueryReceiveBranch(BaseModel):
     """Command for receive branch"""
-    branch_id: int | None = None
-    branch_name: str | None = None
     branch_activity: int | None = 1
-
 
 class CmdDeleteBranch(BaseModel):
     """Command for delete branch"""

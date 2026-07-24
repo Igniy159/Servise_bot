@@ -49,41 +49,39 @@ class AuthController:
 
 
 class BaseController:
-    def __init__(self,
-                 config: dict,
-                 uow_factory: UoW) -> None:
+    def __init__(self, config: dict, uow:UoW):
         self.config = config
-        self.uow_factory = uow_factory
+        self.uow = uow
 
 
-class BranchController(BaseController):
-    """
-    This class calls service layer functions
-     to manage the branch
-    if the user has the "lead branch" access right.
-    """
-
-    def __init__(self, config: dict, api_user_id: int, uow: UoW) -> None:
-        super().__init__(config, api_user_id, uow)
-        self._check_permission('lead_branch')
-        self.service = BranchService(uow)
-
-    def create(self,cmd: CmdCreateBranch):
-        """Calls the function to create a branch after authorization"""
-        with self.uow_factory():
-            return self.service.create(self.user,cmd)
-    def rename(self,cmd:CmdRenameBranch):
-        """Calls the function to rename a branch after authorization"""
-        with self.uow_factory():
-            return self.service.rename(self.user, cmd)
-    def get(self,cmd:QueryReceiveBranch):
-        """Calls the function to get branches with filters after authorization"""
-        with self.uow_factory():
-            return self.service.receive(self.user, cmd)
-    def delete(self, cmd: CmdDeleteBranch):
-        """Calls the function to delete a branch after authorization"""
-        with self.uow_factory():
-            return self.service.delete(self.user, cmd)
+# class BranchController(BaseController):
+#     """
+#     This class calls service layer functions
+#      to manage the branch
+#     if the user has the "lead branch" access right.
+#     """
+#
+#     def __init__(self, config: dict, user: User, uow: UoW) -> None:
+#         super().__init__(config,uow)
+#         self.service = BranchService(uow)
+#         self.user = user
+#
+#     def create(self,cmd: CmdCreateBranch):
+#         """Calls the function to create a branch after authorization"""
+#         with self.uow:
+#             return self.service.create(self.user,cmd)
+#     def rename(self,cmd:CmdRenameBranch):
+#         """Calls the function to rename a branch after authorization"""
+#         with self.uow:
+#             return self.service.rename(self.user, cmd)
+#     def get(self,cmd:QueryReceiveBranch):
+#         """Calls the function to get branches with filters after authorization"""
+#         with self.uow:
+#             return self.service.receive(self.user, cmd)
+#     def delete(self, cmd: CmdDeleteBranch):
+#         """Calls the function to delete a branch after authorization"""
+#         with self.uow:
+#             return self.service.delete(self.user, cmd)
 
 
 class TicketController(BaseController):
@@ -149,7 +147,7 @@ class UserController(BaseController):
 
     def create(self, cmd: CmdCreateUser):
         """The function create new user """
-        with self.uow_factory():
+        with self.uow:
             return self.service.create(self.user, cmd)
 
     def delete(self, cmd: CmdDeleteUser):

@@ -36,6 +36,7 @@ class EventBranch:
         self.user = user
         self.branch = branch
         self.action = action
+
 class EventGetBranch:
     def __init__(self,user: User, branches:list[dict]):
         self.user = user
