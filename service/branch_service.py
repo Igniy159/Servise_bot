@@ -31,8 +31,7 @@ class BranchService:
         else:
             self.uow.branches.create(cmd.name)
             branch = self.uow.branches.get({"branch_name": cmd.name})
-            print(branch[0])
-        return Branch(branch[0])
+        return Branch(branch)
 
     def rename(self, cmd: CmdRenameBranch) -> Branch:
         branch = self.uow.branches.get({"branch_id": cmd.branch_id})
