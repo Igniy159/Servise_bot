@@ -35,6 +35,8 @@ class User:
         self.branch_id = user.get('branch_id', None)
         self.branch_name = user.get('branch_name', None)
 
+    def __str__(self):
+        return f"{self.name}|{self.role}|{self.depart_name or self.branch_name or " "}"
 
 class Ticket:
     __doc__ = "This class for ticket field validations and patch operations."

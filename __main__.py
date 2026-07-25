@@ -2,7 +2,6 @@ from os import getenv
 import asyncio
 from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher
-
 from api.midleware import AuthMiddleware
 from core.loader import raw_config
 from repository.create_migrations import run_migrations, create_migration_shema

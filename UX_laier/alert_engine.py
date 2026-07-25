@@ -1,4 +1,4 @@
-from UX_laier.translate import translate, union_history
+from UX_laier.translate import  union_history
 
 
 def tr(config, key):
@@ -94,38 +94,38 @@ def create_apply_ticket_msg(event_alert,config,send=None):
     return '\n'.join(msg)
 
 
-def branch_msg(event_alert,config):
-    msg = ''
-    if event_alert['action'] == 'create_branch':
-        msg = f"Филиал {event_alert['branch_name']} успешно создан"
-    elif event_alert['action'] == 'rename_branch':
-        msg = f"Филиал успешно изменил имя на: {event_alert['branch_name']}"
-    elif event_alert['action'] == 'receive_branch':
-        msg = translate(event_alert['branches'],config)
-    elif event_alert['action'] == 'delete_branch':
-        msg = f"Филиал #{event_alert['branch_id']} успешно удалён"
-    return msg
+# def branch_msg(event_alert,config):
+#     msg = ''
+#     if event_alert['action'] == 'create_branch':
+#         msg = f"Филиал {event_alert['branch_name']} успешно создан"
+#     elif event_alert['action'] == 'rename_branch':
+#         msg = f"Филиал успешно изменил имя на: {event_alert['branch_name']}"
+#     elif event_alert['action'] == 'receive_branch':
+#         msg = translate(event_alert['branches'],config)
+#     elif event_alert['action'] == 'delete_branch':
+#         msg = f"Филиал #{event_alert['branch_id']} успешно удалён"
+#     return msg
+#
+#
+# def user_msg(event_alert,config):
+#     msg = ''
+#     if event_alert['action'] == 'create_user':
+#         msg = f"Пользователь {event_alert['user_name']} успешно добавлен"
+#     elif event_alert['action'] == "delete_user":
+#         msg = f"Пользователь #{event_alert['user_id']} успешно удалён"
+#     elif event_alert['action'] == 'change_user':
+#         msg = f"Параметры пользователя {event_alert['user_name']} успешно изменены"
+#     elif event_alert['action'] == 'rename_user':
+#         msg = f"У пользователя изменилось имя на {event_alert['user_name']}"
+#     elif event_alert['action'] == "receive_user":
+#         msg = translate(event_alert['users'],config)
+#     return msg
 
 
-def user_msg(event_alert,config):
-    msg = ''
-    if event_alert['action'] == 'create_user':
-        msg = f"Пользователь {event_alert['user_name']} успешно добавлен"
-    elif event_alert['action'] == "delete_user":
-        msg = f"Пользователь #{event_alert['user_id']} успешно удалён"
-    elif event_alert['action'] == 'change_user':
-        msg = f"Параметры пользователя {event_alert['user_name']} успешно изменены"
-    elif event_alert['action'] == 'rename_user':
-        msg = f"У пользователя изменилось имя на {event_alert['user_name']}"
-    elif event_alert['action'] == "receive_user":
-        msg = translate(event_alert['users'],config)
-    return msg
-
-
-def show_ticket_msg(event_alert,config):
-    msg = ''
-    if event_alert['action'] == 'receive_ticket':
-        msg = translate(event_alert['tickets'],config)
-    elif event_alert['action'] == 'receive_history':
-        msg = union_history(event_alert['history'],config)
-    return msg
+# def show_ticket_msg(event_alert,config):
+#     msg = ''
+#     if event_alert['action'] == 'receive_ticket':
+#         msg = translate(event_alert['tickets'],config)
+#     elif event_alert['action'] == 'receive_history':
+#         msg = union_history(event_alert['history'],config)
+#     return msg

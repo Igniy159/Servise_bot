@@ -33,11 +33,11 @@ class PolicyUser:
         self.cmd = cmd
         self.config = config
         self.enum = config['enum']
-        self.access = config['roles']['ROLES'][user.role]['permissions']['lead_user']
+        self.access = config['roles'][user.role]['permissions']['lead_user']
 
     def _access_user(self, action: str):
         if not self.access[action]:
-            raise PermissionDenied(f" User {self.user.name} cannot access {action} users")
+            raise PermissionDenied(f"User {self.user.name} cannot access {action} users")
 
     def normalize_user_fields_by_role(self):
         roles = self.enum['ROLES']

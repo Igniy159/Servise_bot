@@ -39,7 +39,3 @@ class RecipientsApplyTicket(Recipient):
         if self.action in link_manager:
             self.target += self.context['manager']
 
-class RecipientUser(Recipient):
-    def __init__(self, creator: User, target: User):
-        super().__init__(creator)
-        self.target = target

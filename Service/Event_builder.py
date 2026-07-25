@@ -20,24 +20,3 @@ class EventGetHistory:
         self.actor = actor
         self.history = history
 
-class EventUser:
-    def __init__(self,actor: User, user: User, action:str):
-        self.actor = actor
-        self.user = user
-        self.action = action
-
-class EventGetUser:
-    def __init__(self, actor: User, users: list[dict]):
-        self.actor = actor
-        self.users = users
-
-class EventBranch:
-    def __init__(self, user: User, branch:dict, action: str):
-        self.user = user
-        self.branch = branch
-        self.action = action
-
-class EventGetBranch:
-    def __init__(self,user: User, branches:list[dict]):
-        self.user = user
-        self.branches = branches

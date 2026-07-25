@@ -6,8 +6,6 @@ from repository.unit_of_work import UoW
 from core.ticket_core import User
 from api.command import (CmdRenameUser, CmdCreateUser, CmdDeleteUser,
                          CmdChangeUser, QueryReceiveUser, CmdFirstUser)
-from service.event_builder import EventUser, EventGetUser
-from service.recipients import RecipientUser, Recipient
 
 class UserService:
     def __init__(self, config:dict, uow: UoW):
@@ -25,7 +23,6 @@ class UserService:
         self.uow.users.create(cmd.user_name,
                                      cmd.api_user_id,
                                      role_id=role_id)
-        print('Сервис слой отработал')
         return User({'user_id':1,
                      'user_name': cmd.user_name,
                      'api_user_id':cmd.api_user_id,
@@ -34,7 +31,7 @@ class UserService:
     def create(self,
                     actor: User,
                     cmd: CmdCreateUser
-                    )->tuple[EventUser,RecipientUser]:
+                    )->User:
 
         control = PolicyCreateUser(actor,self.config,cmd)
         control.access_user()
@@ -54,13 +51,11 @@ class UserService:
                         )
             new_user = dict(cmd)
             new_user['user_id'] = user_id
-        event_alert = EventUser(actor,User(new_user),"create_user")
-        recipient = RecipientUser(actor,User(new_user))
-        return event_alert, recipient
+        return User(new_user)
 
     def delete(self,
                     actor:User,
-                    cmd: CmdDeleteUser)->tuple[EventUser,RecipientUser]:
+                    cmd: CmdDeleteUser)-> User:
         control = PolicyDeleteUser(actor,self.config,cmd)
         control.access_user()
         deletable = self.uow.users.get({"user_id": cmd.user_id})
@@ -70,13 +65,11 @@ class UserService:
         deletable = User(deletable[0])
         control.check_modified(deletable)
         self.uow.users.delete(cmd.user_id)
-        event_alert = EventUser(actor,deletable,"delete_user")
-        recipient = RecipientUser(actor,deletable)
-        return event_alert, recipient
+        return deletable
 
     def change(self,
                 actor: User,
-               cmd: CmdChangeUser)->tuple[EventUser,RecipientUser]:
+               cmd: CmdChangeUser)->User:
         changed = self.uow.users.get({'user_id': cmd.user_id})
         if not changed:
             core_logger.error('User not found')
@@ -91,13 +84,11 @@ class UserService:
                            cmd.branch_id,
                            cmd.depart_id)
         modified = User(self.uow.users.get({'user_id': cmd.user_id})[0])
-        event_alert = EventUser(actor,modified,"change_user")
-        recipient = RecipientUser(actor,modified)
-        return event_alert, recipient
+        return modified
 
     def rename(self,
             actor:User,
-            cmd: CmdRenameUser)->tuple[EventUser,RecipientUser]:
+            cmd: CmdRenameUser)-> User:
         changed = self.uow.users.get({'user_id': cmd.user_id})
         if not changed:
             core_logger.error('User not found')
@@ -108,17 +99,14 @@ class UserService:
         control.check_modified(changed)
         self.uow.users.rename(cmd.user_id,cmd.user_name)
         modified = User(self.uow.users.get({'user_id': cmd.user_id})[0])
-        event_alert = EventUser(actor,modified,"rename_user")
-        recipient = RecipientUser(actor,changed)
-        return event_alert, recipient
+        return modified
 
     def get(self,
              actor:User,
-             cmd:QueryReceiveUser)->tuple[EventGetUser,Recipient]:
+             cmd:QueryReceiveUser)->list[User]:
         control = PolicyGetUsers(actor,self.config,cmd)
         control.access_user()
         cmd = control.role_filter()
-        users = self.uow.users.get(cmd)
-        event_alert = EventGetUser(actor,users)
-        recipient = Recipient(actor)
-        return event_alert, recipient
+        with self.uow:
+            users = self.uow.users.get(cmd.dict())
+        return [User(user) for user in users]

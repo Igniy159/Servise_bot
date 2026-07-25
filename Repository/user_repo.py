@@ -14,6 +14,8 @@ class UserRepo(Repo):
         param = []
         if filter_value:
             for key, val in filter_value.items():
+                if val is None:
+                    continue
                 if key == "user_id":
                     condition.append("u.user_id = ?")
                     param.append(val)
@@ -47,6 +49,7 @@ class UserRepo(Repo):
                                JOIN role AS r ON u.role_id = r.role_id
                                LEFT JOIN department AS d ON d.depart_id = u.depart_id
                                LEFT JOIN branch AS b ON b.branch_id = u.branch_id"""
+
         request = base_query + where_sql
         try:
             rows = cur.execute(request, param).fetchall()
@@ -66,7 +69,6 @@ class UserRepo(Repo):
             """INSERT INTO users (user_name, api_user_id, role_id, depart_id, branch_id)
              VALUES (?, ?, ?, ?, ?)""",
             (user_name, api_user_id, role_id, depart_id, branch_id))
-        print('Запись в БД успешная')
         return cur.lastrowid
 
     def delete(self,
