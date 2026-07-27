@@ -1,0 +1,16 @@
+from enum import Enum
+
+class Role(Enum):
+    OWNER = "OWNER"
+    MANAGER = "MANAGER"
+    SPECIALIST = "SPECIALIST"
+    EMPLOYEE = "EMPLOYEE"
+
+class State(Enum):
+    NEW = 'NEW'
+    CONFIRMED = 'CONFIRMED'
+    IN_PROGRESS = 'IN_PROGRESS'
+    WAITING_EXTERNAL = 'WAITING_EXTERNAL'
+    RESOLVED = 'RESOLVED'
+    CLOSED = 'CLOSED'
+    CANCELLED = 'CANCELLED'
