@@ -1,6 +1,8 @@
 from os import getenv
 from aiogram import Router
 from dotenv import load_dotenv
+
+from UX_laier.translate import Formatter
 from api.handlers.branch_handler import branch_router
 from api.handlers.user_handler import user_router
 from api.handlers.ticket_handler import ticket_router
@@ -25,7 +27,8 @@ async def auth(message:Message):
                        api_user_id=message.from_user.id,
                        first_owner_id= int(getenv('FIRST_OWNER'))).auth()
         menu = get_main_menu(user)
-        await message.answer(f"Добро пожаловать в систему {user.name}. Ваша роль {user.role}",
+        await message.answer(f"""Добро пожаловать в систему {user.name}.
+         Ваша роль {user.role.name}""",
                               reply_markup=menu)
     except PermissionDenied:
         await message.answer(f"""Вы не зарегистрированы в системе. Обратитесь к администратору.

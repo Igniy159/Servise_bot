@@ -32,7 +32,6 @@ class UserService:
                     actor: User,
                     cmd: CmdCreateUser
                     )->User:
-
         control = PolicyCreateUser(actor,self.config,cmd)
         control.access_user()
         chek_user = self.uow.users.get({"api_user_id": cmd.api_user_id})
@@ -40,16 +39,16 @@ class UserService:
             new_user = chek_user[0]
             self.uow.users.activate(new_user['api_user_id'])
         else:
-            control.validate_cmd()
-            cmd = control.normalize_user_fields_by_role()
+            control.validate_create_cmd()
+            cmd = control.normalize_cmd_by_role()
+            role_id =  self.uow.role_mapper.get_roles_id(cmd.role.name)
             user_id = self.uow.users.create(
-                        cmd.name,
+                        cmd.user_name,
                         cmd.api_user_id,
-                        cmd.role_id,
+                        role_id,
                         depart_id=cmd.depart_id,
-                        branch_id=cmd.branch_id
-                        )
-            new_user = dict(cmd)
+                        branch_id=cmd.branch_id)
+            new_user = cmd.dict()
             new_user['user_id'] = user_id
         return User(new_user)
 

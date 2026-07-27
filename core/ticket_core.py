@@ -1,6 +1,5 @@
 from datetime import datetime
 from api.command import CmdCreateTicket
-from core.loader import raw_config
 from logger.logger import core_logger
 from core.exceptions import CoreValidationBreak, LifecycleError
 from core.actions import (Actions, ConfirmAction,
@@ -8,9 +7,7 @@ from core.actions import (Actions, ConfirmAction,
                           OffWaitAction, OnWaitAction,
                         CloseAction, FinishAction,
                         PriorityAction)
-from enum import Enum
-
-State = Enum('State', list(raw_config['enum']['TICKET_STATUS']))
+from core.enums import State, Role
 
 
 class Branch:
@@ -21,6 +18,13 @@ class Branch:
     def __str__(self):
         return f"Филиал №{self.id} {self.name} "
 
+class Department:
+    def __init__(self, depart: dict):
+        self.id = depart['depart_id']
+        self.name = depart['depart_name']
+
+    def __str__(self):
+        return f"Отдел {self.name} "
 
 class User:
     __doc__ = "This class for user operations"
@@ -29,14 +33,14 @@ class User:
         self.id = user['user_id']
         self.name = user['user_name']
         self.api_id = user['api_user_id']
-        self.role = user['role_name']
+        self.role = Role(user.get('role') or user.get('role_name'))
         self.depart_id = user.get('depart_id', None)
         self.depart_name = user.get('depart_name', None)
         self.branch_id = user.get('branch_id', None)
         self.branch_name = user.get('branch_name', None)
 
     def __str__(self):
-        return f"{self.name}|{self.role}|{self.depart_name or self.branch_name or " "}"
+        return f"{self.name}|{self.role.name}|{self.depart_name or self.branch_name or " "}"
 
 class Ticket:
     __doc__ = "This class for ticket field validations and patch operations."

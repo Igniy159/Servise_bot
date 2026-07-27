@@ -18,8 +18,13 @@ class MapperDepart(Repo):
                         WHERE d.depart_id == ? """, (dep_id,)).fetchone()
         if res:
             return res[0]
-
         raise IncorrectWrite("Department not found")
+
+    def get_all_depart(self)->list[dict]:
+        cur = self.con
+        res = cur.execute("""SELECT d.depart_id, d.depart_name
+                        FROM department AS d""").fetchall()
+        return [dict(row) for row in res]
 
 class MapperRoles(Repo):
 

@@ -1,5 +1,7 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton as InB
 
+from core.ticket_core import Branch
+
 
 def get_branch_menu():
     keyboard = InlineKeyboardMarkup(
@@ -12,7 +14,7 @@ def get_branch_menu():
     )
     return keyboard
 
-def get_branch_keyboard(branches: list, action: str):
+def get_branch_keyboard(branches: list[Branch], action: str):
     keyboard = InlineKeyboardMarkup(
         inline_keyboard= [
             [InB(text=f'{branch.name}',callback_data=f'{action}_branch:{branch.id}')]

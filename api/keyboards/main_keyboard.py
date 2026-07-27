@@ -43,4 +43,4 @@ def get_main_menu(actor: User)-> ReplyKeyboardMarkup:
         'SPECIALIST': get_specialist_menu,
         'OWNER': get_owner_menu
     }
-    return mapper[actor.role]()
+    return mapper[actor.role.name]()

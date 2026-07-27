@@ -213,12 +213,6 @@ DEPARTMENTS:
     description: отдел маркетинга
   SERVICE:
     description: сервис менеджер. жалобы посетителей
-  TOP_MANAGEMENT:
-    description: руководство
-  BRANCH_MANAGER:
-    description: управляющий филиала
-  LINE_STAFF:
-    description: линейный персонал
 
 TICKET_STATUS:
   NEW:

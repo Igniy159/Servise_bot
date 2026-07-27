@@ -1,6 +1,8 @@
 from os import getenv
 from aiogram import BaseMiddleware
 from aiogram.types import Message
+
+from UX_laier.translate import Formatter
 from core.exceptions import PermissionDenied, RepositoryError
 from service.controllers import AuthController
 
@@ -30,6 +32,7 @@ class AuthMiddleware(BaseMiddleware):
                 data['user'] = user
                 data['uow'] = uow
                 data['raw_config'] = self.raw_config
+                data['formatter'] = Formatter(self.raw_config)
                 result = await handler(event, data)
         except PermissionDenied:
             if hasattr(event, "answer"):

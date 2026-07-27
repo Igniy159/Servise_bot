@@ -5,6 +5,9 @@ The module is used to validate input data types through Pydantic and generate in
 from typing import Literal
 from pydantic import BaseModel
 
+from core.enums import Role
+
+
 class CmdCreateBranch(BaseModel):
     """Command for create branch"""
     name: str
@@ -104,7 +107,7 @@ class CmdCreateUser(BaseModel):
     """Command for create user"""
     user_name: str
     api_user_id: int
-    role_id: int
+    role: Role
     depart_id: int | None = None
     branch_id: int | None = None
 

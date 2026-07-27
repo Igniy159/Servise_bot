@@ -5,11 +5,12 @@ class Formatter:
     def __init__(self, raw_config: dict):
         self.dict_en_ru = raw_config['translate']
 
-    def _translate(self, key):
+    def translate(self, key):
         return self.dict_en_ru.get(key, "")
 
     def user_formatter(self, user: User):
-        user.role = self._translate(user.role)
+        user.role = self.translate(user.role.name)
+        user.depart_name = self.translate(user.depart_name)
         return f"{user.name} | {user.role} | {user.depart_name or user.branch_name or " "}"
 
 
@@ -17,11 +18,6 @@ def tr(config, key):
     dict_en_ru = config['translate']
     res = dict_en_ru.get(key, key)
     return res
-
-def user_formatter(user: User, raw_config:dict):
-    user.role = tr(raw_config, user.role)
-    return str(user)
-
 
 def translate_ticket(tickets: list[dict], config)-> str:
     dict_en_ru = config['translate']

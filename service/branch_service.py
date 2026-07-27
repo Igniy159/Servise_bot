@@ -20,7 +20,7 @@ class BranchService:
         self._check_access()
 
     def _check_access(self):
-        if not self.access[self.user.role]['permissions']['lead_branch']:
+        if not self.access[self.user.role.name]['permissions']['lead_branch']:
             raise PermissionDenied('User not access')
 
     def create(self, cmd: CmdCreateBranch)->Branch:
@@ -30,7 +30,7 @@ class BranchService:
             self.uow.branches.activate(branch['branch_id'])
         else:
             self.uow.branches.create(cmd.name)
-            branch = self.uow.branches.get({"branch_name": cmd.name})
+            branch = self.uow.branches.get({"branch_name": cmd.name})[0]
         return Branch(branch)
 
     def rename(self, cmd: CmdRenameBranch) -> Branch:
