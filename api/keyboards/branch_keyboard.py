@@ -17,7 +17,7 @@ def get_branch_menu():
 def get_branch_keyboard(branches: list[Branch], action: str):
     keyboard = InlineKeyboardMarkup(
         inline_keyboard= [
-            [InB(text=f'{branch.name}',callback_data=f'{action}_branch:{branch.id}')]
+            [InB(text=f'{branch.name}',callback_data=f'{action}:{branch.id}')]
             for branch in branches
         ]
     )

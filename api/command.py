@@ -126,7 +126,7 @@ class CmdChangeUser(BaseModel):
     For business reasons, it is advisable to provide complete data
     """
     user_id: int
-    user_role_id: int
+    role: Role
     user_depart_id: int | None = None
     user_branch_id: int | None = None
 

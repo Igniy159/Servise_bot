@@ -23,15 +23,13 @@ class PolicyUser:
 
     def normalize_cmd_by_role(self):
         need_field = self.config['roles'][self.cmd.role.name]['required_field']
-        print(need_field, 'нужные поля')
         if 'branch_id' not in need_field:
             self.cmd.branch_id = None
         if 'depart_id' not in need_field:
             self.cmd.depart_id = None
-        print(f'я изменил команду {self.cmd}')
         return self.cmd
 
-    def validate_create_cmd(self):
+    def validate_cmd(self):
         if self.user.role == Role.MANAGER:
             if self.cmd.branch_id != self.user.branch_id:
                 raise PermissionDenied("Manager can only change its branch")
@@ -39,6 +37,7 @@ class PolicyUser:
                 raise PermissionDenied("Manager can only actions EMPLOYEE")
             if self.cmd.depart_id is not None:
                 raise PermissionDenied("Manager cannot assign depart_id")
+            self.cmd.branch_id = self.user.branch_id
         return self.cmd
 
 class PolicyCreateUser(PolicyUser):
@@ -54,9 +53,5 @@ class PolicyRenameUser(PolicyUser):
     def access_user(self):
         self._access_user("rename_user")
 class PolicyGetUsers(PolicyUser):
-    def role_filter(self):
-        if self.user.role == "MANAGER":
-            self.cmd.branch_id = self.user.branch_id
-        return self.cmd
     def access_user(self):
         self._access_user("receive_user")

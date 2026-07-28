@@ -39,7 +39,7 @@ class UserService:
             new_user = chek_user[0]
             self.uow.users.activate(new_user['api_user_id'])
         else:
-            control.validate_create_cmd()
+            control.validate_cmd()
             cmd = control.normalize_cmd_by_role()
             role_id =  self.uow.role_mapper.get_roles_id(cmd.role.name)
             user_id = self.uow.users.create(
@@ -62,7 +62,6 @@ class UserService:
             core_logger.error('User not found')
             raise CoreValidationBreak("User not found")
         deletable = User(deletable[0])
-        control.check_modified(deletable)
         self.uow.users.delete(cmd.user_id)
         return deletable
 
@@ -75,13 +74,12 @@ class UserService:
             raise CoreValidationBreak('User not found')
         control = PolicyChangeUser(actor,self.config,cmd)
         control.access_user()
-        control.check_modified(User(changed[0]))
-        cmd = control.normalize_user_fields_by_role()
-        control.validate_cmd()
+        cmd = control.validate_cmd()
+        role_id = self.uow.role_mapper.get_roles_id(cmd.role.name)
         self.uow.users.update(cmd.user_id,
-                           cmd.role_id,
-                           cmd.branch_id,
-                           cmd.depart_id)
+                           role_id,
+                           cmd.user_branch_id,
+                           cmd.user_depart_id)
         modified = User(self.uow.users.get({'user_id': cmd.user_id})[0])
         return modified
 
@@ -92,10 +90,8 @@ class UserService:
         if not changed:
             core_logger.error('User not found')
             raise CoreValidationBreak('User not found')
-        changed = User(changed[0])
         control = PolicyRenameUser(actor,self.config,cmd)
         control.access_user()
-        control.check_modified(changed)
         self.uow.users.rename(cmd.user_id,cmd.user_name)
         modified = User(self.uow.users.get({'user_id': cmd.user_id})[0])
         return modified
@@ -105,7 +101,6 @@ class UserService:
              cmd:QueryReceiveUser)->list[User]:
         control = PolicyGetUsers(actor,self.config,cmd)
         control.access_user()
-        cmd = control.role_filter()
-        with self.uow:
-            users = self.uow.users.get(cmd.dict())
+        cmd = control.validate_cmd()
+        users = self.uow.users.get(cmd.dict())
         return [User(user) for user in users]

@@ -119,7 +119,7 @@ async def rename_branch_start(callback: CallbackQuery,
     if not branches:
         await callback.message.answer('Филиалы не найдены. Создайте новый филиал')
     else:
-        keyboard = get_branch_keyboard(branches,'rename')
+        keyboard = get_branch_keyboard(branches,'rename_branch')
         await callback.message.answer(text="Выберите филиал чтоб его переименовать:",
                                       reply_markup= keyboard )
 
@@ -157,7 +157,7 @@ async def delete_branch_start(callback: CallbackQuery,
     if not branches:
         await callback.message.answer('Филиалы не найдены. Создайте новый филиал')
     else:
-        keyboard = get_branch_keyboard(branches,'delete')
+        keyboard = get_branch_keyboard(branches,'delete_branch')
         await callback.message.answer(text="Выберите филиал чтоб его удалить:",
                                       reply_markup= keyboard )
 

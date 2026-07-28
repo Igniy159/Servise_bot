@@ -1,5 +1,5 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton as InB
-from core.ticket_core import Department
+from core.ticket_core import Department, User
 from core.enums import Role
 from UX_laier.translate import Formatter
 
@@ -25,6 +25,15 @@ def get_department_keyboard(formater: Formatter,
         ]
     )
     return keyboard
+def get_user_keyboard(users: list[User], formatter):
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InB(text=f" 👤{user.name} | {formatter.translate(user.role.name)}",
+                 callback_data=f'user_id:{user.id}')]
+            for user in users
+        ]
+    )
+    return keyboard
 
 def get_roles_keyboard(formater: Formatter,
                        action:str):
@@ -36,3 +45,12 @@ def get_roles_keyboard(formater: Formatter,
     )
     return keyboard
 
+def get_actions_from_user():
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InB(text='Переименовать сотрудника',callback_data='user_action:rename')],
+            [InB(text='Изменить сотрудника',callback_data='user_action:change')],
+            [InB(text='Удалить сотрудника',callback_data='user_action:delete')]
+        ]
+    )
+    return keyboard
