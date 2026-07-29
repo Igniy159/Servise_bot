@@ -41,11 +41,10 @@ class AuthController:
             user = users[0] if users else None
             if user:
                 return User(user)
-            elif self.api_user_id == self.first_owner_id and not users:
+            if self.api_user_id == self.first_owner_id and not users:
                 return self.service.create_first_owner(CmdFirstUser(user_name=self.user_name,
                                                             api_user_id=self.api_user_id))
-            else:
-                raise PermissionDenied('401 Unauthorized')
+            raise PermissionDenied('401 Unauthorized')
 
 
 class BaseController:

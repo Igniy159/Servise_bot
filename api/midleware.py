@@ -1,33 +1,35 @@
 from os import getenv
+from typing import Optional
 from aiogram import BaseMiddleware
 from aiogram.types import Message
-
 from UX_laier.translate import Formatter
 from core.exceptions import PermissionDenied, RepositoryError
+from repository.unit_of_work import UowFactory
 from service.controllers import AuthController
 
+
 class AuthMiddleware(BaseMiddleware):
-    def __init__(self, uow_factory, raw_config):
+    def __init__(self,
+                 uow_factory: UowFactory,
+                 raw_config:dict,
+                 fake_user_id: Optional[int]=None):
         self.uow_factory = uow_factory
         self.raw_config = raw_config
+        self.fake_user_id = fake_user_id
 
     async def __call__(self,
                        handler,
                        event,
                        data):
-        if isinstance(event, Message) and event.text:
-            if event.text.startswith("/start"):
-                return await handler(event, data)
         tg_user = data.get("event_from_user")
         if not tg_user:
             return await handler(event, data)
-
         uow = self.uow_factory()
         try:
             with uow:
                 user = AuthController(uow_example=uow,
                                       user_name=tg_user.username,
-                                      api_user_id=tg_user.id,
+                                      api_user_id=self.fake_user_id or tg_user.id,
                                       first_owner_id=int(getenv('FIRST_OWNER'))).auth()
                 data['user'] = user
                 data['uow'] = uow

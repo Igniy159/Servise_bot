@@ -138,13 +138,11 @@ async def finish_user(callback: CallbackQuery,
             f'Пользователь: {formatter.user_formatter(user)} был добавлен')
         await state.clear()
     else:
-
         command = CmdChangeUser(
             user_id=data['user_id'],
             role=data['user_role'],
             user_depart_id=data.get('user_depart'),
             user_branch_id=data.get('user_branch'))
-        print('Я команда', command)
         with uow:
             user = service.change(actor=user, cmd=command)
         await callback.message.answer(f'Пользователь: {formatter.user_formatter(user)} был изменен')

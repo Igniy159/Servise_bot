@@ -1,7 +1,7 @@
 from sqlite3 import Connection
 from typing import Optional
 from repository.branch_repo import BranchRepo
-from repository.create_migrations import get_connect, DB_PATH
+from repository.create_migrations import get_connect
 from repository.ticket_repo import TicketRepo
 from repository.user_repo import UserRepo
 from repository.mapper_repo import MapperRoles, MapperDepart
@@ -30,8 +30,3 @@ class UowFactory:
 
     def __call__(self):
         return UoW(get_connect(self.path))
-
-main_factory_uow = UowFactory(DB_PATH)
-
-def get_uow():
-    return main_factory_uow

@@ -4,14 +4,16 @@ from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher
 from api.midleware import AuthMiddleware
 from core.loader import raw_config
-from repository.create_migrations import run_migrations, create_migration_shema
+from repository.create_migrations import run_migrations, create_migration_shema, DB_PATH
 from api.handlers.main_handler import main_routers
-from repository.unit_of_work import main_factory_uow
+from repository.unit_of_work import UowFactory
+
 
 async def main():
     dp = Dispatcher()
     bot = Bot(token=getenv("BOT_TOKEN"))
-    middleware_example = AuthMiddleware(main_factory_uow, raw_config)
+    main_factory_uow = UowFactory(DB_PATH)
+    middleware_example = AuthMiddleware(main_factory_uow, raw_config,fake_user_id=123456)
     for router in main_routers:
         router.message.middleware(middleware_example)
         router.callback_query.middleware(middleware_example)
