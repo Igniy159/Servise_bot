@@ -8,12 +8,18 @@ from repository.create_migrations import run_migrations, create_migration_shema,
 from api.handlers.main_handler import main_routers
 from repository.unit_of_work import UowFactory
 
+class FakeUser:
+    employee = 333333
+    manager = 111111
+    specialist = 222222
+
+
 
 async def main():
     dp = Dispatcher()
     bot = Bot(token=getenv("BOT_TOKEN"))
     main_factory_uow = UowFactory(DB_PATH)
-    middleware_example = AuthMiddleware(main_factory_uow, raw_config,fake_user_id=123456)
+    middleware_example = AuthMiddleware(main_factory_uow, raw_config, FakeUser.manager)
     for router in main_routers:
         router.message.middleware(middleware_example)
         router.callback_query.middleware(middleware_example)

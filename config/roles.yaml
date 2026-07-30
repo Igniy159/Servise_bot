@@ -26,7 +26,7 @@ MANAGER:
       create_user: true
       delete_user: true
       change_user: false
-      rename_user: false
+      rename_user: true
       receive_user: true
     lead_ticket:
       create: true

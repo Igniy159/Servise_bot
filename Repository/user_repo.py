@@ -22,10 +22,10 @@ class UserRepo(Repo):
                 elif key == "api_user_id":
                     condition.append("u.api_user_id = (?)")
                     param.append(val)
-                elif key == "user_branch_id":
+                elif key == "branch_id":
                     condition.append("u.branch_id = ?")
                     param.append(val)
-                elif key == "user_depart_id":
+                elif key == "depart_id":
                     condition.append("u.depart_id = ?")
                     param.append(val)
                 elif key == "role_id":

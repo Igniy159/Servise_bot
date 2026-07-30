@@ -39,9 +39,8 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 from api.command import QueryReceiveBranch, CmdCreateBranch, CmdRenameBranch, CmdDeleteBranch
 from api.keyboards.branch_keyboard import get_branch_menu,get_branch_keyboard
-from core.ticket_core import User, Branch
-from repository.unit_of_work import UoW
-from service.branch_service import BranchService
+from api.midleware import RequestContext
+from core.ticket_core import Branch
 
 
 branch_router = Router()
@@ -53,23 +52,19 @@ async def branches_menu(message: Message):
 
 @branch_router.callback_query(F.data == 'get_branches')
 async def show_branches(callback: CallbackQuery,
-                       user: User,
-                       uow: UoW,
-                       raw_config:dict):
+                       ctx: RequestContext):
     command = QueryReceiveBranch()
     await callback.answer()
-    branches = BranchService(uow, user, raw_config['roles']).receive(command)
+    branches = ctx.service_branch.receive(ctx.actor,command)
     if branches:
         msg = "\n".join([str(branch) for branch in branches])
         await callback.message.answer(msg)
     else:
         await callback.message.answer('Филиалы не найдены. Создайте новый филиал')
 
-def get_branches(user: User,
-                       uow: UoW,
-                       raw_config:dict)-> list[Branch]:
+def get_branches(ctx: RequestContext)-> list[Branch]:
     command = QueryReceiveBranch()
-    branches = BranchService(uow, user, raw_config['roles']).receive(command)
+    branches = ctx.service_branch.receive(ctx.actor,command)
     return branches
 
 
@@ -98,30 +93,23 @@ async def create_branch_start(callback: CallbackQuery,
 
 @branch_router.message(BranchState.waiting_for_branch_name)
 async def create_branch_finish(message: Message,
-                               user: User,
-                                uow: UoW,
-                                raw_config: dict,
+                                ctx: RequestContext,
                                state: FSMContext):
     command = CmdCreateBranch(name=message.text)
-    branch = BranchService(uow=uow,
-                           user=user,
-                           accesses=raw_config['roles']).create(command)
+    branch = ctx.service_branch.create(ctx.actor,command)
     await message.answer(f"{str(branch)} был успешно создан")
     await state.clear()
 
 @branch_router.callback_query(F.data == 'rename_branch')
 async def rename_branch_start(callback: CallbackQuery,
-                                user: User,
-                                uow: UoW,
-                                raw_config: dict
-                                ):
-    branches = get_branches(user, uow, raw_config)
+                              ctx: RequestContext):
+    branches = ctx.service_branch.receive(ctx.actor,QueryReceiveBranch())
     if not branches:
         await callback.message.answer('Филиалы не найдены. Создайте новый филиал')
     else:
         keyboard = get_branch_keyboard(branches,'rename_branch')
         await callback.message.answer(text="Выберите филиал чтоб его переименовать:",
-                                      reply_markup= keyboard )
+                                      reply_markup= keyboard)
 
 @branch_router.callback_query(F.data.startswith('rename_branch:'))
 async def rename_branch_set_name(callback: CallbackQuery,
@@ -136,24 +124,18 @@ async def rename_branch_set_name(callback: CallbackQuery,
 @branch_router.message(BranchState.waiting_for_new_branch_name)
 async def rename_branch_finish(message: Message,
                                state: FSMContext,
-                               user: User,
-                               raw_config:dict,
-                               uow: UoW):
+                               ctx: RequestContext):
     data = await state.get_data()
     command = CmdRenameBranch(branch_id=data['branch_id'],
                               new_name= message.text)
-    branch = BranchService(uow, user, raw_config['roles']).rename(command)
+    branch = ctx.service_branch.rename(ctx.actor,command)
     await message.answer(text=f'Филиал {branch.id} был успешно переименован')
     await state.clear()
 
-
 @branch_router.callback_query(F.data == 'delete_branch')
 async def delete_branch_start(callback: CallbackQuery,
-                              user: User,
-                              uow: UoW,
-                              raw_config: dict
-                              ):
-    branches = get_branches(user, uow, raw_config)
+                            ctx: RequestContext):
+    branches = ctx.service_branch.receive(ctx.actor,QueryReceiveBranch())
     if not branches:
         await callback.message.answer('Филиалы не найдены. Создайте новый филиал')
     else:
@@ -163,10 +145,9 @@ async def delete_branch_start(callback: CallbackQuery,
 
 
 @branch_router.callback_query(F.data.startswith('delete_branch:'))
-async def delete_branch_finish(callback: CallbackQuery, user: User,
-                               raw_config:dict,
-                               uow: UoW):
+async def delete_branch_finish(callback: CallbackQuery,
+                               ctx: RequestContext):
     branch_id = int(callback.data.split(':')[1])
     command = CmdDeleteBranch(branch_id= branch_id)
-    branch = BranchService(uow, user, raw_config['roles']).delete(command)
+    branch = ctx.service_branch.delete(ctx.actor,command)
     await callback.message.answer(f"Филиал {branch.name} был удалён")

@@ -4,13 +4,24 @@ from core.enums import Role
 from UX_laier.translate import Formatter
 
 
-def get_user_menu():
+def get_user_for_owner_menu():
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
             [InB(text='Все сотрудники',callback_data='get_all_users')],
             [InB(text='Добавить сотрудника',callback_data='create_user')],
             [InB(text='Пользователи филиалов',callback_data='branch_users')],
             [InB(text='Специалисты служб', callback_data='depart_users')]
+        ]
+    )
+    return keyboard
+
+def get_user_for_manager_menu():
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InB(text='Мои сотрудники',callback_data='get_my_users')],
+            [InB(text='Добавить',callback_data='create_my_user')],
+            [InB(text='Переименовать', callback_data='rename_my_user')],
+            [InB(text='Удалить', callback_data='delete_my_user')],
         ]
     )
     return keyboard
@@ -25,6 +36,7 @@ def get_department_keyboard(formater: Formatter,
         ]
     )
     return keyboard
+
 def get_user_keyboard(users: list[User], formatter):
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[

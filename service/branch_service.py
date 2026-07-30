@@ -10,20 +10,22 @@ Handles validation, filtering, and transaction boundaries.
 from core.exceptions import CoreValidationBreak, PermissionDenied
 from core.ticket_core import User, Branch
 from api.command import CmdCreateBranch, CmdDeleteBranch, CmdRenameBranch, QueryReceiveBranch
+from policy.policy_branch import PolicyBranch
 from repository.unit_of_work import UoW
 
 class BranchService:
-    def __init__(self, uow: UoW, user: User, accesses:dict):
+    def __init__(self,
+                 raw_config:dict,
+                 uow: UoW):
         self.uow = uow
-        self.user = user
-        self.access = accesses
-        self._check_access()
+        self.control = PolicyBranch(raw_config['roles'])
 
-    def _check_access(self):
-        if not self.access[self.user.role.name]['permissions']['lead_branch']:
-            raise PermissionDenied('User not access')
 
-    def create(self, cmd: CmdCreateBranch)->Branch:
+    def create(self,
+               actor:User,
+               cmd: CmdCreateBranch
+               )->Branch:
+        self.control.access_user(actor,'create_branch')
         branch = self.uow.branches.get({"branch_name": cmd.name})
         if branch:
             branch = branch[0]
@@ -33,7 +35,11 @@ class BranchService:
             branch = self.uow.branches.get({"branch_name": cmd.name})[0]
         return Branch(branch)
 
-    def rename(self, cmd: CmdRenameBranch) -> Branch:
+    def rename(self,
+               actor:User,
+               cmd: CmdRenameBranch
+               ) -> Branch:
+        self.control.access_user(actor,'rename_branch')
         branch = self.uow.branches.get({"branch_id": cmd.branch_id})
         if not branch:
             raise CoreValidationBreak('Branch not found')
@@ -41,12 +47,19 @@ class BranchService:
         return Branch(self.uow.branches.get({"branch_id": cmd.branch_id})[0])
 
 
-    def receive(self,cmd:QueryReceiveBranch)-> list[Branch]:
+    def receive(self,
+                actor: User,
+                cmd:QueryReceiveBranch
+                )-> list[Branch]:
+        self.control.access_user(actor, 'receive_branch')
         branches = self.uow.branches.get(dict(cmd))
         return [Branch(i) for i in branches]
 
 
-    def delete(self, cmd: CmdDeleteBranch)-> Branch:
+    def delete(self,
+               actor: User,
+               cmd: CmdDeleteBranch)-> Branch:
+        self.control.access_user(actor,'delete_branch')
         branch = self.uow.branches.get({"branch_id": cmd.branch_id},)
         if not branch:
             raise CoreValidationBreak('Branch not found')

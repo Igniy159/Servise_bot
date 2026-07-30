@@ -1,11 +1,25 @@
 from os import getenv
 from typing import Optional
 from aiogram import BaseMiddleware
-from aiogram.types import Message
 from UX_laier.translate import Formatter
 from core.exceptions import PermissionDenied, RepositoryError
-from repository.unit_of_work import UowFactory
-from service.controllers import AuthController
+from core.ticket_core import User
+from repository.unit_of_work import UowFactory, UoW
+from service.controllers import AuthController, ServiceFactory
+
+class RequestContext:
+    def __init__(self,
+                 uow: UoW,
+                 actor: User,
+                 raw_config: dict,
+                 services: ServiceFactory):
+        self.service_branch = services.branch_service
+        self.service_user = services.user_service
+        self.service_ticket = services.ticket_service
+        self.uow = uow
+        self.actor = actor
+        self.raw_config = raw_config
+        self.formatter = Formatter(self.raw_config)
 
 
 class AuthMiddleware(BaseMiddleware):
@@ -27,15 +41,20 @@ class AuthMiddleware(BaseMiddleware):
         uow = self.uow_factory()
         try:
             with uow:
-                user = AuthController(uow_example=uow,
+                service_factory = ServiceFactory(self.raw_config,uow)
+
+                user = AuthController(
                                       user_name=tg_user.username,
                                       api_user_id=self.fake_user_id or tg_user.id,
-                                      first_owner_id=int(getenv('FIRST_OWNER'))).auth()
-                data['user'] = user
-                data['uow'] = uow
-                data['raw_config'] = self.raw_config
-                data['formatter'] = Formatter(self.raw_config)
+                                      first_owner_id=int(getenv('FIRST_OWNER')),
+                                    uow=uow,
+                    user_service= service_factory.user_service).auth()
+                data['ctx'] = RequestContext(uow,
+                                             user,
+                                             self.raw_config,
+                                             service_factory)
                 result = await handler(event, data)
+                uow.con.commit()
         except PermissionDenied:
             if hasattr(event, "answer"):
                 await event.answer(
@@ -43,7 +62,7 @@ class AuthMiddleware(BaseMiddleware):
                 )
             else:
                 await event.answer("У вас нет прав на эту операцию")
-            return None
+            raise
         except RepositoryError:
             await event.answer("Произошла ошибка.")
             return None

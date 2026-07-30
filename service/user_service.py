@@ -1,5 +1,4 @@
-from policy.policy_user import (PolicyCreateUser, PolicyDeleteUser,
-                                PolicyChangeUser, PolicyRenameUser, PolicyGetUsers)
+from policy.policy_user import PolicyUser
 from core.exceptions import CoreValidationBreak
 from logger.logger import core_logger
 from repository.unit_of_work import UoW
@@ -10,7 +9,8 @@ from api.command import (CmdRenameUser, CmdCreateUser, CmdDeleteUser,
 class UserService:
     def __init__(self, config:dict, uow: UoW):
         self.uow = uow
-        self.config = config
+        permissions = config['roles']
+        self.control = PolicyUser(permissions)
 
     def create_first_owner(self,
                            cmd: CmdFirstUser)-> User:
@@ -32,15 +32,14 @@ class UserService:
                     actor: User,
                     cmd: CmdCreateUser
                     )->User:
-        control = PolicyCreateUser(actor,self.config,cmd)
-        control.access_user()
+        self.control.access_user(actor,'create_user')
         chek_user = self.uow.users.get({"api_user_id": cmd.api_user_id})
         if chek_user:
             new_user = chek_user[0]
             self.uow.users.activate(new_user['api_user_id'])
         else:
-            control.validate_cmd()
-            cmd = control.normalize_cmd_by_role()
+            self.control.validate_cmd(cmd,actor)
+            cmd = self.control.normalize_cmd_by_role(actor,cmd)
             role_id =  self.uow.role_mapper.get_roles_id(cmd.role.name)
             user_id = self.uow.users.create(
                         cmd.user_name,
@@ -55,8 +54,7 @@ class UserService:
     def delete(self,
                     actor:User,
                     cmd: CmdDeleteUser)-> User:
-        control = PolicyDeleteUser(actor,self.config,cmd)
-        control.access_user()
+        self.control.access_user(actor,'delete_user')
         deletable = self.uow.users.get({"user_id": cmd.user_id})
         if not deletable:
             core_logger.error('User not found')
@@ -72,14 +70,14 @@ class UserService:
         if not changed:
             core_logger.error('User not found')
             raise CoreValidationBreak('User not found')
-        control = PolicyChangeUser(actor,self.config,cmd)
-        control.access_user()
-        cmd = control.validate_cmd()
+        self.control.access_user(actor,'change_user')
+        cmd = self.control.normalize_cmd_by_role(actor,cmd)
+        cmd = self.control.validate_cmd(cmd,actor)
         role_id = self.uow.role_mapper.get_roles_id(cmd.role.name)
         self.uow.users.update(cmd.user_id,
                            role_id,
-                           cmd.user_branch_id,
-                           cmd.user_depart_id)
+                           cmd.branch_id,
+                           cmd.depart_id)
         modified = User(self.uow.users.get({'user_id': cmd.user_id})[0])
         return modified
 
@@ -90,8 +88,7 @@ class UserService:
         if not changed:
             core_logger.error('User not found')
             raise CoreValidationBreak('User not found')
-        control = PolicyRenameUser(actor,self.config,cmd)
-        control.access_user()
+        self.control.access_user(actor,'rename_user')
         self.uow.users.rename(cmd.user_id,cmd.user_name)
         modified = User(self.uow.users.get({'user_id': cmd.user_id})[0])
         return modified
@@ -99,8 +96,7 @@ class UserService:
     def get(self,
              actor:User,
              cmd:QueryReceiveUser)->list[User]:
-        control = PolicyGetUsers(actor,self.config,cmd)
-        control.access_user()
-        cmd = control.validate_cmd()
+        self.control.access_user(actor,'receive_user')
+        cmd = self.control.validate_cmd(cmd,actor)
         users = self.uow.users.get(cmd.dict())
         return [User(user) for user in users]

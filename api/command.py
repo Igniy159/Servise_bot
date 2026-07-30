@@ -127,14 +127,14 @@ class CmdChangeUser(BaseModel):
     """
     user_id: int
     role: Role
-    user_depart_id: int | None = None
-    user_branch_id: int | None = None
+    depart_id: int | None = None
+    branch_id: int | None = None
 
 class QueryReceiveUser(BaseModel):
     """ Command for get use with optional filter"""
     user_id: int | None = None
     api_user_id: int | None = None
-    user_branch_id: int | None = None
-    user_depart_id: int | None = None
-    user_role_id: int | None = None
+    branch_id: int | None = None
+    depart_id: int | None = None
+    role_id: int | None = None
     user_activity: int | None = 1
