@@ -319,8 +319,9 @@ async def rename_my_user(callback: CallbackQuery,
                          ctx: RequestContext):
     await state.set_state(UserManagerState.waiting_rename)
     await callback.answer()
-    users = ctx.service_user.get(ctx.actor, QueryReceiveUser(branch_id=ctx.actor.branch_id,
-                                                             role_id=ctx.uow.role_mapper.get_roles_id(Role.EMPLOYEE.name)))
+    users = ctx.service_user.get(ctx.actor, QueryReceiveUser(
+            branch_id=ctx.actor.branch_id,
+            role_id=ctx.uow.role_mapper.get_roles_id(Role.EMPLOYEE.name)))
     keyboard = get_user_keyboard(users, ctx.formatter)
     await callback.message.answer(
         'Выберите сотрудника которого хотите переименовать', reply_markup=keyboard)

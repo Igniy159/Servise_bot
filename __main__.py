@@ -13,13 +13,11 @@ class FakeUser:
     manager = 111111
     specialist = 222222
 
-
-
 async def main():
     dp = Dispatcher()
     bot = Bot(token=getenv("BOT_TOKEN"))
     main_factory_uow = UowFactory(DB_PATH)
-    middleware_example = AuthMiddleware(main_factory_uow, raw_config, FakeUser.manager)
+    middleware_example = AuthMiddleware(main_factory_uow, raw_config, FakeUser.employee)
     for router in main_routers:
         router.message.middleware(middleware_example)
         router.callback_query.middleware(middleware_example)

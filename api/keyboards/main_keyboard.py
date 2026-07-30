@@ -1,6 +1,7 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton as KB
 from core.ticket_core import User
 
+
 def get_owner_menu():
     keyboard = ReplyKeyboardMarkup(
         keyboard=[[KB(text="Филиалы")],
@@ -29,14 +30,12 @@ def get_specialist_menu():
 def get_employee_menu():
     keyboard = ReplyKeyboardMarkup(
         keyboard=[
-                [KB(text="Срочные уведомления"), KB(text='ARS служба')],
-                  [KB(text='IT отдел'), KB(text='Служба безопасности')],
-                   [KB(text='Склад'), KB(text='Инвентарь')],
-                   [KB(text='Бухгалтерия'), KB(text='HR отдел')],
-                   [KB(text='Сервис менеджер'), KB(text='Маркетинг')]
-                  ],
+                [KB(text="Критическое событие 🚨")],
+                [KB(text='Создать заявку')]
+                ],
         resize_keyboard=True)
     return keyboard
+
 
 def get_main_menu(actor: User)-> ReplyKeyboardMarkup:
     mapper = {
