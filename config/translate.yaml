@@ -1,4 +1,4 @@
-CRITICAL_NOTIFICATION: "Важное оповещение"
+CRITICAL_NOTIFICATION: "Важное оповещение"   #use in FORMATTER
 CRITICAL_REQUEST: "Критическая заявка"
 URGENT_REQUEST: 'Срочная заявка'
 REGULAR_REQUEST: 'Обычная заявка'
@@ -161,10 +161,9 @@ CHANGE_PRISES: 'Изменить цены'
 ADD_POSITION: 'Добавить позицию'
 DEL_POSITION: 'Удалить позицию'
 NO_ELECTRICITY: 'Нет света'
-FULL_NO_WATER: 'Полностью нет воды'
+NOT_WATER: 'Нет воды'
 NO_INTERNET: 'Нет интернета'
 GOVERNMENT_INSPECTION: 'Проверка гос органов'
-NO_COLD_OR_HOT_WATER: 'Частично нет воды'
 THEFTS_ALERT: 'Предупреждение о краже'
 AGGRESSIONS_ALERT: 'Предупреждение о агрессии'
 ALARM_ALERT: 'Предупреждение о сигнализации'

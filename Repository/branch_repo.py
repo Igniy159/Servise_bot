@@ -1,13 +1,14 @@
 from sqlite3 import Error
 from typing import Optional
 from core.exceptions import RepositoryError, IncorrectWrite
+from core.ticket_core import Branch
 from logger.logger import core_logger
 from repository.base import Repo
 
 
 class BranchRepo(Repo):
     def get(self,
-        filter_value: Optional[dict] = None)-> list[dict]:
+        filter_value: Optional[dict] = None)-> list[Branch]:
         cur = self.con.cursor()
         base_query = """SELECT b.branch_id,
                                 b.branch_name,
@@ -34,7 +35,7 @@ class BranchRepo(Repo):
         request = base_query + where_sql
         try:
             rows = cur.execute(request, params).fetchall()
-            return [dict(row) for row in rows]
+            return [Branch.for_db(dict(row)) for row in rows]
         except Error as e :
             raise RepositoryError(f"Error in get_branch_with_data: {e}") from e
 

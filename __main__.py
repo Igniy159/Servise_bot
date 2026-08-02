@@ -17,7 +17,7 @@ async def main():
     dp = Dispatcher()
     bot = Bot(token=getenv("BOT_TOKEN"))
     main_factory_uow = UowFactory(DB_PATH)
-    middleware_example = AuthMiddleware(main_factory_uow, raw_config, FakeUser.employee)
+    middleware_example = AuthMiddleware(main_factory_uow, raw_config, fake_user_id= FakeUser.employee)
     for router in main_routers:
         router.message.middleware(middleware_example)
         router.callback_query.middleware(middleware_example)

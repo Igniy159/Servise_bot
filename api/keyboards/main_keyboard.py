@@ -29,9 +29,7 @@ def get_specialist_menu():
 
 def get_employee_menu():
     keyboard = ReplyKeyboardMarkup(
-        keyboard=[
-                [KB(text="Критическое событие 🚨")],
-                [KB(text='Создать заявку')]
+        keyboard=[[KB(text='Создать заявку')]
                 ],
         resize_keyboard=True)
     return keyboard

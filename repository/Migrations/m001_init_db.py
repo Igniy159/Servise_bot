@@ -1,4 +1,5 @@
-from core.loader import raw_config
+from core.enums import State, Role, Priority, Depart
+
 
 def up(con):
     cur = con.cursor()
@@ -23,36 +24,36 @@ def up(con):
     state TEXT)
     """)
     if not cur.execute("SELECT status_id FROM ticket_status").fetchall():
-        for key in raw_config['enum']['TICKET_STATUS']:
-            if key not in ('CLOSED', 'CANCELLED'):
+        for key in State:
+            if key.name not in ('CLOSED', 'CANCELLED'):
                 state = "open"
             else:
                 state = "close"
             cur.execute("INSERT INTO ticket_status (status_name, state) VALUES (?, ?)",
-                        (key, state))
+                        (key.name, state))
     cur.execute(""" CREATE TABLE IF NOT EXISTS department(
     depart_id INTEGER PRIMARY KEY AUTOINCREMENT,
     depart_name TEXT
     )""")
     if not cur.execute("SELECT depart_id FROM department").fetchall():
-        for dep in raw_config['enum']['DEPARTMENTS'].keys():
-            cur.execute("INSERT INTO department (depart_name) VALUES (?)", (dep,))
+        for dep in Depart:
+            cur.execute("INSERT INTO department (depart_name) VALUES (?)", (dep.name,))
 
     cur.execute("""CREATE TABLE IF NOT EXISTS priority(
     priority_id  INTEGER PRIMARY KEY AUTOINCREMENT,
     priority_name TEXT)
     """)
     if not cur.execute("SELECT priority_id FROM priority").fetchall():
-        for priority in raw_config['enum']['priority']:
-            cur.execute("INSERT INTO priority (priority_name) VALUES (?)", (priority,))
+        for priority in Priority:
+            cur.execute("INSERT INTO priority (priority_name) VALUES (?)", (priority.name,))
 
     cur.execute(""" CREATE TABLE IF NOT EXISTS role(
     role_id INTEGER PRIMARY KEY AUTOINCREMENT,
     role_name TEXT
     )""")
     if not cur.execute("SELECT role_id FROM role").fetchall():
-        for role in raw_config['enum']['ROLES']:
-            cur.execute("INSERT INTO role (role_name) VALUES (?)", (role,))
+        for role in Role:
+            cur.execute("INSERT INTO role (role_name) VALUES (?)", (role.name,))
 
     cur.execute(""" CREATE TABLE IF NOT EXISTS users(
      user_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -96,4 +97,22 @@ def up(con):
     FOREIGN KEY(branch_id) REFERENCES branch (branch_id),
     FOREIGN KEY(target) REFERENCES department (depart_id),
     FOREIGN KEY(assigned_to) REFERENCES users (user_id)
+    )""")
+    cur.execute("""CREATE TABLE IF NOT EXISTS rules_alert(
+    code_alert INTEGER PRIMARY KEY AUTOINCREMENT,
+    class_alert TEXT,
+    name_alert TEXT UNIQUE,
+    target_id INTEGER,
+    FOREIGN KEY(target_id) REFERENCES department (depart_id)
+    )""")
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS alerts(
+    alert_id  INTEGER PRIMARY KEY AUTOINCREMENT,
+    code_alert INTEGER,
+    creator_id INTEGER,
+    branch_id INTEGER,
+    date_create TEXT,
+    comment TEXT,
+    FOREIGN KEY(code_alert) REFERENCES rules_alert (code_alert),
+    FOREIGN KEY(branch_id) REFERENCES branch (branch_id)
     )""")

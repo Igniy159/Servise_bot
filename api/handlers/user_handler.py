@@ -17,7 +17,6 @@ from api.keyboards.user_keyboard import (get_user_for_owner_menu,
                                          get_actions_from_user, get_user_for_manager_menu)
 from api.midleware import RequestContext
 from core.enums import Role
-from core.ticket_core import Department
 
 user_router = Router()
 @user_router.message(F.text.lower() == "сотрудники")
@@ -27,7 +26,7 @@ async def users_menu(message: Message):
 
 
 def get_department(ctx:RequestContext):
-    return [Department(d) for d in ctx.uow.dep_mapper.get_all_depart()]
+    return ctx.uow.dep_mapper.get_all_depart()
 
 @user_router.callback_query(F.data == 'get_all_users')
 async def get_all_users(callback: CallbackQuery,

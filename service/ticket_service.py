@@ -11,7 +11,7 @@ from repository.unit_of_work import UoW
 from api.command import (CmdCreateTicket, CmdCloseTicket, CmdAssignTicket, CmdFinishTicket,
                          CmdRejectTicket, CmdPriorityTicket, CmdConfirmTicket, CmdOnWaitingTicket,
                          CmdOffWaitingTicket, QueryGetTicket, QueryGetHistoryTicket)
-from service.event_builder import EventCreateTicket, EventApplyTicket, EventGetTicket, EventGetHistory
+from service.Event_builder import EventCreateTicket, EventApplyTicket, EventGetTicket, EventGetHistory
 from service.recipients import RecipientsCreateTicket, RecipientsApplyTicket, Recipient
 
 class TicketService:

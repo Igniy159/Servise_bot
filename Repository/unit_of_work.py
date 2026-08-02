@@ -1,5 +1,7 @@
 from sqlite3 import Connection
 from typing import Optional
+
+from repository.alert_repo import AlertRepo
 from repository.branch_repo import BranchRepo
 from repository.create_migrations import get_connect
 from repository.ticket_repo import TicketRepo
@@ -13,6 +15,7 @@ class UoW:
         self.branches = BranchRepo(con)
         self.dep_mapper = MapperDepart(con)
         self.role_mapper = MapperRoles(con)
+        self.alerts = AlertRepo(con)
         self.con = con
 
     def __enter__(self):

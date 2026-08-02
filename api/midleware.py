@@ -16,6 +16,7 @@ class RequestContext:
         self.service_branch = services.branch_service
         self.service_user = services.user_service
         self.service_ticket = services.ticket_service
+        self.service_alert = services.alert_service
         self.uow = uow
         self.actor = actor
         self.raw_config = raw_config

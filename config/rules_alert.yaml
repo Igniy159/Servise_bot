@@ -1,4 +1,4 @@
-CRIT_ALERT:
+CRITICAL_ALERTS:
   scenario: CRITICAL_NOTIFICATION
   target: TOP_MANAGEMENT
 
@@ -16,8 +16,7 @@ HR_ALERT:
 
 CASH_ALERT:
   scenario: ALERT
-  target: ACCOUNTANT
+
 
 SERVICE_ALERT:
   scenario: ALERT
-  target: SERVICE

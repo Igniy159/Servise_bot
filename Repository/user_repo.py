@@ -1,6 +1,7 @@
 from sqlite3 import Error
 from typing import Optional
 from core.exceptions import RepositoryError, IncorrectWrite
+from core.ticket_core import User
 from repository.base import Repo
 
 
@@ -8,7 +9,7 @@ class UserRepo(Repo):
 
     def get(self,
     filter_value: Optional[dict]=None
-    )-> list[dict]:
+    )-> list[User]:
         cur = self.con.cursor()
         condition = []
         param = []
@@ -53,7 +54,7 @@ class UserRepo(Repo):
         request = base_query + where_sql
         try:
             rows = cur.execute(request, param).fetchall()
-            return [dict(row) for row in rows]
+            return [User.for_db(dict(row)) for row in rows]
         except Error as e:
             raise RepositoryError(f"Error in get_tickets: {e}") from e
 

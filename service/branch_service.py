@@ -7,7 +7,7 @@ Contains use-case functions for branch management:
 - receive
 Handles validation, filtering, and transaction boundaries.
 """
-from core.exceptions import CoreValidationBreak, PermissionDenied
+from core.exceptions import CoreValidationBreak
 from core.ticket_core import User, Branch
 from api.command import CmdCreateBranch, CmdDeleteBranch, CmdRenameBranch, QueryReceiveBranch
 from policy.policy_branch import PolicyBranch
@@ -29,11 +29,11 @@ class BranchService:
         branch = self.uow.branches.get({"branch_name": cmd.name})
         if branch:
             branch = branch[0]
-            self.uow.branches.activate(branch['branch_id'])
+            self.uow.branches.activate(branch.id)
         else:
             self.uow.branches.create(cmd.name)
             branch = self.uow.branches.get({"branch_name": cmd.name})[0]
-        return Branch(branch)
+        return branch
 
     def rename(self,
                actor:User,
@@ -44,7 +44,7 @@ class BranchService:
         if not branch:
             raise CoreValidationBreak('Branch not found')
         self.uow.branches.rename(cmd.branch_id, cmd.new_name)
-        return Branch(self.uow.branches.get({"branch_id": cmd.branch_id})[0])
+        return self.uow.branches.get({"branch_id": cmd.branch_id})[0]
 
 
     def receive(self,
@@ -52,8 +52,7 @@ class BranchService:
                 cmd:QueryReceiveBranch
                 )-> list[Branch]:
         self.control.access_user(actor, 'receive_branch')
-        branches = self.uow.branches.get(dict(cmd))
-        return [Branch(i) for i in branches]
+        return self.uow.branches.get(dict(cmd))
 
 
     def delete(self,
@@ -64,4 +63,4 @@ class BranchService:
         if not branch:
             raise CoreValidationBreak('Branch not found')
         self.uow.branches.delete(cmd.branch_id)
-        return Branch(branch[0])
+        return branch[0]

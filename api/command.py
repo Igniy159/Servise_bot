@@ -37,6 +37,16 @@ class CmdCreateTicket(BaseModel):
     priority: str | None = None
     branch_id: int | None = None
 
+class CmdCreateAlert(BaseModel):
+    """Command for create alert"""
+    code_alert: int
+    comment: str
+
+class QueryGetAlerts(BaseModel):
+    alert_id: int | None = None
+    creator_id: int | None = None
+    branch_id: int | None = None
+    target_id: int | None = None
 
 class CmdRejectTicket(BaseModel):
     """Command for reject ticket"""
