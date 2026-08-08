@@ -1,27 +1,21 @@
-LIFECYCLE:
-  NEW:
-    next:
-      - CONFIRMED
-      - CANCELLED
-  CONFIRMED:
-    next:
-      - IN_PROGRESS
-      - CANCELLED
-  IN_PROGRESS:
-    next:
-      - WAITING_EXTERNAL
-      - RESOLVED
-      - CANCELLED
-  WAITING_EXTERNAL:
-    next:
-      - IN_PROGRESS
-      - RESOLVED
-      - CANCELLED
-  RESOLVED:
-    next:
-      - CLOSED
-      - CANCELLED
-  CLOSED:
-    next: []
-  CANCELLED:
-    next: []
+NEW:
+  - CONFIRMED
+  - CANCELLED
+CONFIRMED:
+  - IN_PROGRESS
+  - CANCELLED
+IN_PROGRESS:
+  - WAITING_EXTERNAL
+  - RESOLVED
+  - CANCELLED
+WAITING_EXTERNAL:
+  - IN_PROGRESS
+  - RESOLVED
+  - CANCELLED
+RESOLVED:
+  - CLOSED
+  - CANCELLED
+CLOSED:
+  []
+CANCELLED:
+  []

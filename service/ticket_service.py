@@ -1,244 +1,115 @@
-from datetime import datetime, timedelta
+from datetime import datetime
+from core.enums import Role, DATE_FORMAT
 from core.exceptions import CoreValidationBreak
-from core.ticket_core import Ticket, User, State
-from policy.policy_ticket import (PolicyObject, PolicyRequest,
-                                  PolicyAlert, PolicyConfirm,
-                                  PolicyReject, PolicyPriority,
-                                PolicyOnWait, PolicyOffWait,
-                                  PolicyFinish, PolicyClose,
-                                  PolicyAssign, PolicyGetHistory, PolicyGetTicket)
+from core.ticket_core import Ticket, User, State, Permission, TicketContext, TicketLifecycle, TicketView
 from repository.unit_of_work import UoW
-from api.command import (CmdCreateTicket, CmdCloseTicket, CmdAssignTicket, CmdFinishTicket,
-                         CmdRejectTicket, CmdPriorityTicket, CmdConfirmTicket, CmdOnWaitingTicket,
-                         CmdOffWaitingTicket, QueryGetTicket, QueryGetHistoryTicket)
-from service.Event_builder import EventCreateTicket, EventApplyTicket, EventGetTicket, EventGetHistory
-from service.recipients import RecipientsCreateTicket, RecipientsApplyTicket, Recipient
+from core.schemas import CmdCreateTicket,QueryGetTicket, QueryGetHistoryTicket, CmdChangeState
+from service.recipients import RecipientResolver, Recipients
+from service.user_service import PolicyUser
+
 
 class TicketService:
-    def __init__(self, config:dict, uow: UoW):
+    def __init__(self, control: Permission, uow: UoW):
         self.uow = uow
-        self.config = config
+        self.control = control
 
-    def write(self,
-              user:User,
-              cmd:CmdCreateTicket
-              ) -> tuple[EventCreateTicket,RecipientsCreateTicket]:
-        #Определяем тип события
-        type_event = self._type_resolver(self.config['enum'],cmd)
-        if type_event == "OBJECT_PROBLEM":
-            control = PolicyObject(user, cmd, self.config)
-        elif type_event == "REQUEST":
-            control = PolicyRequest(user, cmd, self.config)
-        else:
-            control = PolicyAlert(user, cmd, self.config)
-        #Валидируем команду и принимаем решение (сценарий, отдел, приоритет)
-        resolve = control.policy_cmd()
-        if cmd.branch_id:
-            resolve['branch_name'] = self.uow.branches.get({'branch_id': cmd.branch_id}
-            )[0]['branch_name']
-        resolve = self.calculate_sla(resolve, self.config['scenarios'], self.config['SLA'])
-        #Собираем контекст из БД
-        manager = self.uow.users.get({'user_activity': 1,
-                                       'role_id': 2,
-                                       'branch_id': user.branch_id})
-        owner = self.uow.users.get({'user_activity': 1,
-                                     'role_id': 4})
-        depart = self.uow.users.get({'user_activity': 1,
-                                      'role_id': 3,
-                                      'depart_id': resolve['target_id']})
-        context = {'manager': manager,
-                   'owner': owner,
-                   'depart': depart}
-        #Собираем из контекста правила эскалации(отдел, текущий статус, получателей)
-        solution, recipient = self.escalation(self.config['scenarios'], cmd, context)
-        #Создаём тикет
-        ticket = Ticket.from_created(cmd, resolve, user)
-        ticket.validate_sla()
-        ticket.update_solution(solution)
-        state_for_history = ticket.current_state
-        ticket_for_db = Ticket.for_data_base(ticket, self.config['enum'])
-        #Записываем тикет и историю в БД
-        ticket_id = self.uow.tickets.create(ticket_for_db)
+    def create(self,
+              actor:User,
+              cmd:CmdCreateTicket)->tuple[TicketView,Recipients]:
+        self.control.can(actor,'lead_ticket','create')
+        rules_ticket = self.uow.rule.get_rules({'code': cmd.code_rule})
+        if not rules_ticket:
+            raise CoreValidationBreak(f'Incorrect rule_ticket {cmd.code_rule}')
+        rule = rules_ticket[0]
+
+        recipients = RecipientResolver.get_create_recipients(uow=self.uow,
+                                                            actor=actor,
+                                                            rule=rule)
+        state = self._resolve_state(recipients,actor)
+        context = TicketContext(actor.id,
+                                actor.branch_id,
+                                cmd.comment,
+                                cmd.severity,
+                                cmd.file_id)
+        ticket = Ticket(code_ticket=rule.code,
+                        state=state,
+                        context=context,
+                        date_create=datetime.now().strftime(DATE_FORMAT))
+        ticket_id =  self.uow.tickets.create(ticket)
+        ticket.id = ticket_id
+
         self.uow.tickets.insert_history(ticket_id,
-                                  datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                                  user.id,
+                                  datetime.now().strftime(DATE_FORMAT),
+                                  actor.id,
                                   'current_state',
                                   None,
-                                  state_for_history)
-        #Формируем событие и ответ для API
-        event_alert = EventCreateTicket(user,ticket)
-        recipient = RecipientsCreateTicket(user,recipient)
-        return event_alert, recipient
+                                  ticket.state.name)
+        view = TicketView(ticket, rule.name, actor.branch_name)
+        return view, recipients
 
     @staticmethod
-    def _type_resolver(enums:dict, cmd:CmdCreateTicket) -> str:
-        """The function determines the event type through the config and returns it as a string"""
-        type_event = ""
-        if cmd.problem_category in enums['zones']:
-            type_event = 'OBJECT_PROBLEM'
-        elif cmd.problem_category in enums['REQUEST_CATEGORY']:
-            type_event = 'REQUEST'
-        elif cmd.problem_category in enums['CATEGORY_ALERTS']:
-            type_event = 'ALERT'
-        return type_event
+    def _resolve_state(recipient: Recipients,
+                      actor: User) -> State:
+        state = State.NEW
+        if actor.role == Role.MANAGER:
+            state = State.CONFIRMED
+        elif recipient.manager is None:
+            state = State.CONFIRMED
+        return state
 
-    @staticmethod
-    def calculate_sla(resolve: dict, scenario: dict, sla_metrix: dict) -> dict:
-        scen = resolve['scenario']
-        type_sla = scenario['SCENARIOS'][scen]["sla_policy"]
-        need_sla = sla_metrix["SLA_POLICIES"][type_sla]
-        react_time, resol_time = need_sla['reaction'], need_sla['resolution']
-
-        def _convert(value: str)-> datetime | None:
-            now = datetime.now()
-            if value is None:
-                return None
-            if value.endswith("m"):
-                return timedelta(minutes=int(value[:-1])) + now
-            if value.endswith("h"):
-                return timedelta(hours=int(value[:-1])) + now
-            if value.endswith("d"):
-                return timedelta(days=int(value[:-1])) + now
-            raise ValueError(f"Invalid SLA format: {value}")
-
-        resolve['react_time'] = _convert(react_time)
-        resolve['resol_time'] = _convert(resol_time)
-        return resolve
-
-    @staticmethod
-    def escalation(scenarios: dict,
-                   cmd: CmdCreateTicket,
-                   context: dict) -> tuple[dict,dict]:
-        need_confirm = scenarios['SCENARIOS'][cmd['scenario']]["confirmation_required"]
-        solution = {}
-        recipient = {}
-
-        if not context['depart'] and not context['manager']:
-            solution['assigned_to'] = context['owner'][0]['user_id']
-            solution['target'] = 'TOP_MANAGEMENT'
-            solution['current_state'] = State.IN_PROGRESS
-            recipient['target'] = context['owner'][0]['api_user_id']
-
-        elif not context['depart'] and context['manager'] and need_confirm:
-            solution['target'] = 'TOP_MANAGEMENT'
-            solution['current_state'] = State.NEW
-            recipient['manager'] = context['manager'][0]['api_user_id']
-
-        elif not context['depart'] and context['manager'] and not need_confirm:
-            solution['target'] = 'TOP_MANAGEMENT'
-            solution['current_state'] = State.CONFIRMED
-            recipient['manager'] = context['manager'][0]['api_user_id']
-            recipient['target'] = [users['api_user_id'] for users in context['depart']]
-
-        elif not context['manager'] and context['depart']:
-            solution['current_state'] = State.CONFIRMED
-            recipient['target'] = [users['api_user_id'] for users in context['depart']]
-
-        elif context['manager'] and context['depart']:
-            solution['current_state'] = State.NEW
-            recipient['manager'] = context['manager'][0]['api_user_id']
-
-        return solution, recipient
-
-    def patch(self,
-              user:User,
-              cmd
-              ) -> tuple[EventApplyTicket,RecipientsApplyTicket]:
-        fsm = self.config['ticket_lifecycle']['LIFECYCLE']
-        # из БД поднимаем заявку для изменения
-        ticket = self.uow.tickets.get({"ticket_id": cmd.ticket_id})
-        if ticket:
-            ticket = Ticket(ticket[0])
-        else:
+    def update(self,
+              fsm: TicketLifecycle,
+              actor:User,
+              cmd: CmdChangeState)-> tuple[TicketView, Recipients]:
+        tickets = self.uow.tickets.get({"ticket_id": cmd.ticket_id})
+        if not tickets:
             raise CoreValidationBreak("Ticket not found")
-        #маппер для вызова нужного класса, в зависимости от типа команды
+        ticket = tickets[0]
+        old_state = ticket.state.name
+        rule = self.uow.rule.get_rules({'code': ticket.code})[0]
         cmd_policy_map = {
-            CmdRejectTicket: PolicyReject,
-            CmdConfirmTicket: PolicyConfirm,
-            CmdPriorityTicket: PolicyPriority,
-            CmdAssignTicket: PolicyAssign,
-            CmdOnWaitingTicket: PolicyOnWait,
-            CmdOffWaitingTicket: PolicyOffWait,
-            CmdFinishTicket: PolicyFinish,
-            CmdCloseTicket: PolicyClose
+            State.CANCELLED: 'reject',
+            State.CONFIRMED: 'confirm',
+            State.IN_PROGRESS: 'assign',
+            State.WAITING_EXTERNAL: 'on_waiting',
+            State.RESOLVED: 'finish',
+            State.CLOSED: 'close'
         }
-        #определяем команду и создаём патч
-        policy = cmd_policy_map.get(type(cmd))
-        control = policy(ticket, user, self.config, cmd)
-        control.access_user()
-        action = control.resolve_patch()
-        #переписываем тикет
-        updated_ticket = ticket.update_ticket(fsm, action)
-        #записываем в БД
-        self.uow.tickets.update(updated_ticket)
-        for record in updated_ticket.history:
-            self.uow.tickets.insert_history(updated_ticket.ticket_id,
-                                  record['timestamp'],
-                                  user.id,
-                                  record['changes'],
-                                  record['old'],
-                                  record['new'])
-        ticket.history.clear()
-        #Собираем контекст из БД
-        manager = self.uow.users.get({'user_activity': 1,
-                                       'role_id': 2,
-                                       'branch_id': ticket.branch_id})
-        target_id = self.config['enum'][ticket.target]
-        depart = self.uow.users.get({'user_activity': 1,
-                                      'role_id': 3,
-                                      'depart_id': target_id})
-        context = {'manager': manager,
-                   'depart': depart}
-        event_alert = EventApplyTicket(user,ticket,action)
-        recipient = RecipientsApplyTicket(user,action,context)
-        return  event_alert, recipient
+        action = cmd_policy_map.get(cmd.new_state)
+        if not actor:
+            raise CoreValidationBreak(f"Unsupported state transition to {cmd.new_state}")
+        self.control.can(actor,'lead_ticket',action)
+        fsm.check_prohibit_step(first_state=ticket.state,second_state= cmd.new_state)
+
+        ticket.state = cmd.new_state
+        ticket.context.comment = cmd.comment
+        self.uow.tickets.update()
+
+        self.uow.tickets.insert_history(ticket.id,
+                                        datetime.now().strftime(DATE_FORMAT),
+                                        actor.id,
+                                        'current_state',
+                                        old_state,
+                                        cmd.new_state)
+        recipient =  RecipientResolver.get_update_recipient(action,self.uow,rule,ticket)
+        view = TicketView(ticket,rule.name,actor.branch_name)
+        return view, recipient
 
 
-    def get(self,
-                    user:User,
-                    cmd:QueryGetTicket
-                    )-> tuple[EventGetTicket,Recipient]:
-        control = PolicyGetTicket(user,self.config,cmd)
-        control.access_user()
-        modified_cmd = control.role_filter()
-        tickets = self.uow.tickets.get(modified_cmd)
-        res = []
-        if tickets:
-            for ticket in tickets:
-                if cmd.size == 'full':
-                    res.append(self._full_view(ticket, user.role, self.config['ticket_masks']))
-                else:
-                    res.append(self._short_view(ticket,self.config['ticket_masks']))
-        event_alert = EventGetTicket(user,res)
-        recipient = Recipient(user)
-        return event_alert, recipient
-
-    @staticmethod
-    def _full_view(ticket: dict, role: str, masks:dict)->dict:
-        ticket_view = {}
-        need_field = masks['FULL_VIEW'][role]
-        for key, val in ticket.items():
-            if key in need_field:
-                ticket_view[key] = val
-        return ticket_view
-
-    @staticmethod
-    def _short_view(ticket: dict, masks: dict)->dict:
-        need_field = masks['SHORT_VIEW']
-        ticket_view = {}
-        for key, val in ticket.items():
-            if key in need_field:
-                ticket_view[key] = val
-        return ticket_view
+    def get(self, actor:User,
+            cmd:QueryGetTicket)-> list[TicketView]:
+        self.control.can(actor,'lead_ticket', 'get_ticket')
+        cmd = PolicyUser.validate_cmd(cmd,actor)
+        tickets = self.uow.tickets.get(cmd.dict())
+        return tickets
 
     def history(self,
-                    user:User,
-                    cmd:QueryGetHistoryTicket
-                    )->tuple[EventGetHistory,Recipient]:
-        control = PolicyGetHistory(user,self.config,cmd)
-        control.access_user()
-        modified_cmd = control.role_filter()
-        history = self.uow.tickets.get_history(modified_cmd)
-        event_alert = EventGetHistory(user,history)
-        recipient = Recipient(user)
-        return event_alert, recipient
+                actor:User,
+                cmd:QueryGetHistoryTicket):
+        self.control.can(actor,'lead_ticket', 'get_history')
+        cmd = PolicyUser.validate_cmd(cmd, actor)
+        history = self.uow.tickets.get_history(cmd.dict())
+        return history
+
+
+

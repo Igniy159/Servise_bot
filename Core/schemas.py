@@ -5,7 +5,7 @@ The module is used to validate input data types through Pydantic and generate in
 from typing import Literal
 from pydantic import BaseModel
 
-from core.enums import Role
+from core.enums import Role, TypeTicket, State
 
 
 class CmdCreateBranch(BaseModel):
@@ -29,17 +29,21 @@ class CmdDeleteBranch(BaseModel):
 
 class CmdCreateTicket(BaseModel):
     """ Command for create ticket. Old name - EVENT DATA"""
-    department: str
-    problem_name: str
-    problem_type: str | None = None
-    zone: str | None = None
-    comment: str | None = None
-    priority: str | None = None
-    branch_id: int | None = None
+    code_rule: int
+    severity: TypeTicket
+    comment: str
+    file_id: str | None = None
+
 
 class CmdCreateAlert(BaseModel):
     """Command for create alert"""
     code_alert: int
+    comment: str
+
+class CmdChangeState(BaseModel):
+    """Command for reject ticket"""
+    ticket_id: int
+    new_state: State
     comment: str
 
 class QueryGetAlerts(BaseModel):
@@ -48,61 +52,13 @@ class QueryGetAlerts(BaseModel):
     branch_id: int | None = None
     target_id: int | None = None
 
-class CmdRejectTicket(BaseModel):
-    """Command for reject ticket"""
-    ticket_id: int
-    reject_comment: str
-
-
-class CmdPriorityTicket(BaseModel):
-    """ Command for change priority ticket"""
-    ticket_id: int
-    new_priority_id: int
-    comment: str | None = None
-
-
-class CmdConfirmTicket(BaseModel):
-    """Command for actions confirm """
-    ticket_id: int
-    comment: str | None = None
-
-class CmdAssignTicket(BaseModel):
-    """Command for actions assign ticket"""
-    ticket_id: int
-    comment: str | None = None
-
-class CmdOnWaitingTicket(BaseModel):
-    """Command for actions ON waiting """
-    ticket_id: int
-    comment: str | None = None
-
-class CmdOffWaitingTicket(BaseModel):
-    """Command for actions Off waiting ticket"""
-    ticket_id: int
-    comment: str | None = None
-
-class CmdFinishTicket(BaseModel):
-    """Command for actions finish ticket"""
-    ticket_id: int
-    comment: str | None = None
-
-class CmdCloseTicket(BaseModel):
-    """Command for actions close ticket"""
-    ticket_id: int
-    comment: str | None = None
-
 class QueryGetTicket(BaseModel):
     """ Command for get ticket with optional filter"""
     ticket_id: int | None = None
-    zone: str | None = None
     branch_id: int | None = None
     depart_id: int | None = None
     creator_id: int | None = None
-    status: int | None = None
-    priority: int | None = None
-    sort_priority: Literal['asc','desc'] = 'asc'
-    sort_status: Literal['asc','desc']  = 'asc'
-    size: Literal['full','short'] = 'short'
+    state_id: int | None = None
 
 class QueryGetHistoryTicket(BaseModel):
     """ Command for get history 1 ticket"""

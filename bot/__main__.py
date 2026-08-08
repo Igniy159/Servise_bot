@@ -2,22 +2,23 @@ from os import getenv
 import asyncio
 from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher
-from api.midleware import AuthMiddleware
+from bot.midleware import AuthMiddleware
 from core.loader import raw_config
 from repository.create_migrations import run_migrations, create_migration_shema, DB_PATH
-from api.handlers.main_handler import main_routers
+from bot.handlers.main_handler import main_routers
 from repository.unit_of_work import UowFactory
 
+
 class FakeUser:
-    employee = 333333
-    manager = 111111
-    specialist = 222222
+    employee = 111111
+    manager = 222222
+    specialist = 333333
 
 async def main():
     dp = Dispatcher()
     bot = Bot(token=getenv("BOT_TOKEN"))
     main_factory_uow = UowFactory(DB_PATH)
-    middleware_example = AuthMiddleware(main_factory_uow, raw_config, fake_user_id= FakeUser.employee)
+    middleware_example = AuthMiddleware(main_factory_uow, raw_config)
     for router in main_routers:
         router.message.middleware(middleware_example)
         router.callback_query.middleware(middleware_example)

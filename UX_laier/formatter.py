@@ -1,4 +1,6 @@
 from core.ticket_core import User
+from service.alert_service import AlertView
+from service.ticket_service import TicketView
 
 
 class Formatter:
@@ -6,13 +8,28 @@ class Formatter:
         self.dict_en_ru = raw_config['translate']
 
     def translate(self, key):
-        return self.dict_en_ru.get(key, "")
+        return self.dict_en_ru.get(key, key)
 
     def user_formatter(self, user: User):
         user.role = self.translate(user.role.name)
         user.depart_name = self.translate(user.depart_name)
         return f"{user.name} | {user.role} | {user.depart_name or user.branch_name or " "}"
 
+    def alert_formatter(self, view: AlertView):
+        return "\n".join([
+            f"📌 {self.translate(view.rule.name)}",
+            f"💬 {view.alert.comment}",
+            f"🏢 {view.branch_name}",
+            f"🕒 {view.alert.date_create}",
+        ])
+    def ticket_formatter(self, view: TicketView):
+        return "\n".join([
+            f"📌 {self.translate(view.rule_name)}",
+            f"🚩 {self.translate(view.ticket.state.name)}",
+            f"💬 {view.ticket.context.comment}",
+            f"🏢 {view.branch_name}",
+            f"🕒 {view.ticket.date_create}",
+        ])
 
 def tr(config, key):
     dict_en_ru = config['translate']

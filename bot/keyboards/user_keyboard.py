@@ -1,7 +1,9 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton as InB
+
+from bot.keyboards.main_keyboard import button_main_menu
 from core.ticket_core import Department, User
 from core.enums import Role
-from UX_laier.translate import Formatter
+from UX_laier.formatter import Formatter
 
 
 def get_user_for_owner_menu():
@@ -10,7 +12,8 @@ def get_user_for_owner_menu():
             [InB(text='Все сотрудники',callback_data='get_all_users')],
             [InB(text='Добавить сотрудника',callback_data='create_user')],
             [InB(text='Пользователи филиалов',callback_data='branch_users')],
-            [InB(text='Специалисты служб', callback_data='depart_users')]
+            [InB(text='Специалисты служб', callback_data='depart_users')],
+            button_main_menu()
         ]
     )
     return keyboard
@@ -22,6 +25,7 @@ def get_user_for_manager_menu():
             [InB(text='Добавить',callback_data='create_my_user')],
             [InB(text='Переименовать', callback_data='rename_my_user')],
             [InB(text='Удалить', callback_data='delete_my_user')],
+            button_main_menu()
         ]
     )
     return keyboard
@@ -35,6 +39,7 @@ def get_department_keyboard(formater: Formatter,
              for depart in departments
         ]
     )
+    keyboard.inline_keyboard.append(button_main_menu())
     return keyboard
 
 def get_user_keyboard(users: list[User], formatter):
@@ -45,6 +50,7 @@ def get_user_keyboard(users: list[User], formatter):
             for user in users
         ]
     )
+    keyboard.inline_keyboard.append(button_main_menu())
     return keyboard
 
 def get_roles_keyboard(formater: Formatter,
@@ -55,6 +61,7 @@ def get_roles_keyboard(formater: Formatter,
              for role in Role
         ]
     )
+    keyboard.inline_keyboard.append(button_main_menu())
     return keyboard
 
 def get_actions_from_user():
@@ -65,4 +72,5 @@ def get_actions_from_user():
             [InB(text='Удалить сотрудника',callback_data='user_action:delete')]
         ]
     )
+    keyboard.inline_keyboard.append(button_main_menu())
     return keyboard

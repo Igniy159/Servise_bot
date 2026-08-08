@@ -1,5 +1,6 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton as InB
 
+from bot.keyboards.main_keyboard import button_main_menu
 from core.ticket_core import Branch
 
 
@@ -9,8 +10,8 @@ def get_branch_menu():
             [InB(text='Активные филиалы',callback_data='get_branches')],
             [InB(text='Создать новый филиал',callback_data='create_branch')],
             [InB(text='Переименовать филиал',callback_data='rename_branch')],
-            [InB(text='Удалить филиал', callback_data='delete_branch')]
-        ]
+            [InB(text='Удалить филиал', callback_data='delete_branch')],
+            button_main_menu()]
     )
     return keyboard
 
@@ -21,4 +22,5 @@ def get_branch_keyboard(branches: list[Branch], action: str):
             for branch in branches
         ]
     )
+    keyboard.inline_keyboard.append(button_main_menu())
     return keyboard

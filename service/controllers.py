@@ -4,14 +4,15 @@ Authorization occurs in this module.
 Initial access checks to the service layer are also performed.
 """
 from typing import Optional
-from api.command import CmdFirstUser
+from core.schemas import CmdFirstUser
 from core.exceptions import PermissionDenied
 from repository.unit_of_work import UoW
 from service.alert_service import AlertService
 from service.branch_service import BranchService
 from service.user_service import UserService
 from service.ticket_service import TicketService
-from core.ticket_core import User
+from core.ticket_core import User, Permission
+
 
 class AuthController:
     def __init__(self,
@@ -41,7 +42,8 @@ class ServiceFactory:
     def __init__(self,
                  raw_config:dict,
                  uow: UoW):
-        self.ticket_service = TicketService(raw_config,uow)
-        self.user_service = UserService(raw_config,uow)
-        self.branch_service = BranchService(raw_config,uow)
-        self.alert_service = AlertService(raw_config, uow)
+        control = Permission(raw_config['roles'])
+        self.ticket_service = TicketService(control,uow)
+        self.user_service = UserService(control,uow)
+        self.branch_service = BranchService(control,uow)
+        self.alert_service = AlertService(control, uow)

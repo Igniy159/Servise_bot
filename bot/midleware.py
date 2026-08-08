@@ -1,7 +1,7 @@
 from os import getenv
 from typing import Optional
-from aiogram import BaseMiddleware
-from UX_laier.translate import Formatter
+from aiogram import BaseMiddleware, Bot
+from UX_laier.formatter import Formatter
 from core.exceptions import PermissionDenied, RepositoryError
 from core.ticket_core import User
 from repository.unit_of_work import UowFactory, UoW
@@ -12,7 +12,8 @@ class RequestContext:
                  uow: UoW,
                  actor: User,
                  raw_config: dict,
-                 services: ServiceFactory):
+                 services: ServiceFactory,
+                 bot: Optional[Bot] = None):
         self.service_branch = services.branch_service
         self.service_user = services.user_service
         self.service_ticket = services.ticket_service
@@ -21,6 +22,7 @@ class RequestContext:
         self.actor = actor
         self.raw_config = raw_config
         self.formatter = Formatter(self.raw_config)
+        self.bot = bot
 
 
 class AuthMiddleware(BaseMiddleware):
@@ -43,7 +45,6 @@ class AuthMiddleware(BaseMiddleware):
         try:
             with uow:
                 service_factory = ServiceFactory(self.raw_config,uow)
-
                 user = AuthController(
                                       user_name=tg_user.username,
                                       api_user_id=self.fake_user_id or tg_user.id,
@@ -53,7 +54,8 @@ class AuthMiddleware(BaseMiddleware):
                 data['ctx'] = RequestContext(uow,
                                              user,
                                              self.raw_config,
-                                             service_factory)
+                                             service_factory,
+                                             data.get(''))
                 result = await handler(event, data)
                 uow.con.commit()
         except PermissionDenied:
@@ -63,7 +65,6 @@ class AuthMiddleware(BaseMiddleware):
                 )
             else:
                 await event.answer("У вас нет прав на эту операцию")
-            raise
         except RepositoryError:
             await event.answer("Произошла ошибка.")
             return None

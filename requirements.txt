@@ -1,5 +1,0 @@
-aiogram~=3.29.1
-python-dotenv~=1.2.2
-pydantic~=2.12.5
-PyYAML~=6.0.3
-pytest~=9.0.2

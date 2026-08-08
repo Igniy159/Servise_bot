@@ -37,18 +37,19 @@ from aiogram.types import Message, CallbackQuery
 from aiogram import F, Router
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
-from api.command import QueryReceiveBranch, CmdCreateBranch, CmdRenameBranch, CmdDeleteBranch
-from api.keyboards.branch_keyboard import get_branch_menu,get_branch_keyboard
-from api.midleware import RequestContext
+from core.schemas import QueryReceiveBranch, CmdCreateBranch, CmdRenameBranch, CmdDeleteBranch
+from bot.keyboards.branch_keyboard import get_branch_menu,get_branch_keyboard
+from bot.keyboards.main_keyboard import get_button_main
+from bot.midleware import RequestContext
 from core.ticket_core import Branch
 
 
 branch_router = Router()
 
-@branch_router.message(F.text.title() == 'Филиалы')
-async def branches_menu(message: Message):
+@branch_router.callback_query(F.data == 'branches')
+async def branches_menu(callback: CallbackQuery):
     menu = get_branch_menu()
-    await message.answer(text='Панель управления филиалами',reply_markup=menu)
+    await callback.message.edit_text(text='Панель управления филиалами',reply_markup=menu)
 
 @branch_router.callback_query(F.data == 'get_branches')
 async def show_branches(callback: CallbackQuery,
@@ -56,11 +57,12 @@ async def show_branches(callback: CallbackQuery,
     command = QueryReceiveBranch()
     await callback.answer()
     branches = ctx.service_branch.receive(ctx.actor,command)
+    main_menu = get_button_main()
     if branches:
         msg = "\n".join([str(branch) for branch in branches])
-        await callback.message.answer(msg)
+        await callback.message.edit_text(msg,reply_markup=main_menu)
     else:
-        await callback.message.answer('Филиалы не найдены. Создайте новый филиал')
+        await callback.message.edit_text('Филиалы не найдены. Создайте новый филиал', reply_markup=main_menu)
 
 def get_branches(ctx: RequestContext)-> list[Branch]:
     command = QueryReceiveBranch()
@@ -97,7 +99,8 @@ async def create_branch_finish(message: Message,
                                state: FSMContext):
     command = CmdCreateBranch(name=message.text)
     branch = ctx.service_branch.create(ctx.actor,command)
-    await message.answer(f"{str(branch)} был успешно создан")
+    main_menu = get_button_main()
+    await message.answer(f"{str(branch)} был успешно создан",reply_markup=main_menu)
     await state.clear()
 
 @branch_router.callback_query(F.data == 'rename_branch')
@@ -108,7 +111,7 @@ async def rename_branch_start(callback: CallbackQuery,
         await callback.message.answer('Филиалы не найдены. Создайте новый филиал')
     else:
         keyboard = get_branch_keyboard(branches,'rename_branch')
-        await callback.message.answer(text="Выберите филиал чтоб его переименовать:",
+        await callback.message.edit_text(text="Выберите филиал чтоб его переименовать:",
                                       reply_markup= keyboard)
 
 @branch_router.callback_query(F.data.startswith('rename_branch:'))
@@ -117,7 +120,7 @@ async def rename_branch_set_name(callback: CallbackQuery,
                                  ):
     branch_id = int(callback.data.split(':')[1])
     await callback.answer()
-    await callback.message.answer(text="Напишите новое имя для филиала")
+    await callback.message.edit_text(text="Напишите новое имя для филиала")
     await state.update_data(branch_id= branch_id)
     await state.set_state(BranchState.waiting_for_new_branch_name)
 
@@ -129,7 +132,8 @@ async def rename_branch_finish(message: Message,
     command = CmdRenameBranch(branch_id=data['branch_id'],
                               new_name= message.text)
     branch = ctx.service_branch.rename(ctx.actor,command)
-    await message.answer(text=f'Филиал {branch.id} был успешно переименован')
+    main_menu = get_button_main()
+    await message.answer(text=f'Филиал {branch.id} был успешно переименован', reply_markup=main_menu)
     await state.clear()
 
 @branch_router.callback_query(F.data == 'delete_branch')
@@ -137,10 +141,10 @@ async def delete_branch_start(callback: CallbackQuery,
                             ctx: RequestContext):
     branches = ctx.service_branch.receive(ctx.actor,QueryReceiveBranch())
     if not branches:
-        await callback.message.answer('Филиалы не найдены. Создайте новый филиал')
+        await callback.message.edit_text('Филиалы не найдены. Создайте новый филиал')
     else:
         keyboard = get_branch_keyboard(branches,'delete_branch')
-        await callback.message.answer(text="Выберите филиал чтоб его удалить:",
+        await callback.message.edit_text(text="Выберите филиал чтоб его удалить:",
                                       reply_markup= keyboard )
 
 
@@ -150,4 +154,5 @@ async def delete_branch_finish(callback: CallbackQuery,
     branch_id = int(callback.data.split(':')[1])
     command = CmdDeleteBranch(branch_id= branch_id)
     branch = ctx.service_branch.delete(ctx.actor,command)
-    await callback.message.answer(f"Филиал {branch.name} был удалён")
+    main_menu = get_button_main()
+    await callback.message.edit_text(f"Филиал {branch.name} был удалён", reply_markup=main_menu)

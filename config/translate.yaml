@@ -1,4 +1,4 @@
-CRITICAL_NOTIFICATION: "Важное оповещение"   #use in FORMATTER
+CRITICAL_NOTIFICATION: "Важное оповещение"
 CRITICAL_REQUEST: "Критическая заявка"
 URGENT_REQUEST: 'Срочная заявка'
 REGULAR_REQUEST: 'Обычная заявка'
@@ -38,8 +38,8 @@ SECURITY_SERVICE: 'Запросы в СБ'
 EXTERNAL_SERVICE: 'Вызов внешнего подрядчика'
 OUT_OF_STOCK: 'Полное отсутствие'
 LOW_STOCK: 'Почти полное отсутствие необходимого'
-REQUEST:  'Стандартная заявка'
-INCIDENT: 'Происшествие'
+REQUEST:  '📝 Плановая заявка'
+INCIDENT: '🔥 Экстренная заявка'
 CAMPAIGN_START: 'Старт акции'
 CRITICAL_ALERTS: 'Критическое уведомление'
 SECURITY_ALERTS: 'Предупреждение СБ'
@@ -52,11 +52,13 @@ SEC_ALERT: 'Предупреждение СБ'
 HR_ALERT: 'Предупреждение HR'
 CASH_ALERT: 'Предупреждение бухгалтеру'
 SERVICE_ALERT: 'Предупреждение сервис менеджеру'
+
 EMPLOYEE: 'Сотрудник'
 MANAGER: 'Управляющий'
 SPECIALIST: 'Специалист'
 OWNER: 'Руководитель'
 HR: 'HR отдел'
+
 SECURITY: 'Отдел безопасности'
 ACCOUNTANT: 'Бухгалтерия'
 ARS: 'ARS отдел'
@@ -64,8 +66,8 @@ IT: 'IT отдел'
 STORE: 'Склад'
 SERVICE: 'Сервис менеджер'
 TOP_MANAGEMENT: 'Руководство'
-BRANCH_MANAGER: 'Управляющий филиала'
-LINE_STAFF: 'Сотрудник'
+
+
 NEW: 'Создана'
 CONFIRMED: 'Подтверждена'
 IN_PROGRESS: "В работе"
@@ -73,22 +75,8 @@ WAITING_EXTERNAL: "Ожидание необходимого"
 RESOLVED: 'Выполнена'
 CLOSED: "Закрыта"
 CANCELLED: "Отклонена"
-ticket_id: "Заявка №"
-creator_name: "Создал: "
-branch_name: 'Филиал: '
-'problem_name': "Проблема: "
-'problem_type': 'Тип проблемы: '
-zone: 'Зона: '
-target: "Отдел: "
-date_create: 'Созданa: '
-sla_reaction_deadline: 'Время на реакцию: '
-sla_resolution_deadline: 'Время на исполнение: '
-current_state: "Текущий статус: "
-date_close: "Дата закрытия: "
-assigned_to: "Исполнитель: "
-reject_comment: "Причина отмены: "
-comment: 'Комментарий:'
-priority: 'Приоритет: '
+
+
 COFFEE_MACHINE: 'Кофемашина'
 COFFEE_GRINDER: 'Кофемолка'
 ICE_MAKER: 'Лёдогенератор'
@@ -151,13 +139,13 @@ A3_MENU: 'А3 меню'
 A4_MENU: 'А4 меню'
 POSTERS: 'Плакаты'
 CAMERA_FOOTAGE_REQUEST: 'Запрос на камеры'
-CASH_COLLECTION_REQUEST: 'Запрос на инкасацию'
+CASH_COLLECTION_REQUEST: 'Запрос на инкассацию'
 BA0_SEAL_CHANGE_REQUEST: 'Мешки и печати для денег'
 POS_NOT_WORK: 'Не работает POS'
 MONOBLOCK_NOT_WORK: 'Не работает моноблок'
 POS_BAR_TABLET_NOT_WORK: 'Не работает POS в баре'
 OPTIONS_POS: 'Настройка POS'
-CHANGE_PRISES: 'Изменить цены'
+CHANGE_PRICES: 'Изменить цены'
 ADD_POSITION: 'Добавить позицию'
 DEL_POSITION: 'Удалить позицию'
 NO_ELECTRICITY: 'Нет света'
@@ -184,3 +172,10 @@ api_user_id: "ТГ код: "
 role_name: 'Роль: '
 depart_name: "Отдел:"
 branch_manager: "Администратор: "
+CLIMATE: 'Климат'
+ELECTRICAL: 'Электрика'
+BAR_EQUIPMENT: 'Барное оборудование'
+REFRIGERATION: 'Холодильники / витрины'
+PLUMBING: 'Сантехника'
+CONSUMABLE_EQUIPMENT: 'Диспенсеры и сушилки'
+

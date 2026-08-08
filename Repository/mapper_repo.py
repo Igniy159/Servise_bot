@@ -46,3 +46,24 @@ class MapperRoles(Repo):
         if res:
             return res[0]
         raise IncorrectWrite("Role not found")
+
+class MapperState(Repo):
+
+    def get_state_id(self, name: str)-> Optional[int]:
+        cur = self.con
+        res = cur.execute("""SELECT t.status_id
+                        FROM ticket_status AS t
+                        WHERE t.status_name == ? """,(name,)).fetchone()
+        if res:
+            return res[0]
+        raise IncorrectWrite("Role not found")
+
+    def get_state_name(self, state_id: int)->  Optional[str]:
+        cur = self.con
+        res = cur.execute("""SELECT t.status_name
+                        FROM ticket_status AS t
+                        WHERE t.status_name == ? """, (state_id,)).fetchone()
+        if res:
+            return res[0]
+
+        raise IncorrectWrite("Role not found")
