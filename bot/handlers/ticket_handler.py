@@ -105,7 +105,6 @@ async def get_severity(callback: CallbackQuery,
 @ticket_router.message(TicketState.waiting_photo, F.photo)
 async def get_photo(message: Message,
                     state:FSMContext):
-    print('Я сработал')
     menu = get_button_main()
     photo = message.photo[-1]
     await state.update_data(file_id=photo.file_id)
@@ -165,7 +164,7 @@ async def create_ticket(message: Message,
             print(f"Отправлен пользователю {users_id}, {msg}")
         except TelegramBadRequest:
             print(f"Не был отправлен пользователю {users_id}, {msg}")
-    await message.answer("Заявка была создана и отправлена.", reply_markup=menu)
+    await message.answer(f"Заявка была создана  отправлена: \n{msg}", reply_markup=menu)
     await state.clear()
 
 

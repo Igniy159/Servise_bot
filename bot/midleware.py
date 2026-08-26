@@ -55,7 +55,7 @@ class AuthMiddleware(BaseMiddleware):
                                              user,
                                              self.raw_config,
                                              service_factory,
-                                             data.get(''))
+                                             data.get('bot'))
                 result = await handler(event, data)
                 uow.con.commit()
         except PermissionDenied:

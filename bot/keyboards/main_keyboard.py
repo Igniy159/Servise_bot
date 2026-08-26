@@ -6,7 +6,8 @@ def get_owner_menu()-> InlineKeyboardMarkup:
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[[InB(text="Филиалы",callback_data='branches')],
                    [InB(text='Сотрудники',callback_data='users')],
-                    [InB(text='Заявки', callback_data="tickets")]
+                    [InB(text='Заявки', callback_data="tickets")],
+                        [InB(text='Дашборд', callback_data='dashboard')]
                   ]
     )
     return keyboard
@@ -52,3 +53,9 @@ def get_button_main():
 def get_button_back()-> list[InB]:
     button = [InB(text='🔙Назад',callback_data='back')]
     return button
+
+
+def get_open_dash_menu(url)->InlineKeyboardMarkup:
+    keyboard = InlineKeyboardMarkup(inline_keyboard=[[InB(text='📖Открыть дашборд',url=url)]])
+    keyboard.inline_keyboard.append(button_main_menu())
+    return keyboard
