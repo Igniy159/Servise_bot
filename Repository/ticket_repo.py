@@ -1,107 +1,127 @@
-from datetime import datetime
 from sqlite3 import Error
 from typing import Optional
-from core.exceptions import RepositoryError,  IncorrectWrite
+from core.exceptions import RepositoryError, IncorrectWrite
+from core.ticket_core import Ticket,TicketView
 from repository.base import Repo
+from repository.mapper_repo import MapperState
 
 
 class TicketRepo(Repo):
     def get(self,
-            filter_value: Optional[dict]=None)-> list:
+            filter_value: Optional[dict]=None)-> list[TicketView]:
         cur = self.con.cursor()
         condition = []
-        sort_condition = []
         param = []
         if filter_value:
             for key, val in filter_value.items():
                 if key == "ticket_id":
                     condition.append("t.ticket_id = ?")
                     param.append(val)
-                elif key == "zone":
-                    condition.append("t.zone = ?")
-                    param.append(val)
                 elif key == "branch_id":
                     condition.append("t.branch_id = ?")
                     param.append(val)
                 elif key == "depart_id":
-                    condition.append(" t.target = ? ")
+                    condition.append(" r.target_id = ? ")
                     param.append(val)
-                elif key == "creator_id":
-                    condition.append("t.creator_id = ? ")
+                elif key == "actor_id":
+                    condition.append("t.actor_id = ? ")
                     param.append(val)
-                elif key == "status":
-                    condition.append("t.current_state = ?")
-                    param.append(val)
-                elif key == "priority":
-                    condition.append("t.priority = ?")
+                elif key == "state_id":
+                    condition.append("t.state_id = ?")
                     param.append(val)
 
-                elif key == 'sort_priority':
-                    if val.lower() in ("asc", "desc"):
-                        sort_condition.append(f"p.priority_id {val.upper()}")
-                elif key == "sort_status":
-                    if val.lower() in ("asc", "desc"):
-                        sort_condition.append(f"st.status_id {val.upper()}")
-
-        where_sql = sort_sql = ""
+        where_sql  = ""
         if condition:
             where_sql = " WHERE " + " AND ".join(condition)
-        if sort_condition:
-            sort_sql = " ORDER BY " + ", ".join(sort_condition)
 
         base_query = """SELECT t.ticket_id,
-                                       t.creator_id,
-                                       cr.user_name AS creator_name,
-                                       t.branch_id,
-                                       b.branch_name,
-                                       t.event_type,
-                                       t.problem_category,
-                                       t.problem_name,
-                                       t.problem_class,
-                                       t.problem_type,
-                                       t.zone,
-                                       t.scenario,
-                                       d.depart_name AS target,
-                                       t.date_create,
-                                       t.sla_reaction_deadline,
-                                       t.sla_resolution_deadline,
-                                       st.status_name AS current_state,
-                                       t.date_close,
-                                       asig.user_name AS assigned_to,
-                                       t.reject_comment,
-                                       t.comment,
-                                       p.priority_name AS priority
-                                       FROM tickets AS t 
-                                       JOIN users AS cr ON t.creator_id = cr.user_id
-                                       LEFT JOIN users AS asig ON t.assigned_to = asig.user_id
-                                       JOIN branch AS b ON t.branch_id = b.branch_id
-                                        JOIN department AS d ON t.target = d.depart_id
-                                       JOIN priority AS p ON t.priority = p.priority_id
-                                       JOIN ticket_status AS st ON t.current_state = st.status_id
-                                       """
-        request = base_query + where_sql + sort_sql
+            t.code_ticket,
+            t.severity,
+            t.actor_id,
+            t.branch_id,
+            t.comment,
+            s.status_name AS ticket_state,
+            t.assigned_to,
+            t.date_create,
+            t.file_id,
+            r.rule_name,
+            b.branch_name
+            FROM tickets AS t 
+            JOIN rules AS r 
+            ON r.code = t.code_ticket
+            JOIN ticket_status AS s  
+            ON t.state_id = s.status_id
+            JOIN branch AS b
+            ON t.branch_id = b.branch_id
+            """
+        request = base_query + where_sql
         try:
             rows = cur.execute(request, param).fetchall()
         except Error as e:
             raise RepositoryError(f"Error in get_tickets: {e}") from e
-        tickets = [dict(row) for row in rows]
-        for ticket in tickets:
-            self._normalize_tickets(ticket)
+        tickets = [TicketView.for_db(dict(row)) for row in rows]
         return tickets
 
-    @staticmethod
-    def _normalize_tickets(ticket:dict)-> dict:
-        f = "%Y-%m-%d %H:%M:%S"
-        ticket['date_create'] = datetime.strptime(ticket['date_create'], f)
-        if ticket['sla_reaction_deadline']:
-            ticket['sla_reaction_deadline'] = datetime.strptime(ticket['sla_reaction_deadline'], f)
-        if ticket['sla_resolution_deadline']:
-            ticket['sla_resolution_deadline'] = datetime.strptime(ticket['sla_resolution_deadline'],
-                                                                  f)
-        if ticket['date_close']:
-            ticket['date_close'] = datetime.strptime(ticket['date_close'], f)
-        ticket['history'] = []
-        return ticket
+
+    def create(self, ticket: Ticket) -> int:
+        cur = self.con.cursor()
+        state_mapper = MapperState(self.con)
+        state_id = state_mapper.get_state_id(ticket.state.name)
+        cur.execute("""INSERT INTO tickets (
+    code_ticket,
+    severity,
+    actor_id,
+    branch_id,
+    comment,
+    state_id,
+    assigned_to,
+    file_id,
+    date_create) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)""",
+(ticket.code,
+    ticket.context.severity.name,
+    ticket.context.actor_id,
+    ticket.context.branch_id,
+    ticket.context.comment,
+    state_id,
+    ticket.assigned_to,
+    ticket.context.file_id,
+    ticket.date_create))
+        return cur.lastrowid
+
+    def update(self,
+            ticket: Ticket,
+            ) -> None:
+        cur = self.con.cursor()
+        state_mapper = MapperState(self.con)
+        state_id = state_mapper.get_state_id(ticket.state.name)
+        cur.execute("""UPDATE tickets SET
+            state_id = (?),
+            assigned_to = (?),
+            comment = (?)
+        WHERE ticket_id = ? """,
+                    (state_id,
+                     ticket.assigned_to,
+                     ticket.context.comment,
+                     ticket.id))
+        if cur.rowcount == 0:
+            raise IncorrectWrite("Ticket not found")
+
+    # HISTORY
+    def insert_history(self
+                      ,ticket_id: int,
+                      timestamp: str,
+                      user_id: int,
+                      field: str | int,
+                      old: str | int | None,
+                      new: str | int | None,
+                      ):
+        cur = self.con.cursor()
+        cur.execute("""INSERT INTO history
+                    (ticket_id, timestamp, user_id, field, old, new)
+                     VALUES (?, ?, ?, ?, ?, ?)""",
+                    (ticket_id, timestamp, user_id, field, old, new)
+                    )
 
     def get_history(self,
                     filter_value:dict)->list[dict]:
@@ -154,78 +174,3 @@ class TicketRepo(Repo):
             return [dict(r) for r in res]
         except Error as e:
             raise RepositoryError(f"Error in get_history_ticket: {e}") from e
-
-    def create(self,
-                      ticket: dict,
-                      ) -> int:
-        cur = self.con.cursor()
-
-        cur.execute("""INSERT INTO tickets (
-                                 creator_id, branch_id, event_type, problem_category, problem_name,
-                                 problem_class, problem_type, zone, scenario, target,
-                                 date_create, sla_reaction_deadline, sla_resolution_deadline, current_state,
-                                 date_close, assigned_to, reject_comment, comment,priority) 
-                                 VALUES (?, ?, ?, ?, ?,
-                                     ?, ?, ?, ?, ?, 
-                                     ?, ?, ?, ?, ?,
-                                     ?, ?, ?, ?)""",
-                    (ticket['creator_id'],
-                     ticket['branch_id'],
-                     ticket['event_type'],
-                     ticket['problem_category'],
-                     ticket['problem_name'],
-                     ticket['problem_class'],
-                     ticket['problem_type'],
-                     ticket['zone'],
-                     ticket['scenario'],
-                     ticket['target'],
-                     ticket['date_create'],
-                     ticket['sla_reaction_deadline'],
-                     ticket['sla_resolution_deadline'],
-                     ticket['current_state'],
-                     ticket['date_close'],
-                     ticket['assigned_to'],
-                     ticket['reject_comment'],
-                     ticket['comment'],
-                     ticket['priority']
-                     ))
-
-        return cur.lastrowid
-
-    def update(self,
-            ticket: dict,
-            ) -> None:
-        cur = self.con.cursor()
-        cur.execute("""UPDATE tickets SET
-            current_state = (?),
-            date_close = (?),
-            assigned_to = (?),
-            priority = (?),
-            comment = (?),
-            reject_comment = (?)
-        WHERE ticket_id = ? """,
-                    (ticket['current_state'],
-                     ticket['date_close'],
-                     ticket['assigned_to'],
-                     ticket['priority'],
-                     ticket['comment'],
-                     ticket['reject_comment'],
-                     ticket['ticket_id']))
-        if cur.rowcount == 0:
-            raise IncorrectWrite("Ticket not found")
-
-    # HISTORY
-    def insert_history(self
-                      ,ticket_id: int,
-                      timestamp: str,
-                      user_id: int,
-                      field: str | int,
-                      old: str | int | None,
-                      new: str | int | None,
-                      ):
-        cur = self.con.cursor()
-        cur.execute("""INSERT INTO history"
-                    (ticket_id, timestamp, user_id, field, old, new)
-                     VALUES (?, ?, ?, ?, ?, ?)""",
-                    (ticket_id, timestamp, user_id, field, old, new)
-                    )
