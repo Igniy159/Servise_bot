@@ -2,7 +2,6 @@
 The module is used to validate input data types through Pydantic and generate initial commands.
 """
 
-from typing import Literal
 from pydantic import BaseModel
 
 from core.enums import Role, TypeTicket, State
@@ -59,6 +58,8 @@ class QueryGetTicket(BaseModel):
     depart_id: int | None = None
     creator_id: int | None = None
     state_id: int | None = None
+
+
 
 class QueryGetHistoryTicket(BaseModel):
     """ Command for get history 1 ticket"""
